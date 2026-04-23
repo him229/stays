@@ -19,6 +19,7 @@ Wraps a single send with three decorators; note the ordering:
 from __future__ import annotations
 
 import json
+import logging
 import os
 import re
 import urllib.parse
@@ -27,11 +28,14 @@ from typing import Any
 from curl_cffi import requests as cffi_requests
 from ratelimit import limits, sleep_and_retry
 from tenacity import (
+    before_sleep_log,
     retry,
     retry_if_exception_type,
     stop_after_attempt,
     wait_exponential,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class BatchExecuteError(RuntimeError):
@@ -45,6 +49,15 @@ class TransientBatchExecuteError(RuntimeError):
 _CALLS_PER_PERIOD = int(os.getenv("STAYS_RPS", "10"))
 _PERIOD_S = 1
 _POST_RPC_LIMITER = limits(calls=_CALLS_PER_PERIOD, period=_PERIOD_S)
+
+# N2: surface rate-limit activity. `ratelimit.sleep_and_retry` sleeps INSIDE
+# the third-party `ratelimit` package, so there is no clean hook we can
+# instrument to log the actual wait duration. The compromise is two call
+# sites: (1) a module-load INFO line so operators confirm the limiter is
+# active and see the configured window, and (2) an INFO line at the top of
+# `post_rpc` advertising the window per call. Tenacity retries still log
+# their sleep via `before_sleep_log` above.
+logger.info("post_rpc rate-limit window=%d/s (STAYS_RPS)", _CALLS_PER_PERIOD)
 
 
 def _reset_rate_limit_state_for_tests() -> None:
@@ -82,10 +95,17 @@ class Client:
         wait=wait_exponential(multiplier=1, min=1, max=30),
         retry=retry_if_exception_type(TransientBatchExecuteError),
         reraise=True,
+        before_sleep=before_sleep_log(logger, logging.WARNING),
     )
     @sleep_and_retry
     @_POST_RPC_LIMITER
     def post_rpc(self, rpc_id: str, inner_payload: list) -> Any:
+        # N2: the @sleep_and_retry decorator (from the `ratelimit` package,
+        # not ours) is what actually sleeps on the fixed-window bucket; we
+        # can't hook that sleep directly. This INFO line is the nearest
+        # in-code equivalent — it fires once per call AFTER the limiter has
+        # admitted the request, so each logged line maps 1:1 to a slot used.
+        logger.info("starting post_rpc id=%s with rate_limit=%d/s", rpc_id, _CALLS_PER_PERIOD)
         body = self._build_body(rpc_id, inner_payload)
         try:
             resp = self._session.post(
@@ -97,6 +117,7 @@ class Client:
             if resp.status_code in (429, 500, 502, 503, 504):
                 raise TransientBatchExecuteError(f"HTTP {resp.status_code} from endpoint")
             if resp.status_code >= 400:
+                logger.error("batchexecute failure rpc=%s status=%s", rpc_id, resp.status_code)
                 raise BatchExecuteError(f"HTTP {resp.status_code} from endpoint")
             raw = resp.text
         except cffi_requests.errors.RequestsError as e:
@@ -118,9 +139,11 @@ class Client:
         if not match:
             if "/sorry/" in raw or "unusual traffic" in raw.lower():
                 raise TransientBatchExecuteError("Hit a rate-limit / anti-bot interstitial")
+            logger.error("batchexecute failure rpc=%s err=frame_missing", rpc_id)
             raise BatchExecuteError(f"No {rpc_id} frame in response; head={raw[:200]!r}")
         payload_str = match.group(1)
         if not payload_str:
+            logger.error("batchexecute failure rpc=%s err=null_payload", rpc_id)
             raise BatchExecuteError(f"{rpc_id} frame carries null payload — request likely malformed.")
         # The capture group is a valid JSON-string body (the regex only
         # allows escape pairs or non-quote/non-backslash chars). Wrapping

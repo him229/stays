@@ -12,34 +12,50 @@ from stays.models.google_hotels.base import Amenity, Brand, Currency, SortBy
 
 
 class TestDateParser:
-    def test_accepts_iso_date(self) -> None:
-        assert _validate.parse_date("2026-07-22") == date(2026, 7, 22)
+    @pytest.mark.parametrize(
+        "value, expected",
+        [
+            ("2026-07-22", date(2026, 7, 22)),
+            (None, None),
+        ],
+        ids=["iso_date", "none_passthrough"],
+    )
+    def test_accepts_valid_input(self, value, expected) -> None:
+        assert _validate.parse_date(value) == expected
 
-    def test_accepts_none(self) -> None:
-        assert _validate.parse_date(None) is None
-
-    def test_rejects_malformed(self) -> None:
-        with pytest.raises(typer.BadParameter, match="YYYY-MM-DD"):
-            _validate.parse_date("07/22/2026")
-
-    def test_rejects_impossible(self) -> None:
-        with pytest.raises(typer.BadParameter):
-            _validate.parse_date("2026-13-45")
+    @pytest.mark.parametrize(
+        "bad, match",
+        [
+            ("07/22/2026", "YYYY-MM-DD"),
+            ("2026-13-45", None),
+        ],
+        ids=["malformed", "impossible"],
+    )
+    def test_rejects_invalid_input(self, bad, match) -> None:
+        if match is None:
+            with pytest.raises(typer.BadParameter):
+                _validate.parse_date(bad)
+        else:
+            with pytest.raises(typer.BadParameter, match=match):
+                _validate.parse_date(bad)
 
 
 class TestCurrency:
-    def test_uppercases_valid_code(self) -> None:
-        assert _validate.parse_currency("usd") == Currency.USD
-
-    def test_accepts_enum_name_directly(self) -> None:
-        assert _validate.parse_currency("EUR") == Currency.EUR
+    @pytest.mark.parametrize(
+        "raw, expected",
+        [
+            ("usd", Currency.USD),
+            ("EUR", Currency.EUR),
+            (None, None),
+        ],
+        ids=["lowercase_uppercased", "enum_name_direct", "none_passthrough"],
+    )
+    def test_accepts_valid_code(self, raw, expected) -> None:
+        assert _validate.parse_currency(raw) == expected
 
     def test_rejects_unknown(self) -> None:
         with pytest.raises(typer.BadParameter, match="Currency"):
             _validate.parse_currency("XYZ")
-
-    def test_accepts_none(self) -> None:
-        assert _validate.parse_currency(None) is None
 
 
 class TestEnumByName:
@@ -80,17 +96,18 @@ class TestStars:
 
 
 class TestPriceRange:
-    def test_both_set(self) -> None:
-        assert _validate.parse_price_range(100, 300) == (100, 300)
-
-    def test_only_min(self) -> None:
-        assert _validate.parse_price_range(100, None) == (100, None)
-
-    def test_only_max(self) -> None:
-        assert _validate.parse_price_range(None, 250) == (None, 250)
-
-    def test_both_none_is_none(self) -> None:
-        assert _validate.parse_price_range(None, None) is None
+    @pytest.mark.parametrize(
+        "lo, hi, expected",
+        [
+            (100, 300, (100, 300)),
+            (100, None, (100, None)),
+            (None, 250, (None, 250)),
+            (None, None, None),
+        ],
+        ids=["both_set", "only_min", "only_max", "both_none"],
+    )
+    def test_valid_combinations(self, lo, hi, expected) -> None:
+        assert _validate.parse_price_range(lo, hi) == expected
 
     def test_min_ge_max_rejected(self) -> None:
         with pytest.raises(typer.BadParameter, match="price-min.*price-max"):

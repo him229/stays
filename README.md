@@ -60,7 +60,7 @@ Prefer a different install path? See [Install](#install) below.
 - ⚡ **Parallel enrichment** — search + fan-out detail fetch for the top N hotels in a single call, with per-hotel partial failure.
 - 🤖 **MCP server** — FastMCP over stdio (what Claude/Codex spawn) or streamable HTTP (dev / Docker).
 - 🧰 **Three-format CLI** — `text` (rich tables), `json` (single envelope), `jsonl` (stream-friendly).
-- 🛡️ **Production hygiene** — rate-limited `curl_cffi` session with Chrome TLS impersonation, tenacity exponential backoff, typed pydantic v2 models, 335 tests.
+- 🛡️ **Production hygiene** — rate-limited `curl_cffi` session with Chrome TLS impersonation, tenacity exponential backoff, typed pydantic v2 models, 330 offline tests.
 - 🐳 **Ready for containers** — published multi-arch image at `ghcr.io/victoriawei/stays:latest`, plus `docker-compose` profiles.
 
 ## Install
@@ -337,8 +337,17 @@ for item in s.search_with_details(filters, max_hotels=5):
     if item.ok:
         print(item.detail.name, len(item.detail.rooms), "rooms")
     else:
-        print("skipped:", item.result.name, "—", item.error)
+        # error_kind is "transient" or "fatal"; is_retryable is True only
+        # for transient failures. Unknown exceptions (parser bugs, etc.)
+        # propagate — only typed BatchExecuteError / TransientBatchExecuteError
+        # / MissingHotelIdError become per-item errors.
+        retry_hint = " (retryable)" if item.is_retryable else ""
+        print("skipped:", item.result.name, "—", item.error_kind, item.error, retry_hint)
 ```
+
+`stays enrich --format json` and the MCP `search_hotels_with_details` tool
+mirror this shape: each per-hotel record includes `ok`, `result`, `detail`,
+`error`, `error_kind` (`"transient"` | `"fatal"` | `null`), and `is_retryable`.
 
 ### Serializer-only (no HTTP)
 
@@ -363,8 +372,13 @@ filters.to_request_body()  # "f.req=..." — ready to POST
 - **Results**: `HotelResult`, `HotelDetail`, `RoomType`, `RatePlan`,
   `CancellationPolicy`, `CancellationPolicyKind`, `Review`,
   `RatingHistogram`, `CategoryRating`, `NearbyPlace`, `EnrichedResult`
+  (now carries `error_kind: Literal["transient","fatal"] | None` and
+  a `.is_retryable` property)
 - **Search API**: `SearchHotels`, `Client`, `BatchExecuteError`,
   `TransientBatchExecuteError`, `MissingHotelIdError`
+- **Serializers**: `stays.serialize` — canonical `serialize_hotel_result`,
+  `serialize_hotel_detail`, plus `build_success` / `build_error` envelope
+  helpers (shared by CLI + MCP; dict shapes guarded by golden-fixture tests)
 - **MCP (core install only)**: `mcp`, `search_hotels`, `get_hotel_details`,
   `search_hotels_with_details`, `run_mcp`, `run_mcp_http`
 
@@ -461,6 +475,26 @@ make build                # sdist + wheel
 
 Full command list: `make help`.
 
+### Testing
+
+- **Offline suite** (`make test`) — 330 tests including golden-fixture
+  regression guards for the parser, the canonical serializers, and the CLI
+  JSON envelope shapes (`tests/test_parse_golden.py`,
+  `tests/test_serialize_golden.py`, `tests/test_cli_envelope_golden.py`).
+- **Live CLI E2E** (`tests/test_cli_live.py`, marker-gated: `pytest -m live`)
+  — 9 subprocess-driven scenarios that exercise the real `stays` binary
+  against live Google (Tokyo dates, Hilton brand family, 4/5-star Paris,
+  London amenity + price band, free-cancellation differential and
+  refundability, search→details roundtrip, `enrich` parallel per-item
+  contract, JPY sort).
+- **Browser-verify matrix** (`pytest --browser-verify`) — the
+  MCP-vs-browser and CLI-vs-browser oracle suites under
+  `tests/browser_verification/` (including
+  `tests/browser_verification/test_cli_vs_browser.py`) diff our results
+  against an authoritative browser oracle. The driver is pluggable:
+  `agent-browser` is the default; set `STAYS_BROWSER_DRIVER=playwright`
+  to force the Playwright fallback.
+
 ### Project layout
 
 ```
@@ -470,7 +504,7 @@ stays/
 ├── search/        # batchexecute HTTP client + search / detail / enrich
 └── models/        # pydantic v2 filter + result + detail + policy models
 
-tests/             # 335 tests — offline, live (-m live), browser-verify (--browser-verify)
+tests/             # 330 offline + live (-m live) + browser-verify (--browser-verify)
 docs/              # reverse-engineering notes, superpowers artifacts, AI_AGENTS.md
 captures/          # Playwright capture oracles (gitignored where large)
 ```

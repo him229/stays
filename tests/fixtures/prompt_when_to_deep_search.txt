@@ -1,0 +1,10 @@
+Decide how to query Google Hotels:
+- Call `search_hotels` for browsing, filtering by price/stars, or any
+  question the user asks about a CITY or area.
+- Call `get_hotel_details` when the user has already chosen ONE hotel
+  and wants rooms / rates / cancellation info (you need an entity_key).
+- Call `search_hotels_with_details` ONLY when the user wants to COMPARE
+  rooms/rates/cancellation across SEVERAL hotels at once. Set
+  `max_hotels` to the smallest number that satisfies the ask (3-5
+  is typical; 15 is the hard maximum).
+User intent: (unspecified)

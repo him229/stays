@@ -8,6 +8,11 @@ Shared helpers here:
 - ``canonical_server_block()`` — ``{"command", "args"}`` dict
 - ``canonical_mcp_json()`` — Claude-style ``{"mcpServers": {...}}`` string
 - ``SERVER_KEY`` — the well-known name "stays"
+
+Protocol-path surface (additive — legacy ``register(...)`` / ``build()``
+signatures are unchanged):
+- ``SetupBackend`` / ``SetupReport`` — in ``_backend``
+- ``BACKENDS`` — dict[Kind, SetupBackend] adapting the three backends
 """
 
 from __future__ import annotations
@@ -43,3 +48,13 @@ def canonical_mcp_json() -> str:
         {"mcpServers": {SERVER_KEY: canonical_server_block()}},
         indent=2,
     )
+
+
+# Protocol-path re-exports (see stays/mcp/setup/_backend.py + _adapters.py).
+# Placed AFTER the shared helpers to avoid circular imports during package init.
+from stays.mcp.setup._adapters import BACKENDS  # noqa: E402, F401  (public API)
+from stays.mcp.setup._backend import (  # noqa: E402, F401  (public API)
+    Kind,
+    SetupBackend,
+    SetupReport,
+)

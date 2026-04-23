@@ -5,7 +5,7 @@ TARGETS := stays/ tests/ scripts/
 .DEFAULT_GOAL := help
 
 .PHONY: help install install-dev mcp mcp-http lint lint-fix \
-        format test test-live test-all build clean docker docker-run \
+        format test test-live test-browser test-all build clean docker docker-run \
         coverage
 
 help:
@@ -17,10 +17,11 @@ help:
 	@echo "  lint          Run ruff check"
 	@echo "  lint-fix      Run ruff check --fix"
 	@echo "  format        Run ruff format"
-	@echo "  test          Run unit + offline tests"
-	@echo "  test-live     Run live network tests"
-	@echo "  test-all      Run unit + live + browser-verify (requires agent-browser on PATH)"
-	@echo "  coverage      Run tests with branch coverage (terminal + HTML at htmlcov/)"
+	@echo "  test          Run unit + offline tests (live + browser auto-skipped)"
+	@echo "  test-live     Run live-marked tests only (hits google.com)"
+	@echo "  test-browser  Run browser-verify tests only (requires agent-browser or Playwright)"
+	@echo "  test-all      Run unit + live + browser-verify"
+	@echo "  coverage      Run offline tests with branch coverage (terminal + HTML at htmlcov/)"
 	@echo "  build         Build sdist + wheel"
 	@echo "  clean         Remove build artifacts"
 	@echo "  docker        Build Docker image"
@@ -48,28 +49,19 @@ format:
 	uv run --extra dev ruff format $(TARGETS)
 
 test:
-	uv run --extra dev pytest -v \
-		--ignore=tests/test_hotel_live.py \
-		--ignore=tests/test_search_live.py \
-		--ignore=tests/test_detail_live.py \
-		--ignore=tests/test_mcp_live.py \
-		--ignore=tests/test_cli_live.py \
-		--ignore=tests/browser_verification
+	uv run --extra dev pytest -v
 
 test-live:
-	uv run --extra dev pytest -v -m live
+	uv run --extra dev pytest -v --live -m live
+
+test-browser:
+	uv run --extra dev pytest -v --browser-verify -m browser_verify
 
 test-all:
-	uv run --extra dev pytest -v --browser-verify
+	uv run --extra dev pytest -v --live --browser-verify
 
 coverage:
-	uv run --extra dev pytest --cov --cov-report=term-missing --cov-report=html \
-		--ignore=tests/test_hotel_live.py \
-		--ignore=tests/test_search_live.py \
-		--ignore=tests/test_detail_live.py \
-		--ignore=tests/test_mcp_live.py \
-		--ignore=tests/test_cli_live.py \
-		--ignore=tests/browser_verification
+	uv run --extra dev pytest --cov --cov-report=term-missing --cov-report=html
 
 build:
 	uv build

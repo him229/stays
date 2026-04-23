@@ -1,0 +1,10 @@
+                                                                                
+                                                      Ameniti                   
+    #   Name       ★          Rating          Price   es        Entity Key      
+ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 
+    1   Tokyo      4      4.3 (1248)        USD 180   pool,     CgoI_TEST_KE…   
+        Central                                       wifi                      
+        Hotel                                                                   
+    2   Second     5       4.7 (980)        USD 240   pool,     CgoI_TEST_KE…   
+        Hotel                                         wifi                      
+                                                                                

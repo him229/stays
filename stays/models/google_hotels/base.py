@@ -220,12 +220,13 @@ class MinGuestRating(Enum):
 
     Lives at ``[1][4][4]`` as a single int. Encoding is ``round(rating * 2)``
     — so 4.5+ → 9, 4.0+ → 8, 3.5+ → 7.
-
-    TODO: only 4.5+ (=9) is currently confirmed from the Playwright run.
-    The 7 and 8 values are inferred by the ``*2`` pattern; rerun the 3.5+
-    and 4.0+ captures to confirm.
     """
 
+    # Only 4.5+ (=9) is confirmed from capture data; 3.5+ / 4.0+ are
+    # inferred from the ``*2`` pattern and deferred for live capture
+    # verification. See
+    # docs/superpowers/specs/2026-04-23-code-quality-audit-design.md for
+    # the deferral rationale.
     THREE_FIVE_PLUS = 7
     FOUR_ZERO_PLUS = 8
     FOUR_FIVE_PLUS = 9
@@ -370,16 +371,16 @@ class GuestInfo(BaseModel):
 
         Buckets currently applied:
           - ages 2-12 → ``[2, 12]`` (CONFIRMED from captures, ages 5/7/10)
-          - ages 0-1 → ``[0, 1]``  (UNCONFIRMED — inferred bucket boundary)
-          - ages 13-17 → ``[13, 17]`` (UNCONFIRMED — inferred bucket boundary)
+          - ages 0-1 → ``[0, 1]``  (inferred bucket boundary)
+          - ages 13-17 → ``[13, 17]`` (inferred bucket boundary)
 
-        TODO: confirm buckets once captures land for infant (0, 1) and teen
-        (13-17) ages. The current 0-1 and 13-17 buckets are our best guess;
-        if Google actually uses a different bucketing we'll find out.
+        The 0-1 and 13-17 bucket boundaries are inferred from the observed
+        2-12 shape and are deferred for live capture verification — see
+        CONTEXT.md (open work items) and
+        ``docs/superpowers/specs/2026-04-23-code-quality-audit-design.md``.
         """
         if 2 <= age <= 12:
             return [2, 12]
-        # TODO: confirm buckets once captures land
         if 0 <= age <= 1:
             return [0, 1]
         if 13 <= age <= 17:

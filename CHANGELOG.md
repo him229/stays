@@ -8,6 +8,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- `error_kind: Literal["transient", "fatal"]` and `is_retryable` property on `EnrichedResult` — CLI `enrich` output and the MCP `search_hotels_with_details` tool now carry both fields per item so retry-aware callers can distinguish recoverable failures.
+- New module `stays.serialize` — canonical serializers (public, consumed by both CLI and MCP) for `HotelResult`, `HotelDetail`, `RoomType`, `RatePlan`, and `CancellationPolicy`. Dict shapes guarded by golden-fixture tests.
+- `SetupBackend` Protocol + `SetupReport` dataclass + `BACKENDS` registry under `stays.mcp.setup` (new `_backend` module); legacy `register(...)` / `build()` entrypoints in `stays.mcp.setup.{claude,codex,chatgpt}` remain unchanged.
+- New test suites: golden-fixture parse/serialize/CLI-envelope regression guards (`tests/test_parse_golden.py`, `tests/test_serialize_golden.py`, `tests/test_cli_envelope_golden.py`), subprocess CLI live E2E tests (`tests/test_cli_live.py`), and a CLI-vs-browser oracle suite (`tests/browser_verification/test_cli_vs_browser.py`). Total offline suite grew from 286 to 330 tests.
+- Browser-verify driver is now pluggable — `agent-browser` default, Playwright fallback (set `STAYS_BROWSER_DRIVER=playwright` to force).
 - `stays` CLI (sole console script) with subcommands `search`, `details`, `enrich`, `mcp`, `mcp-http`.
 - `stays setup` group with per-client backends: `claude` (Code + Desktop auto-detect with JSON fallback), `codex` (wraps `codex mcp add` with TOML fallback), `chatgpt` (prints remote-HTTPS + Developer Mode instructions).
 - Smart-default routing: `stays "tokyo"` → `stays search "tokyo"`.
@@ -23,6 +28,9 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Internal refactor — SOLID/DRY code-quality pass; zero observable regressions.
+- `SearchHotels.search_with_details` no longer swallows unexpected exceptions; only typed `BatchExecuteError` / `TransientBatchExecuteError` / `MissingHotelIdError` become per-item errors. Parser/programming bugs now propagate instead of being silently converted to per-hotel `error` strings.
+- Corrected MCP prompt drift — `when-to-deep-search` prompt and the `search_hotels_with_details` tool description now reflect the real hard cap of 15 `max_hotels_with_details` (was incorrectly documented as 10).
 - `pyproject.toml` upgraded to PyPI-ready metadata (classifiers, URLs, keywords, `license-files`).
 - Ruff lint + format configured at 120-char line length.
 - Reverse-engineering slot maps moved to `docs/reverse-engineering/`.

@@ -1,0 +1,1234 @@
+[
+  {
+    "amenities_available": [
+      12,
+      11
+    ],
+    "category_ratings": [
+      {
+        "category_id": 4,
+        "category_label": null,
+        "score": 4.8
+      },
+      {
+        "category_id": 1,
+        "category_label": null,
+        "score": 4.9
+      },
+      {
+        "category_id": 5,
+        "category_label": null,
+        "score": 4.9
+      },
+      {
+        "category_id": 2,
+        "category_label": null,
+        "score": 5.0
+      },
+      {
+        "category_id": 3,
+        "category_label": null,
+        "score": 4.4
+      }
+    ],
+    "check_in_time": "4:00\u00e2\u0080\u00afPM",
+    "check_out_time": "10:00\u00e2\u0080\u00afAM",
+    "currency": "USD",
+    "deal_pct": null,
+    "display_price": 42,
+    "entity_key": "ChoIxPKIzoX4zIfLARoNL2cvMTFwd2g1N2c1NRAB",
+    "fid": "0x89c25980c90c93d7:0xcb0f33c059c23944",
+    "google_hotel_id": "13168163451878651935",
+    "image_urls": [
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFJY4_7EAM699Mef7tHWXdZDdiBk7BBjNBFw6g66USiayf7Jm5GJV26ad9pjvd-2v3NP06tRZDR92GR7LunX5UGdbRk-4LwH3GHS1ret9oCydL_KYyTseLY_zoAGE5cvj1MY15_=s150-w92-h150-n-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFJY4_7EAM699Mef7tHWXdZDdiBk7BBjNBFw6g66USiayf7Jm5GJV26ad9pjvd-2v3NP06tRZDR92GR7LunX5UGdbRk-4LwH3GHS1ret9oCydL_KYyTseLY_zoAGE5cvj1MY15_=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHweF9gLUeVKn4FpX7_FSsRNqnZw2UTiuONNDwVb_zv4KP3WJtZoTkG86hrinHu-8J_t3iCgM8pERjUmVcec4Tj350BF5PNs0b-oQ4b8GWF_jo9q-EnMd5T7fRSYy3WxC95toUO=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHGJ81FbP8BKpBWWjqJs-JkIZn2n4aNXkdFPjDIQ5VLZuwZHIFIk__9V2hOBpDjgoVyJpuUyfG5eUMxymHxxA-MgJhkovVsKGe0BaeWXcaw5w-czrsBLLLuWi-QvUpZVF9cGSQ=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHtTLkdgWNfloVih33CqzpsPCIhLys46CJ4xNn4JPzPNGM80xnXy6oRCVu9YZXOA3ADOioGCRPRb8N0gsIMaDDq7H-h_nL3s2QIOIGNvurtljxmiesc1HKw6hgYQ7vP5btSsU7BMA=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEat9rfQqFApMNPW6nX29QHvflnyc6MyY0LghyLnkcwFuTtwZIUX59Y97fksvlF0I-yNXGGuwBDVlQfMGYfFTaBPVze5hsMSqE3lNqhJQd_RfGM643EFEqblF4gDO5aAtks1M6--g=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFgAqBJPxB5V-vzzcDoJCFjzv7aj2rmDrEpBwFSCAY0oRZyDhuzcZL-cT2p9vVYZ5SsO29f5iHrkXXfVltKQcYdyqzPgXyfH04tnx10Z-2RWS3RhYUF3nWFSpjeLv2CmGao8o4=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHdqesX8mz5h89ZE5CSIcjHS0lcQ40oJdetWtyuSxzDD7JzqUcViRl-uRKge8LCBT8yCChscg9dfPPUjR4n2wLOMfwtu80nAT1F6g8wxZk8CVXmIIKxU4UmEC6puMmvYS2WCyuuRQ=s287-w287-h192-n-k-no-v1",
+      "https://lh4.googleusercontent.com/proxy/C90YqcmfnFD92szR4xloVH5BwhY9ObShH2_0TLMZTWeZtEllEYdsnYL2fXHLt-KPOy_h3ORU9CAA5wWDD5zwsQL8uX7HIKbyH1eCHFffT6u5WFoBX6Ur-suQ-blYMxY8peOwVR_HF1JczLu1C70CcfKBs_XaDA=s287-w287-h192-n-k-no-v1",
+      "https://images.trvl-media.com/lodging/20000000/19800000/19794400/19794327/ea4497ad_z.jpg"
+    ],
+    "kgmid": "/g/11pwh57g55",
+    "latitude": 40.747211,
+    "longitude": -73.9878074,
+    "name": "31 Street Broadway Hotel",
+    "nearby": [
+      {
+        "distance_text": "5 min",
+        "duration_minutes": 5,
+        "mode": "transit",
+        "name": "Empire State Building"
+      },
+      {
+        "distance_text": "3 min",
+        "duration_minutes": 3,
+        "mode": "transit",
+        "name": "33 St"
+      },
+      {
+        "distance_text": "38 min",
+        "duration_minutes": 38,
+        "mode": "walk",
+        "name": "John F. Kennedy International Airport"
+      },
+      {
+        "distance_text": "4 min",
+        "duration_minutes": 4,
+        "mode": "transit",
+        "name": "Anytime Kitchen"
+      }
+    ],
+    "overall_rating": 2.6,
+    "rate_dates": [
+      "2026-04-27",
+      "2026-04-28"
+    ],
+    "rating_histogram": {
+      "bucket_counts": {
+        "1": 219,
+        "2": 15,
+        "3": 28,
+        "4": 51,
+        "5": 114
+      }
+    },
+    "review_count": 427,
+    "star_class": 2,
+    "star_class_label": "2-star hotel"
+  },
+  {
+    "amenities_available": [
+      15
+    ],
+    "category_ratings": [
+      {
+        "category_id": 4,
+        "category_label": null,
+        "score": 3.3
+      },
+      {
+        "category_id": 1,
+        "category_label": null,
+        "score": 4.3
+      },
+      {
+        "category_id": 5,
+        "category_label": null,
+        "score": 2.8
+      },
+      {
+        "category_id": 2,
+        "category_label": null,
+        "score": 3.7
+      },
+      {
+        "category_id": 3,
+        "category_label": null,
+        "score": 4.5
+      }
+    ],
+    "check_in_time": "3:00\u00e2\u0080\u00afPM",
+    "check_out_time": "11:00\u00e2\u0080\u00afAM",
+    "currency": "USD",
+    "deal_pct": null,
+    "display_price": 68,
+    "entity_key": "ChoI07j2vbif2oC7ARoNL2cvMTF4Zng3X253NRAB",
+    "fid": "0x89c258d183cba5e5:0xbb0168fb87bd9c53",
+    "google_hotel_id": "16760909524196542075",
+    "image_urls": [
+      "https://lh6.googleusercontent.com/proxy/muNDGCBFe02sdXgN_jrZOqcBAi7Owg6NTinUg6p7NW1RHtyO-JCLRr0Jzqr5hjr3wYqA6caWLzGOqJ42LjS7_xc6oSL2ZiNY4uKB-cHu84Gr-cDFXjX0ikVB4B5Qki2OHsykcLLmBYamFFDF42SvpUKkdmaYRzQ=s150-w92-h150-n-k-no",
+      "https://lh6.googleusercontent.com/proxy/muNDGCBFe02sdXgN_jrZOqcBAi7Owg6NTinUg6p7NW1RHtyO-JCLRr0Jzqr5hjr3wYqA6caWLzGOqJ42LjS7_xc6oSL2ZiNY4uKB-cHu84Gr-cDFXjX0ikVB4B5Qki2OHsykcLLmBYamFFDF42SvpUKkdmaYRzQ=s287-w287-h192-n-k-no-v1",
+      "https://images.trvl-media.com/lodging/21000000/20310000/20307700/20307602/b74907a1_z.jpg",
+      "https://lh5.googleusercontent.com/proxy/O6Dw4YN9uS3s9xMayPKSjUcVIujTcNVQKDSro9_RYQSLQdnFd1BsNOHft2R7rf29JpjA2VI98Vew4UQafrQVuuM_kQUfh__aGoq4xbLFJqqjFk3wUOTjSvhh8cbNSWCiac8DZeviRLX-OUOKvtN93SJyqWanXw=s287-w287-h192-n-k-no-v1",
+      "https://images.trvl-media.com/lodging/21000000/20310000/20307700/20307602/1e65bcc0_z.jpg",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGHpSGkxQYMIJscBkF30GafGKG3jum3pkVo5i5TdeP6vcUAi0odLhGko8OddxEzrpNA_FFK7o-kxvvTD9qZ358_bJckIwLrEgFS2DuMtWbAgex9c58UlSa2dwT7Dhq48zpwuAdvD43dMD0=s287-w287-h192-n-k-no-v1",
+      "https://lh4.googleusercontent.com/proxy/F219t0ZpJzxXsoP83w2HcSjMDtYBmk4ft15ljkRjcvAkSBtmh3kRVFTGqqPBu_MK1ngAUOXoCOzPVuVEvMJaShhjqB25bdg1xEvqK7dIuZKIQwqacQZBEhjVSBL_Fa4uFQswcbe37MT94O9FOXhg7LuWkIucPWs=s287-w287-h192-n-k-no-v1",
+      "https://images.trvl-media.com/lodging/21000000/20310000/20307700/20307602/5d4c5e3b_z.jpg",
+      "https://lh5.googleusercontent.com/proxy/iXJ4lVT-AJC1TdtzBydBMpGSBhf-FSf4naOMew5eg7V1sE3QSF71Ty4Vj1WvS8xeAsDVPnEMJ7XyPXCBo_tKKN_oXwWjxVBYSKFVAlE1eJi230oGCuXByJJG7By1ktEtqdo4x2EP8Gnqg7XkzF3bs1jQm0ATPw=s287-w287-h192-n-k-no-v1",
+      "https://images.trvl-media.com/lodging/21000000/20310000/20307700/20307602/b665a244_z.jpg"
+    ],
+    "kgmid": "/g/11xfx7_nw5",
+    "latitude": 40.756887000000006,
+    "longitude": -73.94230499999999,
+    "name": "Mayfair Inn and Suites",
+    "nearby": [
+      {
+        "distance_text": "5 min",
+        "duration_minutes": 5,
+        "mode": "transit",
+        "name": "21 St-Queensbridge"
+      },
+      {
+        "distance_text": "37 min",
+        "duration_minutes": 37,
+        "mode": "walk",
+        "name": "John F. Kennedy International Airport"
+      },
+      {
+        "distance_text": "3 min",
+        "duration_minutes": 3,
+        "mode": "transit",
+        "name": "Mama's"
+      }
+    ],
+    "overall_rating": 2.8,
+    "rate_dates": [
+      "2026-04-27",
+      "2026-04-28"
+    ],
+    "rating_histogram": {
+      "bucket_counts": {
+        "1": 27,
+        "2": 6,
+        "3": 5,
+        "4": 9,
+        "5": 19
+      }
+    },
+    "review_count": 66,
+    "star_class": 2,
+    "star_class_label": "2-star hotel"
+  },
+  {
+    "amenities_available": [
+      15
+    ],
+    "category_ratings": [
+      {
+        "category_id": 4,
+        "category_label": null,
+        "score": 3.3
+      },
+      {
+        "category_id": 1,
+        "category_label": null,
+        "score": 4.3
+      },
+      {
+        "category_id": 5,
+        "category_label": null,
+        "score": 2.8
+      },
+      {
+        "category_id": 2,
+        "category_label": null,
+        "score": 3.8
+      },
+      {
+        "category_id": 3,
+        "category_label": null,
+        "score": 4.5
+      }
+    ],
+    "check_in_time": "3:00\u00e2\u0080\u00afPM",
+    "check_out_time": "11:00\u00e2\u0080\u00afAM",
+    "currency": "USD",
+    "deal_pct": null,
+    "display_price": 71,
+    "entity_key": "ChkIxb6z04zuqOIGGg0vZy8xMXhnZjg5OTY5EAE",
+    "fid": "0x89c258d17edb5723:0x6c4a370ca6cdf45",
+    "google_hotel_id": "8071734459746105830",
+    "image_urls": [
+      "https://lh5.googleusercontent.com/proxy/sjcEBl1xBeiE3nyzKCeEPw2t5gc6c1N3gwg7OeR99L8J_tTVo7zLQ1OvbqEWuPKGAOhsLkNRB6DTQ_DhaaATk-ikrEfnZJi9NI6QlZMuKg4X17FXfWuSv0BrUtFB4N3uuSDBskUmy-V4iTD3xJdaNjp9B7BBCQ=s150-w92-h150-n-k-no",
+      "https://lh5.googleusercontent.com/proxy/sjcEBl1xBeiE3nyzKCeEPw2t5gc6c1N3gwg7OeR99L8J_tTVo7zLQ1OvbqEWuPKGAOhsLkNRB6DTQ_DhaaATk-ikrEfnZJi9NI6QlZMuKg4X17FXfWuSv0BrUtFB4N3uuSDBskUmy-V4iTD3xJdaNjp9B7BBCQ=s287-w287-h192-n-k-no-v1",
+      "https://images.trvl-media.com/lodging/10000000/9070000/9062600/9062555/00ebcccf_z.jpg",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHtcZwvPoE-XQ9HmfH2HKuxdc2UTbAe-oamdSer8J4gIZ7g8VSzOrXfZ4YJmdJfgbLvrMSShPcrVIieLKdLBXiMwz4SFwEv44X0kuzPeQM83YSr1sd1xCloEKzthU7FOAzKcIV1NUlc6Ys=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEvDMi0S5a8vgFjhog0dAfa6ACY5iXwIafRfOZXdHADBwGOPMu-EntDhFVcVT3N0rOI-77YnFrcaX-B_OCeRXCSaHj_Cluyo-jtdnduliK4Qor8Ng6uTKvZBz43rEzijfZJdhb1kvh0I3Is=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE9STW9m0guRzYfzqmQNOsKZPeQ0PcXU6PgKiYucPq2OcWbGJERMc-jHcGccA0FAxD6o82ZQRmjj3_YqlPKDpeOl_klPpIRSXeaH9NSxBzDkzgqFntWbX6Ymid1nHxBTOZ5dB653Vyr5qG3=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEuUQo4hELRjvEsl_ucrEpdboGbxyQ-QdFEu03jKpSxW7cM4ShF7PHOSNOYmCALnnAQzjXDA3K7Jgzg17y1TJbxPSOyY1lU7MJ7-TOWDn_7UqgZQjLcC80Ji0LVTuFGJ76BPIU-UdkQHrQ=s287-w287-h192-n-k-no-v1",
+      "https://lh6.googleusercontent.com/proxy/U4IlCbb1Tyo8mA7o1Rzll7wPHEvT9HiqRAfdIIU-bWCu7eLIjh_5Q8M9zev0tdlGaig116t9YOmgR-5Uh4OeOhGPpMM-zVKM-HxZh1xm5unrIfDXNKQNUB9WtcGS2OaoqUtG0SHaQ7zI_PrDRGEc8l73wfAWbg=s287-w287-h192-n-k-no-v1",
+      "https://images.trvl-media.com/lodging/10000000/9070000/9062600/9062555/9b6d4b84_z.jpg",
+      "https://lh3.googleusercontent.com/proxy/WMUCA8DeZbmhVz5g3l-1QuMUwSQ9bAs9BDOuokdTOwPLOOe4gbTHdsMVJaDeVpGudV8rQbntAFo9-fiCgAjYNcovyhuhY_-jhdGS_OvXjgHWvoySrnmS-t2Mcy-5fXG-3vaMrnbsbisDKEmkLk6Yj9msjoZgLw=s287-w287-h192-n-k-no-v1"
+    ],
+    "kgmid": "/g/11xgf89969",
+    "latitude": 40.756492699999995,
+    "longitude": -73.9419977,
+    "name": "Romana Hotel - NYC",
+    "nearby": [
+      {
+        "distance_text": "5 min",
+        "duration_minutes": 5,
+        "mode": "transit",
+        "name": "21 St-Queensbridge"
+      },
+      {
+        "distance_text": "37 min",
+        "duration_minutes": 37,
+        "mode": "walk",
+        "name": "John F. Kennedy International Airport"
+      },
+      {
+        "distance_text": "2 min",
+        "duration_minutes": 2,
+        "mode": "transit",
+        "name": "Mama's"
+      }
+    ],
+    "overall_rating": 2.7,
+    "rate_dates": [
+      "2026-04-27",
+      "2026-04-28"
+    ],
+    "rating_histogram": {
+      "bucket_counts": {
+        "1": 64,
+        "2": 13,
+        "3": 12,
+        "4": 22,
+        "5": 38
+      }
+    },
+    "review_count": 149,
+    "star_class": 2,
+    "star_class_label": "2-star hotel"
+  },
+  {
+    "amenities_available": [],
+    "category_ratings": [
+      {
+        "category_id": 4,
+        "category_label": null,
+        "score": 3.6
+      },
+      {
+        "category_id": 1,
+        "category_label": null,
+        "score": 4.3
+      },
+      {
+        "category_id": 5,
+        "category_label": null,
+        "score": 3.4
+      },
+      {
+        "category_id": 2,
+        "category_label": null,
+        "score": 3.9
+      },
+      {
+        "category_id": 3,
+        "category_label": null,
+        "score": 4.3
+      }
+    ],
+    "check_in_time": "3:00\u00e2\u0080\u00afPM",
+    "check_out_time": "12:00\u00e2\u0080\u00afAM",
+    "currency": "USD",
+    "deal_pct": null,
+    "display_price": 61,
+    "entity_key": "ChkIxID07d3Q-6s7Gg0vZy8xMXRzOW5mMWpwEAE",
+    "fid": "0x89c2f7fc36d27155:0x3b57ee85ddbd0044",
+    "google_hotel_id": "14324417332305766176",
+    "image_urls": [
+      "https://lh5.googleusercontent.com/proxy/AWUzB-lqn5o6uX6zKxa8UxooNjlS1PhkPThiCN4Toju8gLt2Kvdt5DK2ubxWAjYZPXwIADa8OxEnd_7Yuf0ycdJIUUK-8L4_9OCin33pNEtI_iSX_HCMZy9Iz5BTrjJzQVORMXXlW415RLJkqnNVCsRhU4onTg=s150-w92-h150-n-k-no",
+      "https://lh5.googleusercontent.com/proxy/AWUzB-lqn5o6uX6zKxa8UxooNjlS1PhkPThiCN4Toju8gLt2Kvdt5DK2ubxWAjYZPXwIADa8OxEnd_7Yuf0ycdJIUUK-8L4_9OCin33pNEtI_iSX_HCMZy9Iz5BTrjJzQVORMXXlW415RLJkqnNVCsRhU4onTg=s287-w287-h192-n-k-no-v1",
+      "https://dweh1u36hoppi.cloudfront.net/ORIG/80594/86FCC73E-AE4B-11EE-BE36-383778611667.jpg",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHrX7IfassXjrxF1QlTIA7rlnPBsGXQvu3zs3eUedumAR-rb8FzbYTfG4P2thF4H1LR7ha3LyruuK8nZ2WJgfQGC0IXNNr8Rof8Bn-Sn4W-5Xwx57F839FpmDeIl1zzhFO2S-tIaQ=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEqEJHOIhzEXzT-MO7I_r7tV8K-HrU7gHkZZHfzSwCLNRwA9Pef-uGV5VNOt5D8fbuScunyrLFxoNEeMjYMfESWOx2oIrczqgvShp25jr7iB3BmBeWPhlZ32YixDucWgTu7CDVa=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHejDf2OqzNwQ-ixVlsIEgcTSB3_1HfWyvnKN4IPqiyCWfod8TGoxmD3WhqGVTpXxDN1BxWZ8-MdmuWkj8qLQNDVbZVX22R-Yz-VhRdWGpJJ4uRMFilsk6tAu6P-NqfrMKYOR0g2GW-Q2wl=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHxUQ3O3iaUKqHBWcmNvtmX2rQc5zkF5dLmfsUHmuohCKFxPYz71VfUP2uDPiqcdtwc3qETaPSr3pdVg1jKpEx7HAeRX6vWT9rU7fNacj1fEY_-kJ16x-bA3jI080DO3EIt8MNullpJI_dn=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEhHp4Cj5Qbbg0QgBBm8v3zHAdBwADgCfZ7SdA8fJbbJRla96H5iUwqaqbtjy1o8JnMDiFJ9XFAO--X895kcHGYiyRQfDEX8qWNcRl4JKv8YFg3HJN5PHPj8dM3fo9M1gfozbigXvgIeUw=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFB_Ru8UKukecaSomMUyl7urcrNwjxusTzfC-S3NP-kZm7NqR8sFxjkyZs8d4hikHl663q5aUdHJotqP8c1GSDlDP30OEbFqd4GRjcEL9bHt4P1pBymGYP7eUTwPQZ4tkJocESU_3BqvKoK=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHhBCUa8ibR6n7J69vgFfgi8bTy4QNqMeu1quC3DLl0w-Y0bOXPmrwuuQ9G5RARRE5sdAYduN07HBQcNjmv2322aAniRalU0VVHQLTU6QU4OaqnaI1_xwQHG_OuTRmTJ8PR-jg5ehnnkxcB=s287-w287-h192-n-k-no-v1"
+    ],
+    "kgmid": "/g/11ts9nf1jp",
+    "latitude": 40.7981293,
+    "longitude": -73.9609289,
+    "name": "Kama Central Park",
+    "nearby": [
+      {
+        "distance_text": "2 min",
+        "duration_minutes": 2,
+        "mode": "transit",
+        "name": "Central Park"
+      },
+      {
+        "distance_text": "1 min",
+        "duration_minutes": 1,
+        "mode": "transit",
+        "name": "Central Park West/W 106 St"
+      },
+      {
+        "distance_text": "42 min",
+        "duration_minutes": 42,
+        "mode": "walk",
+        "name": "John F. Kennedy International Airport"
+      },
+      {
+        "distance_text": "2 min",
+        "duration_minutes": 2,
+        "mode": "transit",
+        "name": "Osteria 106"
+      }
+    ],
+    "overall_rating": 4.1,
+    "rate_dates": [
+      "2026-04-27",
+      "2026-04-28"
+    ],
+    "rating_histogram": {
+      "bucket_counts": {
+        "1": 48,
+        "2": 17,
+        "3": 40,
+        "4": 63,
+        "5": 247
+      }
+    },
+    "review_count": 415,
+    "star_class": 1,
+    "star_class_label": "1-star hotel"
+  },
+  {
+    "amenities_available": [
+      11
+    ],
+    "category_ratings": [
+      {
+        "category_id": 4,
+        "category_label": null,
+        "score": 4.8
+      },
+      {
+        "category_id": 1,
+        "category_label": null,
+        "score": 4.6
+      },
+      {
+        "category_id": 5,
+        "category_label": null,
+        "score": 4.7
+      },
+      {
+        "category_id": 2,
+        "category_label": null,
+        "score": 4.6
+      },
+      {
+        "category_id": 3,
+        "category_label": null,
+        "score": 4.5
+      }
+    ],
+    "check_in_time": "3:00\u00e2\u0080\u00afPM",
+    "check_out_time": "11:00\u00e2\u0080\u00afAM",
+    "currency": "USD",
+    "deal_pct": null,
+    "display_price": 83,
+    "entity_key": "ChoI1cnoyd6s64-RARoNL2cvMTFoY3l4eG01eRAB",
+    "fid": "0x89c25a286f86bec3:0x911fad65e93a24d5",
+    "google_hotel_id": "13638034644309821617",
+    "image_urls": [
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEI2G-jXAazrv2iyJSro0y8A2jQ1xJZJ7X17NC-NNSBXyG_MBB4EYrGHie9YbHLTzitv9unzWcIPt-9sa5d2xrDSrpLyyDfD5BymyCeIy_sVreCfiKu5xMs87MVt2cX2Obictey=s150-w92-h150-n-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEI2G-jXAazrv2iyJSro0y8A2jQ1xJZJ7X17NC-NNSBXyG_MBB4EYrGHie9YbHLTzitv9unzWcIPt-9sa5d2xrDSrpLyyDfD5BymyCeIy_sVreCfiKu5xMs87MVt2cX2Obictey=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGUW0OZcp1GkH1KIlh8NjbQBRVi4HPqNdJh4ED58PmkZcFFuzNMYO0GN8RwRpNEcCJ-xAWuIooDRINGXYFShB4YDWMyCmVfpIjsPzmhXgWmixEH8VSd4sVlsJoTjLkkHhMf1oo=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHOZP7mOVvpIAaRfKny-pA2OpN8SmWs9N1gy54dtYk082Ni7Pxx4os8ePKkPG43oYKwdOVMfPS4Q5_SGIypmmeMT_Ed19RCJnYIvgtsqvYrvU8UCgqdlbAKqHrXvtktXA5MaZRV=s287-w287-h192-n-k-no-v1",
+      "https://lh6.googleusercontent.com/proxy/duIygcvwehwug0p4gLqjRI1dll3vGSZdOUx919rvP7m2okyA1sShor20PcuuRvrk1PpPb1ESGdGCjI3xnromrS4iyuRnijnfzU2oWvYRWkntCj75nh8SF9_zIGj07SHe2dXLa4tzEdkiZhdJC0yew5GkSv0Zkw=s287-w287-h192-n-k-no-v1",
+      "https://photos.hotelbeds.com/giata/original/63/638100/638100a_hb_a_013.jpg",
+      "https://lh3.googleusercontent.com/proxy/13GAFyt6NOrjeVE0npKh1mSnDT6b9TAe9SM_FxJB4KwJ3TGaiSLHRJ1AIwOdOVwyTL_3uz1PjHEo_VK2E3panNLrhR0r_9kokxA1NxhLkoX8XjpwxSJK5Wx4kkFHKTwEInEgt7PIjkt6szmuOyEZjQl9SZDbhFo=s287-w287-h192-n-k-no-v1",
+      "https://photos.hotelbeds.com/giata/original/63/638100/638100a_hb_l_001.jpg",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHkYto3w4W_nJiyqoGXX6RUdIu45zUm_IjPSjr9ur7KL97QWRRFSwqx5cAHjO-j6WJwkPAZTiewg0jHo_OrVBX9R0bmguyd9ECFUMfbU91gvDwCW_zC1iVb60sMweMS4spbpiET=s287-w287-h192-n-k-no-v1",
+      "https://lh6.googleusercontent.com/proxy/jwBfwYKsYNgKLBX536m_8q9bZWQkGT9g273d50nrIFUz7cM67dJQALGLXoHAk_UMwSLfDduESK9meD6OU-Ul1uvcSUF3rfVPCgqvI0GHJmKEKDnd4je0y9P4OuNnsbDUgzq1KPTlsSI39_D-TPK-CFwE01NRYy0=s287-w287-h192-n-k-no-v1"
+    ],
+    "kgmid": "/g/11hcyxxm5y",
+    "latitude": 40.7152965,
+    "longitude": -73.9938841,
+    "name": "Canal Loft Hotel",
+    "nearby": [
+      {
+        "distance_text": "6 min",
+        "duration_minutes": 6,
+        "mode": "walk",
+        "name": "Brooklyn Bridge"
+      },
+      {
+        "distance_text": "5 min",
+        "duration_minutes": 5,
+        "mode": "transit",
+        "name": "East Broadway"
+      },
+      {
+        "distance_text": "36 min",
+        "duration_minutes": 36,
+        "mode": "walk",
+        "name": "John F. Kennedy International Airport"
+      },
+      {
+        "distance_text": "3 min",
+        "duration_minutes": 3,
+        "mode": "transit",
+        "name": "Mictlan M\u00c3\u00a9xico and Spanish cuisine"
+      }
+    ],
+    "overall_rating": 3.3,
+    "rate_dates": [
+      "2026-04-27",
+      "2026-04-28"
+    ],
+    "rating_histogram": {
+      "bucket_counts": {
+        "1": 163,
+        "2": 48,
+        "3": 111,
+        "4": 167,
+        "5": 228
+      }
+    },
+    "review_count": 717,
+    "star_class": 2,
+    "star_class_label": "2-star hotel"
+  },
+  {
+    "amenities_available": [
+      11,
+      15
+    ],
+    "category_ratings": [
+      {
+        "category_id": 4,
+        "category_label": null,
+        "score": 3.5
+      },
+      {
+        "category_id": 1,
+        "category_label": null,
+        "score": 4.3
+      },
+      {
+        "category_id": 5,
+        "category_label": null,
+        "score": 2.9
+      },
+      {
+        "category_id": 2,
+        "category_label": null,
+        "score": 4.2
+      },
+      {
+        "category_id": 3,
+        "category_label": null,
+        "score": 4.6
+      }
+    ],
+    "check_in_time": "3:00\u00e2\u0080\u00afPM",
+    "check_out_time": "12:00\u00e2\u0080\u00afAM",
+    "currency": "USD",
+    "deal_pct": null,
+    "display_price": 74,
+    "entity_key": "ChkIhI_c9-Kz55kyGg0vZy8xMWZ6dG5zeXQzEAE",
+    "fid": "0x89c2592bf5e2f57d:0x32339d9e2ef70784",
+    "google_hotel_id": "7407984998336406141",
+    "image_urls": [
+      "https://lh4.googleusercontent.com/proxy/2AJmXXLeDEQnDzNH5JL5wLK1dT_dbPmvXbuo_Jh2G4Xe-776owvCUiOoO8UQs6vvBBKQC_TU9cy6yBi8R4j4dYdUtU-QLjwG5dnBbg3xjL2rXBFeverlj0p-AB9V5Mewz_4GY-JUtz7qsdRdO1x6HMzeGyuSiFY=s150-w92-h150-n-k-no",
+      "https://lh4.googleusercontent.com/proxy/2AJmXXLeDEQnDzNH5JL5wLK1dT_dbPmvXbuo_Jh2G4Xe-776owvCUiOoO8UQs6vvBBKQC_TU9cy6yBi8R4j4dYdUtU-QLjwG5dnBbg3xjL2rXBFeverlj0p-AB9V5Mewz_4GY-JUtz7qsdRdO1x6HMzeGyuSiFY=s287-w287-h192-n-k-no-v1",
+      "https://images.trvl-media.com/lodging/21000000/20310000/20307400/20307398/70d342a6_z.jpg",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFUUlacMMAkDj6NdOShgbQRsd-G48Gatkl9M1xNTzlT-NdXzUKZzq-RL__efvgoXfqs5DvM3zOQnhPLU2Plo68nFbO3usjF9a3VfuejFHR2gwf7t4dTUtCkWWdqtG5fBIn5btV1dgwmUzOm=s287-w287-h192-n-k-no-v1",
+      "https://lh4.googleusercontent.com/proxy/6nG0cd8l5nAWSWRKDTJs5gdqcJ3eh-mnZvXCf6WAKO8kkduf2We0vmm8HvlhiLOlSjIzChW0jFBCTT-Dn8tT7R-Mmi2FiIE3oI5jMY7NB9J0TfREvBd2qr9egGbzOJqHywVNof7ZvP54WV_giqTeloW8th-pqQ=s287-w287-h192-n-k-no-v1",
+      "https://photos.hotelbeds.com/giata/original/60/605841/605841a_hb_a_001.jpg",
+      "https://lh4.googleusercontent.com/proxy/OIq-myx34_g7Co58NVn6upGOHu4XNa_bUb_eD6-3OL5t4ZUrtND4BzXZLwkld4FCucrhgOqJKvIjdReQMlNLUN-zDLWRncifn5z5aUYD2sK44Bt5RJyKbcpTER4VTLlbVDxBOqbFN8uGrLYV32Dk8d_BE1QBrQ=s287-w287-h192-n-k-no-v1",
+      "https://cdn.worldota.net/t/1024x768/ostrovok/37/60/37603b0f42f7ac20487d3f6286bbe8b9e5b24e90.jpeg",
+      "https://lh5.googleusercontent.com/proxy/ZIQpYV0CcX_S8hbVPbT8-Nu0JFLDGFE8orhw2Fjd001Snz8HjgR7YN63M-JvUcJzeGLAl8jkCRatCeZu3hSBmGsXBq76clE3dpElpWIwv2spJSIRHjsrdUOlehqZuT8HLQtlZaaKZWHCeYi9aWFkJgR8uF4xVHM=s287-w287-h192-n-k-no-v1",
+      "https://photos.hotelbeds.com/giata/original/60/605841/605841a_hb_ro_001.jpg"
+    ],
+    "kgmid": "/g/11fztnsyt3",
+    "latitude": 40.744165699999996,
+    "longitude": -73.94073860000002,
+    "name": "Feather Factory Hotel Queens NY",
+    "nearby": [
+      {
+        "distance_text": "31 min",
+        "duration_minutes": 31,
+        "mode": "walk",
+        "name": "John F. Kennedy International Airport"
+      },
+      {
+        "distance_text": "5 min",
+        "duration_minutes": 5,
+        "mode": "mode_8",
+        "name": "Gulp"
+      }
+    ],
+    "overall_rating": 4.1,
+    "rate_dates": [
+      "2026-04-27",
+      "2026-04-28"
+    ],
+    "rating_histogram": {
+      "bucket_counts": {
+        "1": 65,
+        "2": 33,
+        "3": 102,
+        "4": 217,
+        "5": 463
+      }
+    },
+    "review_count": 880,
+    "star_class": 2,
+    "star_class_label": "2-star hotel"
+  },
+  {
+    "amenities_available": [
+      8,
+      7,
+      6,
+      11,
+      15
+    ],
+    "category_ratings": [
+      {
+        "category_id": 4,
+        "category_label": null,
+        "score": 3.2
+      },
+      {
+        "category_id": 1,
+        "category_label": null,
+        "score": 3.5
+      },
+      {
+        "category_id": 5,
+        "category_label": null,
+        "score": 3.1
+      },
+      {
+        "category_id": 2,
+        "category_label": null,
+        "score": 2.9
+      },
+      {
+        "category_id": 3,
+        "category_label": null,
+        "score": 4.0
+      }
+    ],
+    "check_in_time": "3:00\u00e2\u0080\u00afPM",
+    "check_out_time": "11:00\u00e2\u0080\u00afAM",
+    "currency": "USD",
+    "deal_pct": null,
+    "display_price": 79,
+    "entity_key": "ChkIv4OLxdvTl_BXGg0vZy8xMWZqOWQybDdmEAE",
+    "fid": "0x89c25ba41845529f:0x57e05e9db8a2c1bf",
+    "google_hotel_id": "4980311027488714865",
+    "image_urls": [
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGUSjUwB0mQplpX9h7rCdaPgJ75RWmhOLvT8tFG5LEqd0eroL5EWVnkewJLXryqzVXxZz8O5iMrEjz-0Gid0tWMcvNgS4QZjH-BZqvjGM3ov8AvZ4KDZS0sQESAsRIgAMbyNBBtDg=s150-w92-h150-n-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGUSjUwB0mQplpX9h7rCdaPgJ75RWmhOLvT8tFG5LEqd0eroL5EWVnkewJLXryqzVXxZz8O5iMrEjz-0Gid0tWMcvNgS4QZjH-BZqvjGM3ov8AvZ4KDZS0sQESAsRIgAMbyNBBtDg=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFjZ-h8mevt79QZ-d-7py17KzT7FH_b0Yms2Ael7ydX4LL_xoavC60nHRxu-LT7nTWf0loXpGR44GktkQEfNcGjoudzr0LW5mb1lEcCSkgh2Z58nkRTDiECcQks-QrkQCkMBk6J=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHNVe2irDNH2AZ7bTYi8AHHlENSQdqqrKFwSO93Ehzp5Si0r3wCe6kooREAqVV5NfzFZf3asYcoN7alYniZz7pxYkOPIBRIgzaP5koiZsQdU0hu_i3vXO0CxPm2rS9OKAGw8Q0uFg=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGtlUFau9GRsGtvfplFl0Zr2nJ5-diTZ06GGQNSwPvCIvVALh8Q1GhVSDB8Jt_ysmo8n6LzJobPTBTx_Zr7W7PXqNrfvPBs9Or4WxQweW5VQQNTl8O6kBLviM6cKmLqbhx5xnao1w=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEnnE5CEmyi5L7SEeL5RKl71txaYmCth-J6w05KX2PNifDwpT6hh8CBFoytXv4g23Bidopk7bCC6A1msRSe4pclZGfSF4INvTMa1-M5PGr5vbhL9am1O33uPRUCCar5tZDNITGe=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEEXNoUH-SaUDLpgq1ITzkTsFeGoIsBChr1WzoUeTqrJnOolAXpyomCRRNKKG3027WQotSZcVIbNP90SUtNE__4QN77La-9HMMerze7WhQfohTDxVA4H1yZEKC6V8sq5ojBdhB1hw=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE4nwH0XqVQfCYKei1zZjeawjyBaqJg5pkDtKg8hd50ALhXlV7WyLXU8zNVj4Ye_3LsVVyoiQNeDhYSCieFadDWL8gKXofXVKx3hzRhzr1i2aawXlnRleBe-OQvNTaDn2HVyMaI=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/proxy/J6j3B1pOvnUJv5zG7bDpUDXGVh6nUTJIGFnySs3BjrzegGO1AM36EApZuO_tP0qJm_qvGcTHoZ6gmsYbtxIUkYbMtgtLglhDQs4Yscs73MLFY8_vLgq2XIZKtDkTFxgepCJyfNo08QR2kp4CGT306R8ef2gbNro=s287-w287-h192-n-k-no-v1",
+      "https://photos.hotelbeds.com/giata/original/66/665830/665830a_hb_w_004.jpg"
+    ],
+    "kgmid": "/g/11fj9d2l7f",
+    "latitude": 40.657199299999995,
+    "longitude": -74.0027459,
+    "name": "The L Hotel",
+    "nearby": [
+      {
+        "distance_text": "3 min",
+        "duration_minutes": 3,
+        "mode": "transit",
+        "name": "3 Av/34 St"
+      },
+      {
+        "distance_text": "38 min",
+        "duration_minutes": 38,
+        "mode": "walk",
+        "name": "John F. Kennedy International Airport"
+      },
+      {
+        "distance_text": "2 min",
+        "duration_minutes": 2,
+        "mode": "transit",
+        "name": "Picazo's Pizza & Restaurant Place Corp"
+      }
+    ],
+    "overall_rating": 3.7,
+    "rate_dates": [
+      "2026-04-27",
+      "2026-04-28"
+    ],
+    "rating_histogram": {
+      "bucket_counts": {
+        "1": 74,
+        "2": 55,
+        "3": 85,
+        "4": 142,
+        "5": 245
+      }
+    },
+    "review_count": 601,
+    "star_class": 3,
+    "star_class_label": "3-star hotel"
+  },
+  {
+    "amenities_available": [
+      15
+    ],
+    "category_ratings": [
+      {
+        "category_id": 4,
+        "category_label": null,
+        "score": 3.9
+      },
+      {
+        "category_id": 1,
+        "category_label": null,
+        "score": 4.2
+      },
+      {
+        "category_id": 5,
+        "category_label": null,
+        "score": 3.2
+      },
+      {
+        "category_id": 2,
+        "category_label": null,
+        "score": 3.9
+      },
+      {
+        "category_id": 3,
+        "category_label": null,
+        "score": 4.4
+      }
+    ],
+    "check_in_time": "11:00\u00e2\u0080\u00afAM",
+    "check_out_time": "11:00\u00e2\u0080\u00afAM",
+    "currency": "USD",
+    "deal_pct": null,
+    "display_price": 80,
+    "entity_key": "ChgIpsXMgO3Nv6efARoLL2cvMXRma3JwcGYQAQ",
+    "fid": "0x89c25bf8cb3c736d:0x9f4efe6ed01322a6",
+    "google_hotel_id": "16077934143791606210",
+    "image_urls": [
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAH3MR3gvSzRTjpXwD84PiQwEPOPIy1J3ZwVkQH4lxoBStHA22iePK6_BZDawLyMT5sgEHIbe7_GUX5jkg-c1xuY-uTKb8LDHX-knqKzSSpetf-JZOtr-dOpnkHZwmSbfrIIRS8q=s150-w92-h150-n-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAH3MR3gvSzRTjpXwD84PiQwEPOPIy1J3ZwVkQH4lxoBStHA22iePK6_BZDawLyMT5sgEHIbe7_GUX5jkg-c1xuY-uTKb8LDHX-knqKzSSpetf-JZOtr-dOpnkHZwmSbfrIIRS8q=s287-w287-h192-n-k-no-v1",
+      "https://lh6.googleusercontent.com/proxy/OtT2LoXomYL41E9QBrX67Hgamk7mO5WHIPQezp44IttL97CiIELpjG7O8UYb72YXJR4d1v5z12yHBC12ILNyUZfZW4NrL72s7um2aZ-YJy3x2Pnv5KMunBeH2OnQR7btzyz2QsYN7O-N_rTpEH5x8QHBzX6Tt7U=s287-w287-h192-n-k-no-v1",
+      "https://dweh1u36hoppi.cloudfront.net/ORIG/85075/FC3B1D20-A6C0-11EF-A5C0-8FA500D83CB1.jpg",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEsoiDfbFuKv1N1OYl8k7XIjl1B-n_0Sa779s4-tmXjVzkoAjs5trQlPT1krrJ-MBZ4CKk6PZReqqbvhPLHcJ74OK0aOcZQuJbbY8sbz6vQvHywBE6evNLL_YRUV9V5oDc-Ww_x=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAH1QOdaaQAzD3t_bgF7IsZ5e9OVolpSJP7UgwOT84tFYmUy__KtvdbYU9syY_4WOnjKZTMt681ciMPzB6lxziCCL3J4LeWcHOiyE04xexlJQr0j3NyfY6vymeBp0Zbh0P5o3kNO=s287-w287-h192-n-k-no-v1",
+      "https://lh5.googleusercontent.com/proxy/xh_Oe9_wL4cbpMSv6C3nRq8fvIwn442OejxAsdiBab_WpRMiJpzajhm9CMeNRbUXsdFum1tRwM6jK5TrSBa4CN2ZaTGW6pLb9vMhdjqwDHFdDEYURTSc_P0ETyP8J62QdhtlI0PQIlRD6AdeWWQUl1g-dwJkqg=s287-w287-h192-n-k-no-v1",
+      "https://images.trvl-media.com/lodging/8000000/7810000/7803500/7803456/e2b1d71d_z.jpg",
+      "https://lh5.googleusercontent.com/proxy/dolYQuM-iPJCdx7298oVauoxXV0B1_5W2w147QmJvKOR9mAx0XUz7T9Y0Zw0cu1woosAp49CFSX8h6-tJXtGcCgTqGxD2D-Mlrnkxw2UeJPqa8IJt5Q_LoLc3rfRILBcIhSQdeo-nGnV1lbTJ0BtZ33ignGjXfc=s287-w287-h192-n-k-no-v1",
+      "https://dweh1u36hoppi.cloudfront.net/ORIG/85075/FD4AD6F6-A6C0-11EF-A5C0-8FA500D83CB1.jpg"
+    ],
+    "kgmid": "/g/1tfkrppf",
+    "latitude": 40.7043676,
+    "longitude": -73.9376324,
+    "name": "NY Moore Hostel",
+    "nearby": [
+      {
+        "distance_text": "7 min",
+        "duration_minutes": 7,
+        "mode": "transit",
+        "name": "Morgan Av"
+      },
+      {
+        "distance_text": "37 min",
+        "duration_minutes": 37,
+        "mode": "walk",
+        "name": "John F. Kennedy International Airport"
+      },
+      {
+        "distance_text": "6 min",
+        "duration_minutes": 6,
+        "mode": "transit",
+        "name": "Bushniwa"
+      }
+    ],
+    "overall_rating": 4.2,
+    "rate_dates": [
+      "2026-04-27",
+      "2026-04-28"
+    ],
+    "rating_histogram": {
+      "bucket_counts": {
+        "1": 67,
+        "2": 46,
+        "3": 89,
+        "4": 276,
+        "5": 627
+      }
+    },
+    "review_count": 1105,
+    "star_class": 2,
+    "star_class_label": "2-star hotel"
+  },
+  {
+    "amenities_available": [
+      15
+    ],
+    "category_ratings": [
+      {
+        "category_id": 4,
+        "category_label": null,
+        "score": 3.3
+      },
+      {
+        "category_id": 1,
+        "category_label": null,
+        "score": 3.2
+      },
+      {
+        "category_id": 5,
+        "category_label": null,
+        "score": 3.3
+      },
+      {
+        "category_id": 2,
+        "category_label": null,
+        "score": 3.7
+      },
+      {
+        "category_id": 3,
+        "category_label": null,
+        "score": 4.4
+      }
+    ],
+    "check_in_time": "3:00\u00e2\u0080\u00afPM",
+    "check_out_time": "11:00\u00e2\u0080\u00afAM",
+    "currency": "USD",
+    "deal_pct": null,
+    "display_price": 80,
+    "entity_key": "ChkIicWosOHE85NSGg0vZy8xMWtodjZjZmd4EAE",
+    "fid": "0x89c2f337d8518651:0x5227ce26160a2289",
+    "google_hotel_id": "3067012479714690363",
+    "image_urls": [
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHnEc8A65tT0pBlcV73LlaiwyrG9TUuCe4rOw4kGPClIDtCkKvYpu3eWzMqZzTXQORaY0VoJTNmdaaj8Q4WcCwYNPtoTtxJeuVd93q3L2UMgd__0JUDz2QjRz9Gtsm5SvsZUv9U=s150-w92-h150-n-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHnEc8A65tT0pBlcV73LlaiwyrG9TUuCe4rOw4kGPClIDtCkKvYpu3eWzMqZzTXQORaY0VoJTNmdaaj8Q4WcCwYNPtoTtxJeuVd93q3L2UMgd__0JUDz2QjRz9Gtsm5SvsZUv9U=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFLx4lH-zj1MYh8X61v2e1twiDDMOAY2Mibdx5JhYpaF_N7LrMSj7uAzegWY6V5Xbcjn6nvTxCYzQEMbcjEEnk6HXBx5qs0EIAUsPWk7wufrYm-YiNYDWe_4zl4dv1lbX5qWkB6=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAG4NcRCiPqxGDJH5If_P-fKqiba7nz3VJLLLTJpciwGht7ErBUlWGqAJED6gmg5N8xnJXG73rOB4dMvsT4uHY8VcJWkG4_261iJ8xdgJphzyiXwPBk4TDrTbOChkepfNhfWdcogUg=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGWich4jmYABm8jkrO5t2e9e9Ty0T8cadSFoGOrJ8l0wnXmRKSahrucQRJXNdIgVsAmxAsoDR6ls1-AKluNyS4yBCTz6SK1YWUyWNzjMTdd8WX-ZpaTzRgdPA15WFEej6Rq5QO5wp6FG-ww=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFKYvPLNCY-mDZyEkZJ2H3J2tJJpWlC4M-0DqItv0DaNi8ebfRf--N5g8Z3opAsA-rwVdhKXpuLuBUfNYIzKwOWJq_0bKegwk_U2xNu-CpMUGThgr7EyhuqiEmtT_Tz3rMZonz_EHdsNUo=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHxa-z_RMXmJf8-6i6KjcuymhVQOCfXwURu6uzvJ05KPw2bDB7iWRpsJpV4WGIraLfpx_1CAHb9gM0GVh1P9TgzYZooNxoffG2oVT_l5ehDgsNBXThezTSG5QFfdk5Q1bicBrKq0w=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHjlJJOy7CTxYTg_2RGdPOAsGeKa_NltPJnq6l-e6YXaQNRKJPP_1GQ5ovdHgXx93JzeeB6tu-43oedD84OlS66CDk5edJNVwL4CdPH5pxYTuQ61s_bT5dXEgYrkEt1CHumlUIo=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHwWk8hnZw4jrZID6b9DcYSi-VFFk3CiJHzqsr5rzveS7zjAN9ljMmrvZ-rfahDx0-UTiJY_jFTzCil2vHX1Iar74UzSfkhbAnZcXLRKDa4TpkjGBXyX8IHlYKmbZGzzDPsPtTPww=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHT4W2pcBWB7w3us72dMgyEOaui-G1D4XU5t884q7EstWHLsJp1PoUfFZXy21ynRefdq-pmXvcRKCjO_NGkymNHFLqff0ro4bed2Q9rCeBL11C7_-Jw80M3NVSHaKAN8FXiXjF9jw=s287-w287-h192-n-k-no-v1"
+    ],
+    "kgmid": "/g/11khv6cfgx",
+    "latitude": 40.8746399,
+    "longitude": -73.85156119999999,
+    "name": "Royal Hotel Bronx",
+    "nearby": [
+      {
+        "distance_text": "1 min",
+        "duration_minutes": 1,
+        "mode": "transit",
+        "name": "Boston Rd/Wilson Av"
+      },
+      {
+        "distance_text": "36 min",
+        "duration_minutes": 36,
+        "mode": "walk",
+        "name": "John F. Kennedy International Airport"
+      },
+      {
+        "distance_text": "1 min",
+        "duration_minutes": 1,
+        "mode": "transit",
+        "name": "King Hummingbird Restaurant Inc."
+      }
+    ],
+    "overall_rating": 2.8,
+    "rate_dates": [
+      "2026-04-27",
+      "2026-04-28"
+    ],
+    "rating_histogram": {
+      "bucket_counts": {
+        "1": 66,
+        "2": 8,
+        "3": 16,
+        "4": 15,
+        "5": 44
+      }
+    },
+    "review_count": 149,
+    "star_class": 2,
+    "star_class_label": "2-star hotel"
+  },
+  {
+    "amenities_available": [
+      11
+    ],
+    "category_ratings": [
+      {
+        "category_id": 4,
+        "category_label": null,
+        "score": 4.3
+      },
+      {
+        "category_id": 1,
+        "category_label": null,
+        "score": 3.4
+      },
+      {
+        "category_id": 5,
+        "category_label": null,
+        "score": 4.7
+      },
+      {
+        "category_id": 2,
+        "category_label": null,
+        "score": 3.9
+      },
+      {
+        "category_id": 3,
+        "category_label": null,
+        "score": 4.9
+      }
+    ],
+    "check_in_time": "2:00\u00e2\u0080\u00afPM",
+    "check_out_time": "12:00\u00e2\u0080\u00afPM",
+    "currency": "USD",
+    "deal_pct": null,
+    "display_price": 82,
+    "entity_key": "ChcIpMSdmZm1nuRkGgsvZy8xdmpkcV80MBAB",
+    "fid": "0x89c2600f94d19cad:0x64c879a993276224",
+    "google_hotel_id": "6440246009022694446",
+    "image_urls": [
+      "https://lh3.googleusercontent.com/proxy/PNqo4eEP07NC6bhuDbcBohKkSAOrH-s9RH0j4V02s0n0EtL86cOC6tkK_J0N4IA2TJi_f3GgMO8Ef2JT3RO_79K0IELq0qB5t7NesAu4RiJM6UQq39jlKNOr3N0Hjwwv3Lc0q25otY-9wjBQ25qJjdlnIBLE07A=s150-w92-h150-n-k-no",
+      "https://lh3.googleusercontent.com/proxy/PNqo4eEP07NC6bhuDbcBohKkSAOrH-s9RH0j4V02s0n0EtL86cOC6tkK_J0N4IA2TJi_f3GgMO8Ef2JT3RO_79K0IELq0qB5t7NesAu4RiJM6UQq39jlKNOr3N0Hjwwv3Lc0q25otY-9wjBQ25qJjdlnIBLE07A=s287-w287-h192-n-k-no-v1",
+      "https://photos.hotelbeds.com/giata/original/29/292686/292686a_hb_a_013.jpg",
+      "https://lh6.googleusercontent.com/proxy/lUzwdVK04E2ls69KjcfUw47-FUZkACPQz5fQeysnsGtEOx96tHv2hFRR36hp4aGlFllsHvqHLjogzAh8HhaKR9L6dJ8X6tmpdhvb9Dyr8A4JStjcjEjwt5xvqES3y9AvHmRnwMGz-EDWVmFC2VQnzXfos7EjAw=s287-w287-h192-n-k-no-v1",
+      "https://photos.hotelbeds.com/giata/original/29/292686/292686a_hb_w_002.jpg",
+      "https://lh6.googleusercontent.com/proxy/rxvFtJNdFunM-z3TA2YijAKNwVSXut97P4uQitlbHpwIsGFzXf45RdaESyNNB_QDbV-kt8x8TzClEKHraNFKYo1ePlSrN1MAeNHx06sc-xamaqYt7MFq_ZqIEY8NyWA9f7RRy4p4ul_AzZYhsBOZNKPybKuXaqB1Ipz9oztTfg=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/proxy/si8wKtw7tq6mc-4fHtnTx0N-FR5guOx7LJJZ93iA9jAArUtPgNTJClTavqqFNse3Tkcgr07fNYbjIpvJeDsXLuPuYDaQ7Hq5xMYzTDTh43dukgUnja5pDkSV0j-QgD6z4BFRr1-MB6x7lv3YbWwkeSfSMjDD8apwrydkRQjJQw=s287-w287-h192-n-k-no-v1",
+      "https://lh4.googleusercontent.com/proxy/ZWAEjovlihbaavtGk82mi5qBrOxAYBoojlRz-hmmJpSKZ_U2aS-b_465iRDab9JGGqDSsAKDvup74O98aSZ40jm0MzCu691zVhokGX6pHXL9yXwQ59ukbqJ2l5SVc5Ho2vkDjwvZ-Bw5m7IqZK1vu7vVzYnA0crm4ziGrHMTmQ=s287-w287-h192-n-k-no-v1",
+      "https://lh4.googleusercontent.com/proxy/CIdmZUymB2taV2U8GAXGfH3cB6fu4wKRElviXDLyF-kWR-rRa5MVXVKASwaizn4MrhIVwvQTwZfb9F0L65uLxJeFerkStNCoMnVT3XY2qMIw7Fc66kBMROdzkww9sMvEU-PlBururnt_yQafc1ZSvV_v7BwnaPw=s287-w287-h192-n-k-no-v1",
+      "https://photos.hotelbeds.com/giata/original/29/292686/292686a_hb_w_010.jpg"
+    ],
+    "kgmid": "/g/1vjdq_40",
+    "latitude": 40.7620624,
+    "longitude": -73.8317081,
+    "name": "Flushing Hotel",
+    "nearby": [
+      {
+        "distance_text": "4 min",
+        "duration_minutes": 4,
+        "mode": "transit",
+        "name": "Flushing-Main St"
+      },
+      {
+        "distance_text": "22 min",
+        "duration_minutes": 22,
+        "mode": "walk",
+        "name": "John F. Kennedy International Airport"
+      },
+      {
+        "distance_text": "2 min",
+        "duration_minutes": 2,
+        "mode": "transit",
+        "name": "DunHuang Lanzhou Beef Noodle"
+      }
+    ],
+    "overall_rating": 2.8,
+    "rate_dates": [
+      "2026-04-27",
+      "2026-04-28"
+    ],
+    "rating_histogram": {
+      "bucket_counts": {
+        "1": 217,
+        "2": 84,
+        "3": 152,
+        "4": 110,
+        "5": 142
+      }
+    },
+    "review_count": 705,
+    "star_class": 2,
+    "star_class_label": "2-star hotel"
+  },
+  {
+    "amenities_available": [],
+    "category_ratings": [
+      {
+        "category_id": 4,
+        "category_label": null,
+        "score": 3.2
+      },
+      {
+        "category_id": 1,
+        "category_label": null,
+        "score": 3.1
+      },
+      {
+        "category_id": 5,
+        "category_label": null,
+        "score": 3.0
+      },
+      {
+        "category_id": 2,
+        "category_label": null,
+        "score": 3.9
+      },
+      {
+        "category_id": 3,
+        "category_label": null,
+        "score": 4.7
+      }
+    ],
+    "check_in_time": "11:00\u00e2\u0080\u00afAM",
+    "check_out_time": "11:00\u00e2\u0080\u00afAM",
+    "currency": "USD",
+    "deal_pct": null,
+    "display_price": 82,
+    "entity_key": "ChgIq4HTgY299-WHARoLL2cvMXRkdmwyOTkQAQ",
+    "fid": "0x89c24d335c8fbf35:0x87cbdde8d034c0ab",
+    "google_hotel_id": "12305837519801347598",
+    "image_urls": [
+      "https://lh5.googleusercontent.com/proxy/xu0HJs0As0hwhyYYjemUcZ8XG2QV90W9zf4i4iYX92fZjeGFyVEbRhJWhHULjk5cl_xB2xQqpzsqj093PF8axZt17eA8ujKYrZfP5y-S1n5C833amFS7oua0ZjJwaizp1zZdFxrnd-LThtD39h-F83oPewjnNEY=s150-w92-h150-n-k-no",
+      "https://lh5.googleusercontent.com/proxy/xu0HJs0As0hwhyYYjemUcZ8XG2QV90W9zf4i4iYX92fZjeGFyVEbRhJWhHULjk5cl_xB2xQqpzsqj093PF8axZt17eA8ujKYrZfP5y-S1n5C833amFS7oua0ZjJwaizp1zZdFxrnd-LThtD39h-F83oPewjnNEY=s287-w287-h192-n-k-no-v1",
+      "https://images.trvl-media.com/lodging/105000000/104830000/104824400/104824351/acfef26a_z.jpg",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGRZGn2FUFBW5JHL-L2Dc9paSAgRsJyxJgMMMZB9EHTNkDLZsm3LBRhKOKqbktJHFmsFDSpjpgSC3QOaSw06bgHHvX01o8Ey9ruy59S_uiTiQueduJyoRrFBBMkIgsyslMdTFJ2=s287-w287-h192-n-k-no-v1",
+      "https://lh5.googleusercontent.com/proxy/AeGcimdDFN-cwuoWt-uVJdVC6wmtWOiGoz0ryBClRKnXsnmuBxDbJ3hFjQ08HDKk2pdy8lmTfuhdTPKyWo7Kamq3l4xNwTXtcRvfkto6MyNGdDkqk2IB-X8w_Cxbc1ziWy76AC-cbFBSel3SxO8_Kh7HVgYQBgc=s287-w287-h192-n-k-no-v1",
+      "https://images.trvl-media.com/lodging/105000000/104830000/104824400/104824351/10039241_z.jpg",
+      "https://lh5.googleusercontent.com/proxy/7QtidL7H7pnkWm29_dRDJJc-Wsf6f9aNyRUdgHOGRAK0GqrRWwa5dvC7UANW4lv41XWFCNt-0qBd_ob9sVjeSFAC275s45mCTxgLm18CZ34ghE61yILlWOEjLnjMqixKF0OY7X2-bbFTEQfPVIAMyfTmj306gA=s287-w287-h192-n-k-no-v1",
+      "https://images.trvl-media.com/lodging/105000000/104830000/104824400/104824351/6ea701aa_z.jpg",
+      "https://lh6.googleusercontent.com/proxy/JVyN2FR4CZyDAfRlz9hxyA9SDKZEItVP5EoXpIJHZt1Vd-tezG3B4m3HQZtDSE_4S9314AFZQhumUHRplenQysqTImFNOXI_vjYEgYUpuDpSD23r6zuQBQ4cFsaFT-8a7pfyapOkijqeFB4zb1cpVbkLcocHzR0=s287-w287-h192-n-k-no-v1",
+      "https://cdn.worldota.net/t/1024x768/content/47/a8/47a8adba285b339bbe77919a54d68a222bd54321.jpeg"
+    ],
+    "kgmid": "/g/1tdvl299",
+    "latitude": 40.6421561,
+    "longitude": -74.21311779999999,
+    "name": "Budget Inn",
+    "nearby": [
+      {
+        "distance_text": "5 min",
+        "duration_minutes": 5,
+        "mode": "transit",
+        "name": "Bayway Ave at Mckinley St"
+      },
+      {
+        "distance_text": "50 min",
+        "duration_minutes": 50,
+        "mode": "walk",
+        "name": "John F. Kennedy International Airport"
+      },
+      {
+        "distance_text": "6 min",
+        "duration_minutes": 6,
+        "mode": "transit",
+        "name": "KAI Restaurant & Bar"
+      }
+    ],
+    "overall_rating": 3.3,
+    "rate_dates": [
+      "2026-04-27",
+      "2026-04-28"
+    ],
+    "rating_histogram": {
+      "bucket_counts": {
+        "1": 33,
+        "2": 10,
+        "3": 26,
+        "4": 27,
+        "5": 46
+      }
+    },
+    "review_count": 142,
+    "star_class": 2,
+    "star_class_label": "2-star hotel"
+  },
+  {
+    "amenities_available": [
+      8,
+      11,
+      4,
+      15
+    ],
+    "category_ratings": [
+      {
+        "category_id": 4,
+        "category_label": null,
+        "score": 3.7
+      },
+      {
+        "category_id": 1,
+        "category_label": null,
+        "score": 4.3
+      },
+      {
+        "category_id": 5,
+        "category_label": null,
+        "score": 3.6
+      },
+      {
+        "category_id": 2,
+        "category_label": null,
+        "score": 4.6
+      },
+      {
+        "category_id": 3,
+        "category_label": null,
+        "score": 4.5
+      }
+    ],
+    "check_in_time": "3:00\u00e2\u0080\u00afPM",
+    "check_out_time": "12:00\u00e2\u0080\u00afPM",
+    "currency": "USD",
+    "deal_pct": null,
+    "display_price": 113,
+    "entity_key": "ChkIsL6Z-KPh0eJyGg0vZy8xMWJ0djZjbTIxEAE",
+    "fid": "0x89c25a3560b36099:0x72c5470a3f065f30",
+    "google_hotel_id": "4855866821016982786",
+    "image_urls": [
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHEFQn9CyeIFexiLcuO4qKBT6FS_6d0KjSVdi_zVfvHEBIWiMkeY9y1R-0D3m6bhOOpg29ZljzKH6m8tOC8J_H32hDLklWaRuJLv-iDYR9SpepEwq9Ohk14MENj_2NBLmoxytrA=s150-w92-h150-n-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHEFQn9CyeIFexiLcuO4qKBT6FS_6d0KjSVdi_zVfvHEBIWiMkeY9y1R-0D3m6bhOOpg29ZljzKH6m8tOC8J_H32hDLklWaRuJLv-iDYR9SpepEwq9Ohk14MENj_2NBLmoxytrA=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFwRfPHSdgBnGV991S2U5zBXQ_8aY_4BAGoQ4WfKAOFLh8LnleeaVeosWqYPG2gHtZeHxlPYKzKjra_-scKBduueVZkIrX2ngTYU61wmdmgz_MFCxLKGjhymWybmpK5VcHdtG0E=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEydkimUa0TiFD34eGoCoiWN9uJZv99QMQJvDS0kBkVmvyuOlKk6G5xafTCKsjDBkZ8IxAnWxcqIqIEUu2zvVGyBA2yAuwKd2zEYMzbhzRVjCJoh-r4Eol-UkwRiUpzQmz8BlEz1rAUUI1w=s287-w287-h192-n-k-no-v1",
+      "https://lh6.googleusercontent.com/proxy/Zq5dEPBMJY2ZJ4Oi6fuLoYvnaGRWq8u_rR1lM33rTx5If5LvMVPfC2aI1Bsd_sE5Xl2fyQTnIRMyQZCpDJa86FI5shcmMveOGxCnzaFCHSAriQfaxHRpLLYAzVm-Je9cxc7jG4bEdGN2jMsx3-CacrqL8ZlobmQ=s287-w287-h192-n-k-no-v1",
+      "https://cdn.worldota.net/t/1024x768/content/50/87/5087591c4344f095fe8951a7a199d7c0f1480639.jpeg",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEQBj-x_fLrsY2PSZEr3Sw1ZwPRdYQXcPEFs5686SeHcT3EPpKMKe05davCooTbLGbpUNR63wMLBfJ5rU6kuAN40JovzrN_zbZoqWsNl2d99vfoFlCllQb1siXRoO67mMYnVqJW=s287-w287-h192-n-k-no-v1",
+      "https://lh4.googleusercontent.com/proxy/lHBHBhJXMApAFJ00rTTNV7YuQXdZWyCVIlBkhHWf3yEPQm-Nn7iyVBwqJZ7Bjr8jyLNnABjTdESD0ZSKO-zc10I83mhcMe9Ncl5PwrrjuwJ6eqT3nx1Z29bx3NYuj2AR4o6uK-fPvlDArfGKRgZQ1Nk-2tXBLQ=s287-w287-h192-n-k-no-v1",
+      "https://images.trvl-media.com/lodging/11000000/10640000/10635900/10635869/faa2f7ac_z.jpg",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGHpsO9wUD_Ntv9fg35EyO7fVzF2PHJYxwCH3V68yZm8ELPTSzJQmlKlhs18Bvx2OVrH1YBhJQiQyndzL6YERfy6j-rOz8E_0Ma2_aFq9NGLuThyJGFtp4SfMKrv5hkqY3R-hb_sg=s287-w287-h192-n-k-no-v1"
+    ],
+    "kgmid": "/g/11btv6cm21",
+    "latitude": 40.6965685,
+    "longitude": -73.984416,
+    "name": "The Tillary Hotel Brooklyn",
+    "nearby": [
+      {
+        "distance_text": "6 min",
+        "duration_minutes": 6,
+        "mode": "transit",
+        "name": "Brooklyn Bridge"
+      },
+      {
+        "distance_text": "10 min",
+        "duration_minutes": 10,
+        "mode": "transit",
+        "name": "Jay St-MetroTech"
+      },
+      {
+        "distance_text": "34 min",
+        "duration_minutes": 34,
+        "mode": "walk",
+        "name": "John F. Kennedy International Airport"
+      },
+      {
+        "distance_text": "6 min",
+        "duration_minutes": 6,
+        "mode": "transit",
+        "name": "Brooklyn Bridge Bistro"
+      }
+    ],
+    "overall_rating": 3.7,
+    "rate_dates": [
+      "2026-04-27",
+      "2026-04-28"
+    ],
+    "rating_histogram": {
+      "bucket_counts": {
+        "1": 294,
+        "2": 139,
+        "3": 211,
+        "4": 430,
+        "5": 786
+      }
+    },
+    "review_count": 1860,
+    "star_class": 4,
+    "star_class_label": "4-star hotel"
+  },
+  {
+    "amenities_available": [
+      11
+    ],
+    "category_ratings": [
+      {
+        "category_id": 4,
+        "category_label": null,
+        "score": 3.3
+      },
+      {
+        "category_id": 1,
+        "category_label": null,
+        "score": 3.4
+      },
+      {
+        "category_id": 5,
+        "category_label": null,
+        "score": 3.2
+      },
+      {
+        "category_id": 2,
+        "category_label": null,
+        "score": 2.9
+      },
+      {
+        "category_id": 3,
+        "category_label": null,
+        "score": 3.9
+      }
+    ],
+    "check_in_time": "3:00\u00e2\u0080\u00afPM",
+    "check_out_time": "11:00\u00e2\u0080\u00afAM",
+    "currency": "USD",
+    "deal_pct": null,
+    "display_price": 85,
+    "entity_key": "ChgIyPmA7_Pcs8mrARoLL2cvMXRkX2NseTYQAQ",
+    "fid": "0x89c25ac64e070dbd:0xab92cee73de03cc8",
+    "google_hotel_id": "4236616810169193110",
+    "image_urls": [
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE-XX3wvfggyoZardedkMt5Vf6_Nhn5hmSQ_N7d9CLfe9R_aH6sDXJ_L2U11oN_LPwigPq-h01-SamRrh7K8IBq93ejuDTc06CMTZo6fZ9LvfDWkBSj8GJW777bM6GAI8Dg2K-QGPrZclsD=s150-w92-h150-n-k-no",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE-XX3wvfggyoZardedkMt5Vf6_Nhn5hmSQ_N7d9CLfe9R_aH6sDXJ_L2U11oN_LPwigPq-h01-SamRrh7K8IBq93ejuDTc06CMTZo6fZ9LvfDWkBSj8GJW777bM6GAI8Dg2K-QGPrZclsD=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAFKxmwnS-9Qn5CT6zDsYV3ecuc099C_CHUSxvcLP8O2e0Nq6Ce3R-zxtWWssphTrMEKvOwNjEeD2j13pDZBuD1gDErSgQbHBy2GN8wTd8T4XWn1DKLi3YZv-4ibhqmcN1NMcEeXoQ=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE8f1KbGN7Q7MCJEP159IN3sYgcbF9K87BagzKaZhn2Jh1RE4az7NN-M5V3u7nE5pydoSM2WFm9snlAO3EHLoXfbP_FEc-9Vr799leFGobF0sQRVAhStOdM69BCXnUt1r_dKmiL=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAE-Tv2jDXT2t98CykNorwPOYN5W2EUolKUJLy6-Ho4XvpMppFrKzfynYqqu6z-YX9dQ8vJXac0Q1M13aaqzW7mj0r-me0VSXpqLIgpw3O7hmP5guzzYucoP5zdcuHeeVqtPEbmI=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEBaMy_KA0KtM_YV-LESw9A15pd88epzpZSXVWVlPlzopl2mSeGoOeSxR0RalaENMuMi5hU6yEiQApiVCbbwvue2Q2K5mVi4z4-k9JhM7c1PT599az0AzWeaURGGxMD2OBwDPEbEw=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF5e4kJch7aGhsa8vxOdGf3zINyFOe7kQBxnZ-xlkKL2C3NNPOPYWYdWSRsj3SvlEzLANYH6S8XJrDSV-WEwDEOadVUUkW0RX2LOcypSWwAf-cbzYclXf_RfljqU4w4er-65hOGNw=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEPSu5yFN89C-UXFhizd-cIVaH6IAMhv8eubTbDl-b3xAfxcV6JbxUtTfH_OXjV51H4J5YbqiBknhNOdwUjSU3I3gtyEnrF8uYy_J8SyPQkVrLAPIcpg1OwmlIY93aUbDgcIcbCdw=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAENUM4doqFh34lncGhM9oqrcSsPaUjKrTKCUVqcrsBn73lUDNgjlK7QSjilEDafySh4M42gejRurEg6d8HxK83K-mbuDITSrCHUfnNLZ0a_ykQLHzrrH4JKrR1uqFUkGRI2K24=s287-w287-h192-n-k-no-v1",
+      "https://lh3.googleusercontent.com/gps-cs-s/APNQkAECwGwD0LRQQhvyGLJj5hv4-jXqSlW4UPREo7lbb7QpJSLVIpqdW1wIXSgcJTxULZQTmCDzDjeINi9SkUVKYzTpTMnum4to52ebcjdT_66qjTEUiJu1w8vKmDrigeg5BgwPYgAu=s287-w287-h192-n-k-no-v1"
+    ],
+    "kgmid": "/g/1td_cly6",
+    "latitude": 40.6510416,
+    "longitude": -74.0033227,
+    "name": "Phoenix Hotel Brooklyn Sunset Park",
+    "nearby": [
+      {
+        "distance_text": "1 min",
+        "duration_minutes": 1,
+        "mode": "transit",
+        "name": "5 Av/39 St"
+      },
+      {
+        "distance_text": "39 min",
+        "duration_minutes": 39,
+        "mode": "walk",
+        "name": "John F. Kennedy International Airport"
+      },
+      {
+        "distance_text": "1 min",
+        "duration_minutes": 1,
+        "mode": "transit",
+        "name": "Eat Street NYC"
+      }
+    ],
+    "overall_rating": 2.7,
+    "rate_dates": [
+      "2026-04-27",
+      "2026-04-28"
+    ],
+    "rating_histogram": {
+      "bucket_counts": {
+        "1": 201,
+        "2": 41,
+        "3": 86,
+        "4": 59,
+        "5": 127
+      }
+    },
+    "review_count": 514,
+    "star_class": 2,
+    "star_class_label": "2-star hotel"
+  }
+]

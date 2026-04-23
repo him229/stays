@@ -1,0 +1,1 @@
+{"success": false, "data_source": "google_hotels", "search_type": "enrich", "error": {"type": "validation_error", "message": "Date must be in YYYY-MM-DD format; got 'bogus'"}}

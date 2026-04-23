@@ -116,8 +116,12 @@ CASES: list[BrowserCase] = [
         anchor_hotel_substring="Hotel",
     ),
     # --------------------------------------------------------------
-    # 4. NYC, USD, price_max=250 budget cap. Exercises the price range
-    #    filter + confirms results respect the cap.
+    # 4. NYC, USD, price_range=(None, 250) budget cap. Exercises the
+    #    price range filter + confirms results respect the cap.
+    #    NOTE: HotelSearchFilters only has ``price_range: tuple[int|None,
+    #    int|None] | None`` — ``price_max=250`` as a direct kwarg was
+    #    silently dropped by pydantic (extra="ignore"), so the case wasn't
+    #    actually filtering programmatically.
     # --------------------------------------------------------------
     BrowserCase(
         label="nyc-usd-under-250",
@@ -127,7 +131,7 @@ CASES: list[BrowserCase] = [
             location=Location(query="New York hotels"),
             dates=DATES,
             currency=Currency.USD,
-            price_max=250,
+            price_range=(None, 250),
         ),
         anchor_hotel_substring="Hotel",
     ),

@@ -2,15 +2,17 @@
 
 Detail architecture: there is NO separate detail RPC — `AtySUc` handles
 both search (entity_key absent) and detail (entity_key present at outer
-slot [2][5]). get_details() builds the detail request by calling
-filters.format() then overlaying the entity_key into slot [2][5].
+slot [2][5]). get_details() builds a HotelSearchFilters with entity_key
+set; the filter's format() produces the final request shape with
+entity_key at outer [2][5].
 """
 
 from __future__ import annotations
 
-import copy
+import logging
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
+from typing import Literal
 
 from stays.models.google_hotels.base import Currency, DateRange, Location
 from stays.models.google_hotels.detail import HotelDetail
@@ -23,6 +25,10 @@ from stays.search.client import (
     get_client,
 )
 from stays.search.parse import parse_detail_response, parse_search_response
+
+logger = logging.getLogger(__name__)
+
+ErrorKind = Literal["transient", "fatal"]
 
 
 class MissingHotelIdError(ValueError):
@@ -37,17 +43,27 @@ class EnrichedResult:
     Exactly one of ``detail`` or ``error`` is set:
       * ``detail`` is populated when the detail RPC succeeded for this hotel.
       * ``error`` carries a human-readable message when we skipped or
-        failed this hotel. ``result`` is always the list-view record (so
-        callers still get name / price / rating even when details fail).
+        failed this hotel. ``error_kind`` classifies the failure so
+        retry-aware callers can decide whether to re-issue the request.
+        ``result`` is always the list-view record (so callers still
+        get name / price / rating even when details fail).
     """
 
     result: HotelResult
     detail: HotelDetail | None = None
     error: str | None = None
+    error_kind: ErrorKind | None = None
 
     @property
     def ok(self) -> bool:
         return self.detail is not None
+
+    @property
+    def is_retryable(self) -> bool:
+        """True iff this hotel's failure was transient (retrying may
+        succeed). Returns False for fatal errors and for successful
+        items — only ``error_kind == "transient"`` is retryable."""
+        return self.error_kind == "transient"
 
 
 class SearchHotels:
@@ -114,10 +130,9 @@ class SearchHotels:
             location=location or Location(query="hotels"),
             dates=dates,
             currency=currency,
+            entity_key=entity_key,
         )
         inner_req = filters.format()
-        # Overlay entity_key into the outer request metadata at [2][5].
-        inner_req = self._with_entity_key(inner_req, entity_key)
         inner_resp = self._client.post_rpc(RPC_ID, inner_req)
         return parse_detail_response(inner_resp)
 
@@ -134,10 +149,21 @@ class SearchHotels:
         results = self.search(filters)
         top = results[:max_hotels]
         workers = min(self._detail_concurrency, max(1, len(top)))
+        logger.info("enrich count=%d concurrency=%d", len(top), workers)
 
         def enrich_one(r: HotelResult) -> EnrichedResult:
             if not r.entity_key:
-                return EnrichedResult(result=r, error="missing entity_key")
+                logger.warning(
+                    "enrich error hotel=%s kind=%s msg=%s",
+                    r.name,
+                    "fatal",
+                    "missing entity_key",
+                )
+                return EnrichedResult(
+                    result=r,
+                    error="missing entity_key",
+                    error_kind="fatal",
+                )
             try:
                 detail = self.get_details(
                     entity_key=r.entity_key,
@@ -146,31 +172,33 @@ class SearchHotels:
                     currency=filters.currency,
                 )
                 return EnrichedResult(result=r, detail=detail)
-            except (BatchExecuteError, TransientBatchExecuteError, MissingHotelIdError) as e:
-                return EnrichedResult(result=r, error=f"{type(e).__name__}: {e}")
-            except Exception as e:  # noqa: BLE001 — unexpected is reported, not raised
-                return EnrichedResult(result=r, error=f"unexpected: {type(e).__name__}: {e}")
+            except TransientBatchExecuteError as e:
+                logger.warning(
+                    "enrich error hotel=%s kind=%s msg=%s",
+                    r.name,
+                    "transient",
+                    f"{type(e).__name__}: {e}",
+                )
+                return EnrichedResult(
+                    result=r,
+                    error=f"{type(e).__name__}: {e}",
+                    error_kind="transient",
+                )
+            except (BatchExecuteError, MissingHotelIdError) as e:
+                logger.warning(
+                    "enrich error hotel=%s kind=%s msg=%s",
+                    r.name,
+                    "fatal",
+                    f"{type(e).__name__}: {e}",
+                )
+                return EnrichedResult(
+                    result=r,
+                    error=f"{type(e).__name__}: {e}",
+                    error_kind="fatal",
+                )
+            # Unknown exceptions intentionally NOT caught — they propagate
+            # so parser bugs / programmer errors surface instead of being
+            # silently stringified into per-hotel error fields.
 
         with ThreadPoolExecutor(max_workers=workers) as ex:
             return list(ex.map(enrich_one, top))
-
-    @staticmethod
-    def _with_entity_key(inner_req: list, entity_key: str) -> list:
-        """Return a deep-copied inner_req with entity_key set at outer [2][5].
-
-        The outer payload is ``[query, SearchParams, RequestMeta, ...]``.
-        Task 11 will instead plumb entity_key through HotelSearchFilters
-        directly; until then we overlay it here.
-        """
-        payload = copy.deepcopy(inner_req)
-        # Ensure outer[2] exists and is a list of length >= 6.
-        while len(payload) < 3:
-            payload.append(None)
-        meta = payload[2]
-        if not isinstance(meta, list):
-            meta = [None] * 6
-        while len(meta) < 6:
-            meta.append(None)
-        meta[5] = entity_key
-        payload[2] = meta
-        return payload

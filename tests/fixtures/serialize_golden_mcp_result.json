@@ -1,0 +1,19 @@
+{
+  "amenities": [
+    "POOL",
+    "WIFI"
+  ],
+  "check_in_time": "15:00",
+  "check_out_time": "11:00",
+  "currency": "USD",
+  "display_price": 180,
+  "entity_key": "CgoI_TEST_KEY_0001",
+  "fid": "0x123:0x456",
+  "kgmid": "/g/1q2w3e4r5",
+  "lat": 35.6812,
+  "lng": 139.7671,
+  "name": "Tokyo Central Hotel",
+  "overall_rating": 4.3,
+  "review_count": 1248,
+  "star_class": 4
+}

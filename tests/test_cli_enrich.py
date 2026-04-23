@@ -16,13 +16,28 @@ def runner() -> CliRunner:
     return CliRunner()
 
 
-def _mk_item(ok: bool, *, error: str | None = None):
+def _mk_item(
+    ok: bool,
+    *,
+    error: str | None = None,
+    error_kind: str | None = None,
+):
+    """Build a fake EnrichedResult-shaped object for the CLI tests.
+
+    When ``ok`` is False, default ``error_kind`` to "fatal" — it matches
+    the old stringified-error path for missing entity_key and keeps the
+    existing test fixtures meaningful under the M4a contract.
+    """
     result = make_result()
+    if not ok and error_kind is None:
+        error_kind = "fatal"
     return SimpleNamespace(
         ok=ok,
         result=result,
         detail=make_detail(result=result) if ok else None,
         error=error,
+        error_kind=error_kind,
+        is_retryable=error_kind == "transient",
     )
 
 

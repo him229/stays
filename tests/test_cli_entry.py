@@ -88,6 +88,4 @@ def test_setup_help_lists_all_backends():
     result = CliRunner().invoke(app, ["setup", "--help"])
     assert result.exit_code == 0
     for backend in ("claude", "codex", "chatgpt"):
-        assert backend in result.stdout, (
-            f"'stays setup --help' missing '{backend}' in output"
-        )
+        assert backend in result.stdout, f"'stays setup --help' missing '{backend}' in output"

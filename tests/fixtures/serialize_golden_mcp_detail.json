@@ -1,0 +1,44 @@
+{
+  "address": "1-1-1 Chiyoda, Tokyo",
+  "amenities": [
+    "POOL",
+    "WIFI"
+  ],
+  "amenity_details": [],
+  "check_in_time": "15:00",
+  "check_out_time": "11:00",
+  "currency": "USD",
+  "description": "Sample description",
+  "display_price": 180,
+  "entity_key": "CgoI_TEST_KEY_0001",
+  "fid": "0x123:0x456",
+  "kgmid": "/g/1q2w3e4r5",
+  "lat": 35.6812,
+  "lng": 139.7671,
+  "name": "Tokyo Central Hotel",
+  "overall_rating": 4.3,
+  "phone": "+81-3-0000-0000",
+  "review_count": 1248,
+  "rooms": [
+    {
+      "bed_config": "1 queen bed",
+      "description": "Non-smoking, city view",
+      "max_occupancy": 2,
+      "name": "Deluxe Double",
+      "rates": [
+        {
+          "breakfast_included": true,
+          "cancellation_description": "Free cancellation until Jul 20",
+          "cancellation_free_until": "2026-07-20",
+          "cancellation_kind": "free_until",
+          "currency": "USD",
+          "deeplink_url": "https://example.com/room",
+          "includes_taxes_and_fees": false,
+          "price": 185,
+          "provider": "Booking.com"
+        }
+      ]
+    }
+  ],
+  "star_class": 4
+}

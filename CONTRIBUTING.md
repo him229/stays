@@ -16,9 +16,35 @@ make test
 
 1. `make format` — apply ruff formatting
 2. `make lint` — fix any lint findings
-3. `make test` — all offline tests must pass
+3. `make test` — all offline tests must pass (330+ tests, fully hermetic)
 4. If you changed the MCP tool surface, run `make test-live` locally
    against the real Google API to confirm the serializer is still correct.
+5. If you changed the parse layer, serializer, or CLI envelope shape, run
+   `make test-all --browser-verify` to diff the programmatic output against
+   a real browser render.
+
+### Test breakdown
+
+- `make test` — offline unit + integration tests (no network). Fast; always
+  run before pushing.
+- `make test-live` — live Google API tests (marker-gated). Rate-limit
+  sensitive; run locally when touching anything that reaches the network.
+- `make test-all` — everything, including the `--browser-verify` suites
+  under `tests/browser_verification/` (Python API vs browser + CLI
+  subprocess vs browser).
+- Browser-verify driver is pluggable: set `STAYS_BROWSER_DRIVER=agent-browser`
+  (default, preferred) or `STAYS_BROWSER_DRIVER=playwright` (fallback when
+  agent-browser isn't installed). See `tests/browser_verification/README.md`.
+
+### Golden-fixture tests
+
+`tests/test_parse_golden.py`, `tests/test_serialize_golden.py`, and
+`tests/test_cli_envelope_golden.py` pin byte-identical output of the parse,
+serializer, and CLI envelope layers. If your change legitimately shifts any
+of these outputs, regenerate the fixtures through the dedicated one-shot
+script — never quietly relax an assertion or tweak the fixture by hand. A
+silent fixture change hides exactly the kind of regression these tests are
+meant to catch.
 
 ## Commit messages
 

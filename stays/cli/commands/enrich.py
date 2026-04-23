@@ -2,23 +2,15 @@
 
 from __future__ import annotations
 
-import json as _json
 from typing import Annotated, Any
 
 import pydantic
 import typer
 
-from stays.cli import _render, _serialize, _validate
+from stays.cli import _render, _runtime, _serialize
 from stays.cli._console import console
 from stays.cli._enums import OutputFormat
-from stays.cli.commands.search import _build_filters, _emit_error, _serialize_query
-from stays.models.google_hotels.base import (
-    Amenity,
-    Brand,
-    MinGuestRating,
-    PropertyType,
-    SortBy,
-)
+from stays.mcp._config import HARD_MAX_HOTELS_WITH_DETAILS
 from stays.search.client import BatchExecuteError, TransientBatchExecuteError
 from stays.search.hotels import SearchHotels
 
@@ -42,66 +34,42 @@ def enrich(
     special_offers: Annotated[bool, typer.Option("--special-offers/--no-special-offers")] = False,
     price_min: Annotated[int | None, typer.Option("--price-min", min=0)] = None,
     price_max: Annotated[int | None, typer.Option("--price-max", min=0)] = None,
-    max_hotels: Annotated[int, typer.Option("--max-hotels", min=1, max=15)] = 5,
+    max_hotels: Annotated[int, typer.Option("--max-hotels", min=1, max=HARD_MAX_HOTELS_WITH_DETAILS)] = 5,
     output_format: Annotated[OutputFormat, typer.Option("--format", case_sensitive=False)] = OutputFormat.TEXT,
 ) -> None:
     """Search + parallel detail-fetch for the top N hotels."""
     query_record: dict[str, Any] | None = None
     try:
-        check_in_d = _validate.parse_date(check_in)
-        check_out_d = _validate.parse_date(check_out)
-        stars_v = _validate.parse_stars(stars)
-        amenities_v = _validate.parse_enum_name_list(Amenity, amenity)
-        brands_v = _validate.parse_enum_name_list(Brand, brand)
-        currency_v = _validate.parse_currency(currency)
-        property_type_v = _validate.parse_enum_name(PropertyType, property_type)
-        sort_by_v = _validate.parse_enum_name(SortBy, sort_by)
-        min_rating_v = _validate.parse_enum_name(MinGuestRating, min_rating)
-        price_range_v = _validate.parse_price_range(price_min, price_max)
-
-        query_record = _serialize_query(
+        query_record, filters = _runtime.build_filters_from_cli_args(
             query=query,
-            check_in=check_in_d,
-            check_out=check_out_d,
+            check_in=check_in,
+            check_out=check_out,
             adults=adults,
             children=children,
-            child_ages=child_age,
-            stars=stars_v,
-            amenities=amenities_v,
-            brands=brands_v,
-            currency=currency_v,
-            property_type=property_type_v,
-            sort_by=sort_by_v,
-            min_rating=min_rating_v,
+            child_age=child_age,
+            currency=currency,
+            property_type=property_type,
+            sort_by=sort_by,
+            stars=stars,
+            min_rating=min_rating,
+            amenity=amenity,
+            brand=brand,
             free_cancellation=free_cancellation,
             eco_certified=eco_certified,
             special_offers=special_offers,
-            price_range=price_range_v,
+            price_min=price_min,
+            price_max=price_max,
             max_results=None,  # enrich uses max_hotels, not max_results
         )
         query_record["max_hotels"] = max_hotels
-
-        filters = _build_filters(
-            query=query,
-            check_in=check_in_d,
-            check_out=check_out_d,
-            adults=adults,
-            children=children,
-            child_ages=child_age,
-            currency=currency_v,
-            property_type=property_type_v,
-            sort_by=sort_by_v,
-            stars=stars_v,
-            min_rating=min_rating_v,
-            amenities=amenities_v,
-            brands=brands_v,
-            free_cancellation=free_cancellation,
-            eco_certified=eco_certified,
-            special_offers=special_offers,
-            price_range=price_range_v,
-        )
     except (typer.BadParameter, pydantic.ValidationError, ValueError) as exc:
-        _emit_error("enrich", str(exc), "validation_error", query_record, output_format)
+        _runtime.emit_error(
+            search_type="enrich",
+            message=str(exc),
+            error_type="validation_error",
+            query=query_record,
+            output_format=output_format,
+        )
         raise typer.Exit(1) from exc
 
     assert query_record is not None
@@ -109,23 +77,23 @@ def enrich(
     try:
         items = SearchHotels().search_with_details(filters, max_hotels=max_hotels)
     except (BatchExecuteError, TransientBatchExecuteError) as exc:
-        _emit_error("enrich", str(exc), "network_error", query_record, output_format)
+        _runtime.emit_error(
+            search_type="enrich",
+            message=str(exc),
+            error_type="network_error",
+            query=query_record,
+            output_format=output_format,
+        )
         raise typer.Exit(1) from exc
 
-    if output_format == OutputFormat.JSON:
-        envelope = _serialize.build_success(
-            search_type="enrich",
-            query=query_record,
-            results_key="hotels",
-            results=[_serialize_enriched(it) for it in items],
-        )
-        typer.echo(_json.dumps(envelope, indent=2))
-        return
-    if output_format == OutputFormat.JSONL:
-        for it in items:
-            typer.echo(_json.dumps(_serialize_enriched(it)))
-        return
-    _render.render_enriched(items, console=console)
+    _runtime.emit_result(
+        search_type="enrich",
+        query=query_record,
+        results_key="hotels",
+        serialized_results=[_serialize_enriched(it) for it in items],
+        output_format=output_format,
+        render=lambda: _render.render_enriched(items, console=console),
+    )
 
 
 def _serialize_enriched(item: Any) -> dict[str, Any]:
@@ -134,4 +102,6 @@ def _serialize_enriched(item: Any) -> dict[str, Any]:
         "result": _serialize.serialize_hotel_result(item.result),
         "detail": _serialize.serialize_hotel_detail(item.detail) if item.detail else None,
         "error": item.error,
+        "error_kind": item.error_kind,
+        "is_retryable": item.is_retryable,
     }

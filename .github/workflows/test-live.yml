@@ -1,0 +1,52 @@
+name: Live Tests
+
+# Live tests hit the real Google Hotels endpoint. They are flaky by nature
+# (rate limits, ranking drift) so we keep them OUT of the PR gate:
+#   - run on every push to main (post-merge smoke, no blocking)
+#   - run nightly (06:00 UTC / ~11pm PST / 2am EST) for drift detection
+#   - run on manual dispatch for ad-hoc verification
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  live:
+    # Skip on forks — no CI rate-limit budget for external contributors.
+    if: github.repository == 'victoriawei/stays'
+    runs-on: ubuntu-latest
+    # Job-level continue-on-error keeps the workflow yellow (not red) when
+    # Google 429s or reshuffles results — live flakes shouldn't page anyone.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python 3.12
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --extra dev
+
+      - name: Run live tests
+        # `--live` un-skips the auto-gated suite; `-m live` narrows
+        # collection to only live-marked tests (skipping the 300+ offline
+        # tests that are already exercised by test.yml).
+        run: uv run pytest tests/ -v --live -m live --junitxml=junit-live.xml
+        env:
+          FORCE_COLOR: 1
+
+      - name: Upload JUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-live
+          path: junit-live.xml

@@ -3,336 +3,93 @@
 Exposes ``stays.search.SearchHotels`` as an MCP server over stdio via
 FastMCP: three tools (``search_hotels``, ``get_hotel_details``,
 ``search_hotels_with_details``), two prompts, one configuration resource.
+
+Module layout:
+- ``_config.py`` — pydantic-settings ``CONFIG`` + JSON schema + hard caps.
+- ``_params.py`` — pydantic param models (one per tool) + shared validators.
+- ``_executors.py`` — ``_execute_*_from_params`` functions + serializers.
+- ``server.py`` (this file) — registration surface: ``FastMCP`` instance
+  plus ``@mcp.tool`` / ``@mcp.prompt`` / ``@mcp.resource`` decorators.
+
+Every name historically importable from ``stays.mcp.server`` is re-exported
+here so existing tests continue to resolve.
 """
 
 from __future__ import annotations
 
 import json
 import os
-from datetime import date, datetime
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any
 
 from fastmcp import FastMCP
-from pydantic import BaseModel, Field, model_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field
 
-from stays.models.google_hotels.base import (
-    Amenity,
-    Brand,
-    Currency,
-    DateRange,
-    GuestInfo,
-    Location,
-    MinGuestRating,
-    PropertyType,
-    SortBy,
+from stays.mcp._config import (
+    CONFIG,
+    CONFIG_SCHEMA,
+    HARD_MAX_HOTELS_WITH_DETAILS,
+    HotelSearchConfig,
 )
-from stays.models.google_hotels.detail import HotelDetail
-from stays.models.google_hotels.hotels import HotelSearchFilters
-from stays.models.google_hotels.result import HotelResult
-from stays.search.client import (
-    BatchExecuteError,
-    TransientBatchExecuteError,
+from stays.mcp._executors import (
+    _MCP_DETAIL_DROP_KEYS,
+    _MCP_RESULT_DROP_KEYS,
+    _apply_mcp_coordinate_aliases,
+    _build_filters_from_search_params,
+    _execute_get_hotel_details_from_params,
+    _execute_search_hotels_from_params,
+    _execute_search_hotels_with_details_from_params,
+    _parse_date,
+    _serialize_hotel_detail,
+    _serialize_hotel_result,
+    _serialize_rate_plan,
+    _serialize_room_type,
+)
+from stays.mcp._params import (
+    GetHotelDetailsParams,
+    PropertyTypeLiteral,
+    SearchHotelsParams,
+    SearchHotelsWithDetailsParams,
+    SortByLiteral,
 )
 from stays.search.hotels import MissingHotelIdError, SearchHotels
 
-# =============================================================================
-# Configuration
-# =============================================================================
-
-
-class HotelSearchConfig(BaseSettings):
-    """Optional env-driven defaults for the Google Hotels MCP server."""
-
-    model_config = SettingsConfigDict(env_prefix="STAYS_MCP_")
-
-    default_adults: int = Field(2, ge=1, description="Default adult guests.")
-    default_children: int = Field(0, ge=0, le=8, description="Default children count.")
-    default_currency: str = Field("USD", min_length=3, max_length=3, description="Fallback currency code (ISO 4217).")
-    default_max_hotels_with_details: int = Field(
-        5,
-        ge=1,
-        le=15,
-        description="Default N for search_hotels_with_details. HARD CAP 15.",
-    )
-    default_sort_by: str = Field(
-        "RELEVANCE",
-        description="RELEVANCE | LOWEST_PRICE | HIGHEST_RATING | MOST_REVIEWED.",
-    )
-    max_results: int | None = Field(
-        None,
-        gt=0,
-        description="Optional cap on result count returned by search_hotels.",
-    )
-
-
-CONFIG = HotelSearchConfig()
-CONFIG_SCHEMA = HotelSearchConfig.model_json_schema()
+# Re-exported for test compatibility — some tests ``patch("stays.mcp.server.SearchHotels")``.
+__all__ = [
+    "CONFIG",
+    "CONFIG_SCHEMA",
+    "GetHotelDetailsParams",
+    "HARD_MAX_HOTELS_WITH_DETAILS",
+    "HotelSearchConfig",
+    "MissingHotelIdError",
+    "PropertyTypeLiteral",
+    "SearchHotels",
+    "SearchHotelsParams",
+    "SearchHotelsWithDetailsParams",
+    "SortByLiteral",
+    "_MCP_DETAIL_DROP_KEYS",
+    "_MCP_RESULT_DROP_KEYS",
+    "_apply_mcp_coordinate_aliases",
+    "_build_filters_from_search_params",
+    "_execute_get_hotel_details_from_params",
+    "_execute_search_hotels_from_params",
+    "_execute_search_hotels_with_details_from_params",
+    "_parse_date",
+    "_serialize_hotel_detail",
+    "_serialize_hotel_result",
+    "_serialize_rate_plan",
+    "_serialize_room_type",
+    "configuration_resource",
+    "compare_hotels_in_city_prompt",
+    "get_hotel_details",
+    "mcp",
+    "run",
+    "run_http",
+    "search_hotels",
+    "search_hotels_with_details",
+    "when_to_deep_search_prompt",
+]
 
 mcp = FastMCP("Google Hotels MCP Server")
-
-
-# =============================================================================
-# Typed enums — Literals give schema-level rejection in FastMCP
-# =============================================================================
-
-
-SortByLiteral = Literal["RELEVANCE", "LOWEST_PRICE", "HIGHEST_RATING", "MOST_REVIEWED"]
-PropertyTypeLiteral = Literal["HOTELS", "VACATION_RENTALS"]
-
-
-# =============================================================================
-# Params models (used by tests via _execute_*_from_params)
-# =============================================================================
-
-
-class SearchHotelsParams(BaseModel):
-    query: str = Field(description="City or property query.")
-    check_in: str | None = Field(default=None, description="YYYY-MM-DD; omit for flexible dates.")
-    check_out: str | None = Field(default=None, description="YYYY-MM-DD; required if check_in is set.")
-    adults: int = Field(default=CONFIG.default_adults, ge=1)
-    children: int = Field(default=CONFIG.default_children, ge=0, le=8)
-    child_ages: list[int] | None = Field(default=None, description="Ages 0-17.")
-    currency: str = Field(default=CONFIG.default_currency, min_length=3, max_length=3)
-    sort_by: SortByLiteral = CONFIG.default_sort_by
-    hotel_class: list[int] | None = None
-    amenities: list[str] | None = None
-    brands: list[str] | None = None
-    min_guest_rating: float | None = Field(default=None, ge=3.5, le=4.5)
-    free_cancellation: bool = False
-    eco_certified: bool = False
-    special_offers: bool = False
-    price_min: int | None = Field(default=None, ge=0)
-    price_max: int | None = Field(default=None, ge=0)
-    property_type: PropertyTypeLiteral = "HOTELS"
-    max_results: int | None = Field(default=None, ge=1, le=25, description="Cap on returned hotels count.")
-
-    @model_validator(mode="after")
-    def _child_ages_matches_children(self):
-        if self.children > 0 and not self.child_ages:
-            raise ValueError(
-                f"child_ages is required when children > 0 (got children={self.children}, child_ages=None)"
-            )
-        if self.child_ages is not None and len(self.child_ages) != self.children:
-            raise ValueError(f"child_ages length ({len(self.child_ages)}) must equal children ({self.children})")
-        return self
-
-
-class GetHotelDetailsParams(BaseModel):
-    entity_key: str = Field(description="entity_key from a prior search_hotels result.")
-    check_in: str = Field(description="YYYY-MM-DD.")
-    check_out: str = Field(description="YYYY-MM-DD after check_in.")
-    currency: str = Field(default=CONFIG.default_currency, min_length=3, max_length=3)
-
-
-class SearchHotelsWithDetailsParams(BaseModel):
-    query: str = Field(description="City or property query.")
-    check_in: str = Field(description="YYYY-MM-DD — REQUIRED.")
-    check_out: str = Field(description="YYYY-MM-DD after check_in — REQUIRED.")
-    max_hotels: int = Field(
-        default=CONFIG.default_max_hotels_with_details,
-        ge=1,
-        le=15,
-        description="Top-N to enrich. HARD CAP = 15.",
-    )
-    adults: int = Field(default=CONFIG.default_adults, ge=1)
-    children: int = Field(default=CONFIG.default_children, ge=0, le=8)
-    child_ages: list[int] | None = Field(default=None)
-    currency: str = Field(default=CONFIG.default_currency, min_length=3, max_length=3)
-    sort_by: SortByLiteral = CONFIG.default_sort_by
-    hotel_class: list[int] | None = None
-    amenities: list[str] | None = None
-    brands: list[str] | None = None
-    min_guest_rating: float | None = Field(default=None, ge=3.5, le=4.5)
-    free_cancellation: bool = False
-    eco_certified: bool = False
-    special_offers: bool = False
-    price_min: int | None = Field(default=None, ge=0)
-    price_max: int | None = Field(default=None, ge=0)
-    property_type: PropertyTypeLiteral = "HOTELS"
-
-    @model_validator(mode="after")
-    def _child_ages_matches_children(self):
-        if self.children > 0 and not self.child_ages:
-            raise ValueError(
-                f"child_ages is required when children > 0 (got children={self.children}, child_ages=None)"
-            )
-        if self.child_ages is not None and len(self.child_ages) != self.children:
-            raise ValueError(f"child_ages length ({len(self.child_ages)}) must equal children ({self.children})")
-        return self
-
-
-# =============================================================================
-# Serialization helpers — HotelResult / HotelDetail -> JSON-safe dicts
-# =============================================================================
-
-
-def _parse_date(s: str) -> date:
-    return datetime.strptime(s, "%Y-%m-%d").date()
-
-
-def _build_filters_from_search_params(p: SearchHotelsParams) -> HotelSearchFilters:
-    dates = None
-    if p.check_in and p.check_out:
-        dates = DateRange(
-            check_in=_parse_date(p.check_in),
-            check_out=_parse_date(p.check_out),
-        )
-    guests = GuestInfo(
-        adults=p.adults,
-        children=p.children,
-        child_ages=p.child_ages or [],
-    )
-    loc = Location(query=p.query)
-    sort = None if p.sort_by == "RELEVANCE" else SortBy[p.sort_by]
-    amen = [Amenity[a] for a in (p.amenities or [])]
-    brands = [Brand[b] for b in (p.brands or [])]
-    price_range = None
-    if p.price_min is not None or p.price_max is not None:
-        price_range = (p.price_min, p.price_max)
-    mgr = None
-    if p.min_guest_rating is not None:
-        mgr = MinGuestRating(round(p.min_guest_rating * 2))
-    return HotelSearchFilters(
-        location=loc,
-        dates=dates,
-        guests=guests,
-        currency=Currency[p.currency],
-        property_type=PropertyType[p.property_type],
-        sort_by=sort,
-        hotel_class=p.hotel_class or [],
-        min_guest_rating=mgr,
-        amenities=amen,
-        brands=brands,
-        free_cancellation=p.free_cancellation,
-        eco_certified=p.eco_certified,
-        special_offers=p.special_offers,
-        price_range=price_range,
-    )
-
-
-def _serialize_hotel_result(h: HotelResult) -> dict[str, Any]:
-    return {
-        "name": h.name,
-        "entity_key": h.entity_key,
-        "kgmid": h.kgmid,
-        "fid": h.fid,
-        "display_price": h.display_price,
-        "currency": h.currency,
-        "star_class": h.star_class,
-        "overall_rating": h.overall_rating,
-        "review_count": h.review_count,
-        "amenities": sorted(a.name for a in h.amenities_available),
-        "check_in_time": h.check_in_time,
-        "check_out_time": h.check_out_time,
-        "lat": h.latitude,
-        "lng": h.longitude,
-    }
-
-
-def _serialize_rate_plan(rp) -> dict[str, Any]:
-    return {
-        "provider": rp.provider,
-        "price": rp.price,
-        "currency": rp.currency,
-        "cancellation_kind": rp.cancellation.kind.value if rp.cancellation else None,
-        "cancellation_free_until": (
-            rp.cancellation.free_until.isoformat() if rp.cancellation and rp.cancellation.free_until else None
-        ),
-        "cancellation_description": rp.cancellation.description if rp.cancellation else None,
-        "breakfast_included": rp.breakfast_included,
-        "includes_taxes_and_fees": rp.includes_taxes_and_fees,
-        "deeplink_url": rp.deeplink_url,
-    }
-
-
-def _serialize_room_type(r) -> dict[str, Any]:
-    return {
-        "name": r.name,
-        "description": r.description,
-        "bed_config": r.bed_config,
-        "max_occupancy": r.max_occupancy,
-        "rates": [_serialize_rate_plan(rp) for rp in r.rates],
-    }
-
-
-def _serialize_hotel_detail(d: HotelDetail) -> dict[str, Any]:
-    base = _serialize_hotel_result(d)
-    base.update(
-        {
-            "description": d.description,
-            "address": d.address,
-            "phone": d.phone,
-            "amenity_details": d.amenity_details,
-            "rooms": [_serialize_room_type(r) for r in d.rooms],
-        }
-    )
-    return base
-
-
-# =============================================================================
-# Private execute entries (tests invoke these directly)
-# =============================================================================
-
-
-# Single canonical name — no aliases.
-# Tests and tool wrappers both call *_from_params directly.
-
-
-def _execute_search_hotels_from_params(params: SearchHotelsParams) -> dict[str, Any]:
-    try:
-        filters = _build_filters_from_search_params(params)
-        hotels = SearchHotels().search(filters)
-        cap = params.max_results if params.max_results is not None else CONFIG.max_results
-        if cap is not None:
-            hotels = hotels[:cap]
-        return {
-            "success": True,
-            "count": len(hotels),
-            "hotels": [_serialize_hotel_result(h) for h in hotels],
-        }
-    except (BatchExecuteError, TransientBatchExecuteError) as e:
-        return {"success": False, "error": f"{type(e).__name__}: {e}", "hotels": []}
-
-
-def _execute_get_hotel_details_from_params(params: GetHotelDetailsParams) -> dict[str, Any]:
-    try:
-        dates = DateRange(
-            check_in=_parse_date(params.check_in),
-            check_out=_parse_date(params.check_out),
-        )
-        detail = SearchHotels().get_details(
-            entity_key=params.entity_key,
-            dates=dates,
-            currency=Currency[params.currency],
-        )
-        return {"success": True, "hotel": _serialize_hotel_detail(detail)}
-    except MissingHotelIdError as e:
-        return {"success": False, "error": f"MissingHotelIdError: {e}", "hotel": None}
-    except (BatchExecuteError, TransientBatchExecuteError) as e:
-        return {"success": False, "error": f"{type(e).__name__}: {e}", "hotel": None}
-
-
-def _execute_search_hotels_with_details_from_params(
-    params: SearchHotelsWithDetailsParams,
-) -> dict[str, Any]:
-    try:
-        shp = SearchHotelsParams(**params.model_dump(exclude={"max_hotels"}))
-        filters = _build_filters_from_search_params(shp)
-        enriched = SearchHotels().search_with_details(filters, max_hotels=params.max_hotels)
-        items = []
-        for er in enriched:
-            items.append(
-                {
-                    "ok": er.ok,
-                    "result": _serialize_hotel_result(er.result),
-                    "detail": _serialize_hotel_detail(er.detail) if er.detail else None,
-                    "error": er.error,
-                }
-            )
-        return {"success": True, "count": len(items), "items": items}
-    except (BatchExecuteError, TransientBatchExecuteError) as e:
-        return {"success": False, "error": f"{type(e).__name__}: {e}", "items": []}
 
 
 # =============================================================================
@@ -484,20 +241,17 @@ def get_hotel_details(
     return _execute_get_hotel_details_from_params(params)
 
 
-@mcp.tool(
-    annotations={
-        "title": "Search Hotels With Details",
-        "readOnlyHint": True,
-        "idempotentHint": True,
-    }
-)
-def search_hotels_with_details(
+def _search_hotels_with_details_impl(
     query: Annotated[str, Field()],
     check_in: Annotated[str, Field()],
     check_out: Annotated[str, Field()],
     max_hotels: Annotated[
         int,
-        Field(ge=1, le=15, description="Top-N hotels to enrich with detail. Hard cap = 15. Default 5."),
+        Field(
+            ge=1,
+            le=HARD_MAX_HOTELS_WITH_DETAILS,
+            description=(f"Top-N hotels to enrich with detail. Hard cap = {HARD_MAX_HOTELS_WITH_DETAILS}. Default 5."),
+        ),
     ] = CONFIG.default_max_hotels_with_details,
     adults: Annotated[int, Field(ge=1)] = CONFIG.default_adults,
     children: Annotated[int, Field(ge=0, le=8)] = CONFIG.default_children,
@@ -515,12 +269,7 @@ def search_hotels_with_details(
     price_max: Annotated[int | None, Field(ge=0)] = None,
     property_type: Annotated[PropertyTypeLiteral, Field()] = "HOTELS",
 ) -> dict[str, Any]:
-    """Search + parallel detail fetch for the top N hotels in one call.
-
-    Use when the user wants to COMPARE rooms, rates, or cancellation
-    policies across multiple hotels. Costs 1 + N RPCs. max_hotels is
-    HARD-CAPPED at 15.
-    """
+    """placeholder — overwritten via __doc__ assignment below."""
     params = SearchHotelsWithDetailsParams(
         query=query,
         check_in=check_in,
@@ -545,6 +294,31 @@ def search_hotels_with_details(
     return _execute_search_hotels_with_details_from_params(params)
 
 
+# Assign the real docstring via f-string expansion so the HARD-CAPPED number
+# stays in sync with HARD_MAX_HOTELS_WITH_DETAILS. Python does not evaluate a
+# leading f-string as __doc__, so we set it explicitly BEFORE ``@mcp.tool``
+# captures it at decoration time. test_tool_docstring_matches_hard_max_constant
+# locks this invariant. We also rewrite __name__/__qualname__ so FastMCP's
+# introspection sees the public tool name rather than the _impl helper.
+_search_hotels_with_details_impl.__doc__ = f"""Search + parallel detail fetch for the top N hotels in one call.
+
+Use when the user wants to COMPARE rooms, rates, or cancellation
+policies across multiple hotels. Costs 1 + N RPCs. max_hotels is
+HARD-CAPPED at {HARD_MAX_HOTELS_WITH_DETAILS}.
+"""
+_search_hotels_with_details_impl.__name__ = "search_hotels_with_details"
+_search_hotels_with_details_impl.__qualname__ = "search_hotels_with_details"
+
+search_hotels_with_details = mcp.tool(
+    name="search_hotels_with_details",
+    annotations={
+        "title": "Search Hotels With Details",
+        "readOnlyHint": True,
+        "idempotentHint": True,
+    },
+)(_search_hotels_with_details_impl)
+
+
 # =============================================================================
 # Prompts
 # =============================================================================
@@ -564,7 +338,7 @@ def when_to_deep_search_prompt(user_intent: str = "") -> str:
         "- Call `search_hotels_with_details` ONLY when the user wants to COMPARE\n"
         "  rooms/rates/cancellation across SEVERAL hotels at once. Set\n"
         "  `max_hotels` to the smallest number that satisfies the ask (3-5\n"
-        "  is typical; 10 is the hard maximum).\n"
+        f"  is typical; {HARD_MAX_HOTELS_WITH_DETAILS} is the hard maximum).\n"
         f"User intent: {user_intent or '(unspecified)'}"
     )
 
@@ -579,7 +353,7 @@ def compare_hotels_in_city_prompt(
     check_out: str,
     max_hotels: int = 5,
 ) -> str:
-    max_hotels = min(max_hotels, 15)
+    max_hotels = min(max_hotels, HARD_MAX_HOTELS_WITH_DETAILS)
     return (
         f"Use `search_hotels_with_details` with query='{city} hotels', "
         f"check_in='{check_in}', check_out='{check_out}', max_hotels={max_hotels}. "
@@ -608,7 +382,7 @@ def configuration_resource() -> str:
             "variables": {
                 "STAYS_MCP_DEFAULT_ADULTS": "Adjust default adult count.",
                 "STAYS_MCP_DEFAULT_CURRENCY": "Fallback currency code.",
-                "STAYS_MCP_DEFAULT_MAX_HOTELS_WITH_DETAILS": "Default N (hard cap 15).",
+                "STAYS_MCP_DEFAULT_MAX_HOTELS_WITH_DETAILS": (f"Default N (hard cap {HARD_MAX_HOTELS_WITH_DETAILS})."),
                 "STAYS_MCP_DEFAULT_SORT_BY": "Default sort strategy.",
                 "STAYS_MCP_MAX_RESULTS": "Cap returned result count.",
                 "STAYS_RPS": "Override rate-limiter calls/sec (default 10).",

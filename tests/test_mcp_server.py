@@ -15,6 +15,7 @@ import pytest
 from pydantic import ValidationError
 
 from stays.mcp.server import (
+    HARD_MAX_HOTELS_WITH_DETAILS,
     GetHotelDetailsParams,
     SearchHotelsParams,
     SearchHotelsWithDetailsParams,
@@ -48,6 +49,20 @@ def _fake_result(name="Test Hotel", entity_key="ek123") -> MagicMock:
     r.review_count = 500
     r.lat = 40.0
     r.lng = -74.0
+    r.latitude = 40.0
+    r.longitude = -74.0
+    # Fields the canonical serializer reads but the MCP subset drops —
+    # set to empty so the shared serializer pass-through doesn't choke
+    # on MagicMock defaults (e.g. iterating/unpacking auto-mocks).
+    r.rate_dates = None
+    r.rating_histogram = None
+    r.amenities_available = set()
+    r.category_ratings = []
+    r.nearby = []
+    r.image_urls = []
+    r.google_hotel_id = None
+    r.star_class_label = None
+    r.deal_pct = None
     return r
 
 
@@ -57,6 +72,9 @@ def _fake_detail(name="Test Hotel") -> MagicMock:
     d.address = "123 St"
     d.phone = "555"
     d.rooms = []
+    d.amenity_details = []
+    d.nearby_attractions = []
+    d.recent_reviews = []
     return d
 
 
@@ -239,6 +257,52 @@ async def test_render_prompt_when_to_deep_search():
     text = result.messages[0].content.text
     assert "search_hotels_with_details" in text
     assert "compare 3 hotels in Paris" in text
+
+
+@pytest.mark.asyncio
+async def test_when_to_deep_search_prompt_references_hard_max_constant():
+    """S7: prompt must cite the canonical HARD_MAX_HOTELS_WITH_DETAILS cap.
+
+    Before S7 the prompt said "10 is the hard maximum" while the code
+    enforced 15. This test locks the prompt to the constant to prevent
+    the text from drifting out of sync with enforcement again.
+    """
+    result = await mcp.render_prompt("when-to-deep-search", {"user_intent": ""})
+    text = result.messages[0].content.text
+    assert str(HARD_MAX_HOTELS_WITH_DETAILS) in text
+    assert "10 is the hard maximum" not in text
+
+
+@pytest.mark.asyncio
+async def test_tool_docstring_matches_hard_max_constant():
+    """S7 docstring guard: the ``search_hotels_with_details`` tool docstring
+    (which FastMCP exposes as the tool description) must cite the same hard
+    cap the code enforces. Python does not evaluate f-strings as docstrings,
+    so the docstring uses the literal and this test checks they stay in sync.
+    """
+    from stays.mcp.server import search_hotels_with_details as tool
+
+    # FastMCP may wrap the function; probe the underlying callable for __doc__.
+    raw_doc = getattr(tool, "__doc__", None) or getattr(getattr(tool, "fn", None), "__doc__", None)
+    assert raw_doc is not None
+    assert f"HARD-CAPPED at {HARD_MAX_HOTELS_WITH_DETAILS}" in raw_doc
+
+
+@pytest.mark.asyncio
+async def test_when_to_deep_search_prompt_matches_fixture():
+    """S7: snapshot the prompt body to a golden fixture.
+
+    The fixture at ``tests/fixtures/prompt_when_to_deep_search.txt`` is the
+    permanent prompt-text golden. Any prompt edit must be accompanied by a
+    deliberate fixture update.
+    """
+    from pathlib import Path
+
+    result = await mcp.render_prompt("when-to-deep-search", {"user_intent": ""})
+    rendered = result.messages[0].content.text
+    fixture_path = Path(__file__).parent / "fixtures" / "prompt_when_to_deep_search.txt"
+    expected = fixture_path.read_text()
+    assert rendered == expected
 
 
 @pytest.mark.asyncio

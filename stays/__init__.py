@@ -77,10 +77,11 @@ __all__ = [
 ]
 
 # MCP surface — shipped in core since 0.1.0, so this import should always
-# succeed in normal installs. Guarded defensively against a corrupted
-# install or a user who manually uninstalled a transitive MCP dep; catches
-# both ModuleNotFoundError (module missing) and ImportError (name missing
-# inside an existing module, e.g. when fastmcp's internal shape shifts).
+# succeed in normal installs. The ONLY expected failure mode is a user
+# who manually uninstalled the optional ``fastmcp`` runtime; everything
+# else (broken stays.mcp module, ImportError for names we control, etc.)
+# must surface loudly rather than be silently swallowed.
+_OPTIONAL_MCP_DEPS = frozenset({"fastmcp"})
 try:
     from stays.mcp import (
         get_hotel_details,
@@ -103,9 +104,11 @@ try:
         "search_hotels",
         "search_hotels_with_details",
     ]
-except ImportError:
-    # Covers both ModuleNotFoundError (a dep is missing) and plain
-    # ImportError (a name wasn't bound because an inner try/except
-    # swallowed the failure). Library-only usage (`from stays import
-    # HotelSearchFilters`) keeps working either way.
-    pass
+except ModuleNotFoundError as exc:
+    # Only swallow the failure when the missing module is a known-optional
+    # MCP runtime dep (``fastmcp``). Any other missing module — including
+    # one of our own ``stays.*`` submodules — means the install is broken
+    # and should raise rather than leave callers with a silently-empty
+    # public surface.
+    if exc.name not in _OPTIONAL_MCP_DEPS:
+        raise

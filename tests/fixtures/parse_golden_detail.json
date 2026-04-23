@@ -1,0 +1,226 @@
+{
+  "address": "790 7th Ave, New York, NY 10019",
+  "amenities_available": [
+    8,
+    7,
+    11,
+    40,
+    15
+  ],
+  "amenity_details": [
+    "Crowd",
+    "LGBTQ+ friendly",
+    "LGBTQ+ friendly",
+    "Grab and Go Cafe | The Manhattan at Times Square",
+    "Pet Fee: $200/stay"
+  ],
+  "category_ratings": [
+    {
+      "category_id": 4,
+      "category_label": null,
+      "score": 4.9
+    },
+    {
+      "category_id": 1,
+      "category_label": null,
+      "score": 4.9
+    },
+    {
+      "category_id": 5,
+      "category_label": null,
+      "score": 4.9
+    },
+    {
+      "category_id": 2,
+      "category_label": null,
+      "score": 5.0
+    },
+    {
+      "category_id": 3,
+      "category_label": null,
+      "score": 4.2
+    }
+  ],
+  "check_in_time": "4:00\u00e2\u0080\u00afPM",
+  "check_out_time": "12:00\u00e2\u0080\u00afPM",
+  "currency": null,
+  "deal_pct": null,
+  "description": "Polished hotel offering streamlined rooms & suites, plus a marble-clad lobby lounge & a gym.",
+  "display_price": 138,
+  "entity_key": "ChkIooCAqvyy0fDgARoML2cvMWhoZ18zbWdzEAE",
+  "fid": "0x89c258f88254f2c3:0xe0e14597c5400022",
+  "google_hotel_id": "829777812579848950",
+  "image_urls": [
+    "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF-U8Us5TWi13CZiCs3m6RV-B6cRhqLTSbBmpSZeFwJWXGVrvkskzm9Xbnp_gq3tPueQIvx5h9ity8n9gUHHnutQcSGLZeImUCgBysyQQvUfruFKfcdRAXZ0_-WfSVBNkwoC_8L=s150-w92-h150-n-k-no",
+    "https://lh3.googleusercontent.com/gps-cs-s/APNQkAF-U8Us5TWi13CZiCs3m6RV-B6cRhqLTSbBmpSZeFwJWXGVrvkskzm9Xbnp_gq3tPueQIvx5h9ity8n9gUHHnutQcSGLZeImUCgBysyQQvUfruFKfcdRAXZ0_-WfSVBNkwoC_8L=s287-w287-h192-n-k-no-v1",
+    "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGURQ3DI-N4X9zUOhjd39o3r_ASkcuddHtzo3kEmkU6L9zEzX0z5FwZlFXIL0oVQQiEss7S79kf_t9kUGq5toJCbq_0YwvaX0dZjycf5OLbSMCmHXYPV52kJ40-M_FYEwIXzeyr-sqKUDeg=s287-w287-h192-n-k-no-v1",
+    "https://lh3.googleusercontent.com/gps-cs-s/APNQkAESy9_MFk2yVfAX9B6N0H917Wsfd8yMiu34xIB21BYWR5-07BtKQp9vn07juMRP8KvH5HdN6fvFGWy4tWcnHh_ZNMSENF2keoZjhrmlThVeqD7c2gBQA-Big564Eilnt9Yp_ZzSc6t7hrxU=s287-w287-h192-n-k-no-v1",
+    "https://lh3.googleusercontent.com/gps-proxy/ALd4DhHjv-E4EgcVplAg-7WYPjgAnLesK_ZLFJtFOrnEULFQhrJx4A25PgnwNNQKTiZYtXpTwH4E3dWqwN5Rn8byNEadDIWu1wGzYLZctnCWkbnVqd3G_kdGKQsjdbAxslw2n5awqevCDF7OD3AXx0nUmepywDqjuQLkg5j2nbrndJ4hQJkBZVV8qLAPwaOUP8kEoDPp4Ng=s287-w287-h192-n-k-no-v1",
+    "https://lh3.googleusercontent.com/gps-cs-s/APNQkAHpMAbLUj7LIvJbhijtRip412ytAVDrwh1MbZeeK2y4unENjT3Rh-Guxe_BDeCb_HJYqESaMvuWTJmE08ZnSMeBZqJifcoc-wCgSiw82zupJC3Th-ZaA39I2fS7WFhwyIPciHwXAxT9AM0C=s287-w287-h192-n-k-no-v1",
+    "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGjWDUZb8j1W6F9RCRF3KAmSiKjFy3SOgb2U8WZdI3_dnonUrXpo5aOl-5qB9LX1Db9YDDOqXv_FuHXmbdAo3zoaVOGOZQ0k_D9wR0AvKDcWFDpUEtajCNoxPLdIFEsgJmdmVhxNGdjhjE=s287-w287-h192-n-k-no-v1",
+    "https://lh3.googleusercontent.com/gps-proxy/ALd4DhGx61tyT6MHEXxX7LQ5Lh83BAissOG9fqyq1MPYPpTBjJw2u0dRR5wMTKzWZmXiPaodRKKxsxWchzk7hxWtZ2bessfMfV70fNucaXwqKGKOAx6dUNN_JN0AiksRF2qO7yIAKFiruifM-Cx0S4lqbtgiDFdSisUVgxpIGy0xIeaMI69CoGeNJVNflg=s287-w287-h192-n-k-no-v1",
+    "https://d2hyz2bfif3cr8.cloudfront.net/imageRepo/7/0/129/805/640/One_Bedroom_Suite_Dr._R.jpg",
+    "https://lh3.googleusercontent.com/gps-cs-s/APNQkAEvNywxx4J9KECc1AWmzqbJabhRr_gHzp8LAembrBHOq1kmtnJWrS9opmZfF2EqNTrjXj8sy7bExs3XDzQmwXAMtWZsVSFCEUlLQtqfmn4w8qtPOenzuqMK2tP16OMALLwREura3zHUqZY=s287-w287-h192-n-k-no-v1"
+  ],
+  "kgmid": "/g/1hhg_3mgs",
+  "latitude": 40.7622856,
+  "longitude": -73.98264040000001,
+  "name": "The Manhattan at Times Square Hotel",
+  "nearby": [
+    {
+      "distance_text": "8 min",
+      "duration_minutes": 8,
+      "mode": "mode_8",
+      "name": "Grand Central Terminal"
+    },
+    {
+      "distance_text": "10 min",
+      "duration_minutes": 10,
+      "mode": "mode_8",
+      "name": "33 St"
+    },
+    {
+      "distance_text": "1 min",
+      "duration_minutes": 1,
+      "mode": "transit",
+      "name": "7 Av"
+    },
+    {
+      "distance_text": "3 min",
+      "duration_minutes": 3,
+      "mode": "transit",
+      "name": "50 St"
+    },
+    {
+      "distance_text": "3 min",
+      "duration_minutes": 3,
+      "mode": "transit",
+      "name": "49 St"
+    },
+    {
+      "distance_text": "42 min",
+      "duration_minutes": 42,
+      "mode": "walk",
+      "name": "John F. Kennedy International Airport"
+    },
+    {
+      "distance_text": "32 min",
+      "duration_minutes": 32,
+      "mode": "walk",
+      "name": "Newark Liberty International Airport"
+    },
+    {
+      "distance_text": "30 min",
+      "duration_minutes": 30,
+      "mode": "walk",
+      "name": "LaGuardia Airport"
+    },
+    {
+      "distance_text": "48 min",
+      "duration_minutes": 48,
+      "mode": "walk",
+      "name": "Westchester County Airport"
+    }
+  ],
+  "nearby_attractions": [],
+  "overall_rating": 3.0,
+  "phone": "(212) 581-3300",
+  "rate_dates": null,
+  "rating_histogram": {
+    "bucket_counts": {
+      "1": 2808,
+      "2": 1126,
+      "3": 1540,
+      "4": 1706,
+      "5": 2748
+    }
+  },
+  "recent_reviews": [
+    {
+      "author_name": "Breakfast",
+      "body": "https://lh3.googleusercontent.com/a/ACg8ocJHUHz2uweSMUjvH0WAQTtdZOlceatrykfOu1ITVJn-gXLrag=s40-c-rp-br100",
+      "rating": 1,
+      "review_date": null,
+      "source": null
+    },
+    {
+      "author_name": "Paolo \u00e2\u0080\u009cmstcz\u00e2\u0080\u009d P",
+      "body": "https://lh3.googleusercontent.com/a/ACg8ocKqT5WX3jGpyT_q_xxofSpLRu2xZqMxwQejqJJgm4wk-iJnsg=s40-c-rp-ba4-br100",
+      "rating": 1,
+      "review_date": null,
+      "source": null
+    },
+    {
+      "author_name": null,
+      "body": "https://lh3.googleusercontent.com/a/ACg8ocLhw6xL7rsKwcu5CHe1jNw-seXWE4E6D6qsqjS0kFW2bp5x=s40-c-rp-ba6-br100",
+      "rating": 1,
+      "review_date": null,
+      "source": null
+    }
+  ],
+  "review_count": 9928,
+  "rooms": [
+    {
+      "bed_config": null,
+      "description": null,
+      "max_occupancy": null,
+      "name": "Standard Room",
+      "rates": [
+        {
+          "breakfast_included": false,
+          "cancellation": {
+            "description": null,
+            "free_until": null,
+            "kind": "non_refundable"
+          },
+          "currency": "USD",
+          "deeplink_url": "https://www.google.com/aclk?sa=l&ai=DChsSEwi40Mz8vP-TAxWVBq0GHTMyMS8YACICCAEQARoCcHY&co=1&ase=2&gclid=EAIaIQobChMIuNDM_Lz_kwMVlQatBh0zMjEvEAoYASABEgJFUPD_BwE&cid=CAASugHkaIevl18XeasBRll63b1gjUNjYI9HBkisAPUInQlxYsE082JB13jUVSUsN_YLWRlqULFkyNZgo7HpqYtE-oxQquJSr9y2mHYzxBQPvjHdKXsV3Fz2x3_HxBqrCI-UeLNTbHF6yqrg-WiTMHZKR5TEjMBVM0p_Rfy4PuupgOXonFEwBM3ZHBkoLbmfyL3gcSQdu_jReic49Q5QVg8m5iNGTSnGMVtZLHYNYr_R67lw86mREQY0hVTne6o&category=acrcp_v1_48&sig=AOD64_1QC7ItKVv4ZdHW3oPR7_q8KWoMnA&adurl",
+          "includes_taxes_and_fees": false,
+          "price": 158,
+          "provider": "Expedia.com"
+        },
+        {
+          "breakfast_included": false,
+          "cancellation": {
+            "description": null,
+            "free_until": null,
+            "kind": "non_refundable"
+          },
+          "currency": "USD",
+          "deeplink_url": "https://www.google.com/aclk?sa=l&ai=DChsSEwi40Mz8vP-TAxWVBq0GHTMyMS8YACICCAEQGBoCcHY&co=1&ase=2&gclid=EAIaIQobChMIuNDM_Lz_kwMVlQatBh0zMjEvEAoYAiABEgLIDfD_BwE&cid=CAASugHkaIevl18XeasBRll63b1gjUNjYI9HBkisAPUInQlxYsE082JB13jUVSUsN_YLWRlqULFkyNZgo7HpqYtE-oxQquJSr9y2mHYzxBQPvjHdKXsV3Fz2x3_HxBqrCI-UeLNTbHF6yqrg-WiTMHZKR5TEjMBVM0p_Rfy4PuupgOXonFEwBM3ZHBkoLbmfyL3gcSQdu_jReic49Q5QVg8m5iNGTSnGMVtZLHYNYr_R67lw86mREQY0hVTne6o&category=acrcp_v1_48&sig=AOD64_2ycLLJzkZBEJmRinNAwmrCytw22g&adurl",
+          "includes_taxes_and_fees": false,
+          "price": 158,
+          "provider": "The Manhattan at Times Square Hotel"
+        },
+        {
+          "breakfast_included": false,
+          "cancellation": {
+            "description": "Free cancellation until Apr 24 11:59\u00e2\u0080\u00afPM",
+            "free_until": "2026-04-24",
+            "kind": "free_until"
+          },
+          "currency": "USD",
+          "deeplink_url": "https://www.google.com/aclk?sa=l&ai=DChsSEwi40Mz8vP-TAxWVBq0GHTMyMS8YACICCAEQVhoCcHY&co=1&ase=2&gclid=EAIaIQobChMIuNDM_Lz_kwMVlQatBh0zMjEvEAoYAyABEgJIA_D_BwE&cid=CAASugHkaIevl18XeasBRll63b1gjUNjYI9HBkisAPUInQlxYsE082JB13jUVSUsN_YLWRlqULFkyNZgo7HpqYtE-oxQquJSr9y2mHYzxBQPvjHdKXsV3Fz2x3_HxBqrCI-UeLNTbHF6yqrg-WiTMHZKR5TEjMBVM0p_Rfy4PuupgOXonFEwBM3ZHBkoLbmfyL3gcSQdu_jReic49Q5QVg8m5iNGTSnGMVtZLHYNYr_R67lw86mREQY0hVTne6o&category=acrcp_v1_48&sig=AOD64_3SprY53Bicn7Em2BxJ7tG9PGEyxA&adurl",
+          "includes_taxes_and_fees": false,
+          "price": 158,
+          "provider": "Booking.com"
+        },
+        {
+          "breakfast_included": false,
+          "cancellation": {
+            "description": null,
+            "free_until": null,
+            "kind": "non_refundable"
+          },
+          "currency": "USD",
+          "deeplink_url": "https://www.google.com/aclk?sa=l&ai=DChsSEwi40Mz8vP-TAxWVBq0GHTMyMS8YACICCAEQWxoCcHY&co=1&ase=2&gclid=EAIaIQobChMIuNDM_Lz_kwMVlQatBh0zMjEvEAoYBCABEgIVFvD_BwE&cid=CAASugHkaIevl18XeasBRll63b1gjUNjYI9HBkisAPUInQlxYsE082JB13jUVSUsN_YLWRlqULFkyNZgo7HpqYtE-oxQquJSr9y2mHYzxBQPvjHdKXsV3Fz2x3_HxBqrCI-UeLNTbHF6yqrg-WiTMHZKR5TEjMBVM0p_Rfy4PuupgOXonFEwBM3ZHBkoLbmfyL3gcSQdu_jReic49Q5QVg8m5iNGTSnGMVtZLHYNYr_R67lw86mREQY0hVTne6o&category=acrcp_v1_48&sig=AOD64_1NyKaBny8xMeADb90yAORq3M4gVA&adurl",
+          "includes_taxes_and_fees": false,
+          "price": 158,
+          "provider": "Hotels.com"
+        }
+      ]
+    }
+  ],
+  "star_class": 4,
+  "star_class_label": "4-star hotel"
+}

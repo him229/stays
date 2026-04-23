@@ -1,0 +1,1 @@
+{"success": false, "data_source": "google_hotels", "search_type": "details", "error": {"type": "validation_error", "message": "hotel ID missing"}, "query": {"entity_key": "ChkI_bad", "check_in": "2026-07-22", "check_out": "2026-07-26", "currency": null}}

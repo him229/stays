@@ -2,15 +2,14 @@
 
 from __future__ import annotations
 
-import json as _json
 from typing import Annotated, Any
 
 import typer
 
-from stays.cli import _render, _serialize, _validate
+from stays.cli import _render, _runtime, _serialize, _validate
 from stays.cli._console import console
 from stays.cli._enums import OutputFormat
-from stays.models.google_hotels.hotels import DateRange
+from stays.models.google_hotels.base import DateRange
 from stays.search.client import BatchExecuteError, TransientBatchExecuteError
 from stays.search.hotels import MissingHotelIdError, SearchHotels
 
@@ -51,35 +50,29 @@ def details(
     try:
         detail = SearchHotels().get_details(**get_details_kwargs)
     except MissingHotelIdError as exc:
-        return _emit_error("details", str(exc), "validation_error", query, output_format)
-    except (BatchExecuteError, TransientBatchExecuteError) as exc:
-        return _emit_error("details", str(exc), "network_error", query, output_format)
-
-    if output_format == OutputFormat.JSON:
-        envelope = _serialize.build_success(
+        _runtime.emit_error(
             search_type="details",
+            message=str(exc),
+            error_type="validation_error",
             query=query,
-            results_key="hotel",
-            results=_serialize.serialize_hotel_detail(detail),
+            output_format=output_format,
         )
-        typer.echo(_json.dumps(envelope, indent=2))
-        return
-    if output_format == OutputFormat.JSONL:
-        typer.echo(_json.dumps(_serialize.serialize_hotel_detail(detail)))
-        return
-    _render.render_detail(detail, console=console)
+        raise typer.Exit(1) from exc
+    except (BatchExecuteError, TransientBatchExecuteError) as exc:
+        _runtime.emit_error(
+            search_type="details",
+            message=str(exc),
+            error_type="network_error",
+            query=query,
+            output_format=output_format,
+        )
+        raise typer.Exit(1) from exc
 
-
-def _emit_error(
-    search_type: str,
-    message: str,
-    error_type: str,
-    query: dict[str, Any],
-    output_format: OutputFormat,
-) -> None:
-    if output_format == OutputFormat.TEXT:
-        typer.echo(f"Error: {message}")
-        raise typer.Exit(1)
-    envelope = _serialize.build_error(search_type=search_type, message=message, error_type=error_type, query=query)
-    typer.echo(_json.dumps(envelope, indent=2 if output_format == OutputFormat.JSON else None))
-    raise typer.Exit(1)
+    _runtime.emit_result(
+        search_type="details",
+        query=query,
+        results_key="hotel",
+        serialized_results=_serialize.serialize_hotel_detail(detail),
+        output_format=output_format,
+        render=lambda: _render.render_detail(detail, console=console),
+    )

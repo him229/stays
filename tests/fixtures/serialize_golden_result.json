@@ -1,0 +1,30 @@
+{
+  "amenities": [
+    "POOL",
+    "WIFI"
+  ],
+  "category_ratings": [],
+  "check_in_time": "15:00",
+  "check_out_time": "11:00",
+  "currency": "USD",
+  "deal_pct": null,
+  "display_price": 180,
+  "entity_key": "CgoI_TEST_KEY_0001",
+  "fid": "0x123:0x456",
+  "google_hotel_id": null,
+  "image_urls": [],
+  "kgmid": "/g/1q2w3e4r5",
+  "latitude": 35.6812,
+  "longitude": 139.7671,
+  "name": "Tokyo Central Hotel",
+  "nearby": [],
+  "overall_rating": 4.3,
+  "rate_dates": {
+    "check_in": "2026-07-22",
+    "check_out": "2026-07-26"
+  },
+  "rating_histogram": null,
+  "review_count": 1248,
+  "star_class": 4,
+  "star_class_label": "4-star hotel"
+}

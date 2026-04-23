@@ -27,6 +27,18 @@ async def test_in_process_call_tool_roundtrip():
     fake_result.review_count = 10
     fake_result.lat = 0.0
     fake_result.lng = 0.0
+    fake_result.latitude = 0.0
+    fake_result.longitude = 0.0
+    # Fields the canonical serializer reads but the MCP subset drops.
+    fake_result.rate_dates = None
+    fake_result.rating_histogram = None
+    fake_result.amenities_available = set()
+    fake_result.category_ratings = []
+    fake_result.nearby = []
+    fake_result.image_urls = []
+    fake_result.google_hotel_id = None
+    fake_result.star_class_label = None
+    fake_result.deal_pct = None
 
     with patch("stays.mcp.server.SearchHotels") as M:
         M.return_value.search.return_value = [fake_result]

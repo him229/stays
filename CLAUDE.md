@@ -6,11 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `stays` is a Python library and MCP server that provides programmatic access to Google Hotels through direct API interaction (reverse engineering). The project consists of:
 
-- **MCP server** (`stays/mcp/`) — FastMCP-based stdio + streamable-HTTP server exposing three tools
+- **MCP server** (`stays/mcp/`) — FastMCP-based stdio + streamable-HTTP server exposing three tools. Layered into `server.py` (registration only — `@mcp.tool`/`@mcp.prompt`/`@mcp.resource` + re-exports), `_config.py` (`HotelSearchConfig`, `CONFIG`, `CONFIG_SCHEMA`, `HARD_MAX_HOTELS_WITH_DETAILS = 15`), `_params.py` (pydantic `*Params` classes + shared `_validate_child_ages`), and `_executors.py` (`_execute_*_from_params` + MCP-subset `_serialize_hotel_*` wrappers).
 - **Search engine** (`stays/search/`) — hotel search, detail, and parallel enrichment
 - **Core client** (`stays/search/client.py`) — rate-limited `curl_cffi` session with Chrome TLS impersonation
 - **Data models** (`stays/models/google_hotels/`) — pydantic filter/result/detail models
-- **Parse layer** (`stays/search/parse.py`) — response decoding and slot extraction
+- **Parse layer** (`stays/search/parse/`) — response parsing split across `search_parser`/`detail_parser`/`policy_parser`/`provider_parser`/`slots.py`. `slots.py` owns named slot-index constants + `safe_get(tree, *path, default)`.
+- **Canonical serializers** (`stays/serialize.py`) — single source of truth for hotel → dict serialization consumed by both the CLI and MCP (the CLI-local `stays/cli/_serialize.py` is a re-export shim).
+- **CLI runtime helpers** (`stays/cli/_runtime.py`) — shared `emit_result` / `emit_error` / `build_filters_from_cli_args` plumbing used by `search` / `details` / `enrich` subcommands.
+- **MCP setup backends** (`stays/mcp/setup/_backend.py` + `_adapters.py`) — `SetupBackend` Protocol + `SetupReport` dataclass + `BACKENDS` registry; the legacy `stays.mcp.setup.{claude,codex,chatgpt}.register(...)` / `.build()` entry points are preserved on top.
 
 The implementation leans heavily on reverse-engineering captures under `docs/reverse-engineering/` — slot maps and filter coverage notes are the authoritative reference for the wire format.
 
@@ -47,9 +50,21 @@ make clean                   # Remove build/dist/cache artifacts
 ```
 
 ### Test Configuration
-- Markers: `live` (hits google.com), `slow` (rate-limiter timing), `browser_verify` (opt-in Playwright-vs-MCP diff, requires `--browser-verify`)
+- Markers: `live` (hits google.com), `slow` (rate-limiter timing), `browser_verify` (opt-in browser-vs-programmatic diff, requires `--browser-verify`)
 - Test tree mirrors source: `tests/test_search_hotels.py`, `tests/test_mcp_server.py`, `tests/test_hotel_serializer.py`, `tests/browser_verification/`
-- Live tests are gated — default `pytest` run skips them; run `pytest -m live` to include.
+- **Both `live` and `browser_verify` are auto-skipped by `conftest.py` on bare `pytest`.** Opt in via flags:
+  - `pytest --live` or `pytest -m live` — run live tests (hits google.com, flaky)
+  - `pytest --browser-verify` — run browser-oracle suite (requires agent-browser or Playwright)
+  - `pytest --live --browser-verify` — run everything
+- Makefile targets mirror this: `make test` (offline), `make test-live`, `make test-browser`, `make test-all`.
+- CI split: `test.yml` runs the offline suite on every PR + matrix (3.10–3.13); `test-live.yml` runs live tests on push-to-main + nightly cron + manual dispatch (continue-on-error, doesn't block merges).
+- **Golden-fixture regression guards** pin byte-identical output of the parse, serialize, and CLI envelope layers: `tests/test_parse_golden.py`, `tests/test_serialize_golden.py`, `tests/test_cli_envelope_golden.py`. Updates must regenerate the fixtures deliberately, not by silently relaxing assertions.
+- **Live CLI E2E suite:** `tests/test_cli_live.py` spawns the `stays` console script in 9 subprocess scenarios against the real Google API (excluded from default `make test`; run via `make test-live` or `make test-all`).
+- **Narrow ImportError test:** `tests/test_init.py` locks in that `stays/__init__.py` only catches `ModuleNotFoundError` for the optional `fastmcp` import (bare `ImportError` from a broken install still surfaces).
+- **Browser-verify suites** (both opt-in via `--browser-verify`):
+  - `tests/browser_verification/test_browser_match.py` — Python API vs browser oracle (10 cases).
+  - `tests/browser_verification/test_cli_vs_browser.py` — CLI subprocess vs browser oracle (same 10 cases, different entry point).
+  - Driver is pluggable via `STAYS_BROWSER_DRIVER=agent-browser|playwright` (agent-browser preferred; Playwright is the fallback when agent-browser isn't on `$PATH`).
 
 ## Architecture Overview
 
@@ -64,31 +79,40 @@ make clean                   # Remove build/dist/cache artifacts
 2. **Search Engine** (`stays/search/hotels.py`)
    - `SearchHotels.search(filters)` — list view, returns `list[HotelResult]`
    - `SearchHotels.get_details(entity_key, dates, *, currency, location)` — single hotel deep view
-   - `SearchHotels.search_with_details(filters, max_hotels)` — parallel enrichment (thread pool of N)
+   - `SearchHotels.search_with_details(filters, max_hotels)` — parallel enrichment (thread pool of N). Only `BatchExecuteError` / `TransientBatchExecuteError` / `MissingHotelIdError` become per-hotel errors; unknown exceptions (including parser bugs) now propagate instead of being silently swallowed.
+   - `EnrichedResult` carries `error_kind: Literal["transient","fatal"] | None` plus an `is_retryable` property — callers can tell retryable transient failures from fatal ones.
 
-3. **Parse Layer** (`stays/search/parse.py`)
-   - `parse_search_response(inner)` → `list[HotelResult]`
-   - `parse_detail_response(inner)` → `HotelDetail`
+3. **Parse Layer** (`stays/search/parse/`)
+   - `parse_search_response(inner)` → `list[HotelResult]` (in `search_parser.py`)
+   - `parse_detail_response(inner)` → `HotelDetail` (in `detail_parser.py`)
+   - Slot indices + a `safe_get(tree, *path, default)` helper centralized in `stays/search/parse/slots.py`; provider/policy extraction split into `provider_parser.py` / `policy_parser.py`
    - Extracts from Google's nested-array RPC response at well-known slot indices (see `docs/reverse-engineering/slot-map.md`)
 
 4. **Filter Model** (`stays/models/google_hotels/hotels.py`)
    - `HotelSearchFilters.format()` returns the inner payload list for `batchexecute`
    - Serializes 16+ filter slots: location, dates, guests, currency, sort_by, hotel_class, amenities, brands, price_range, min_guest_rating, free_cancellation, eco_certified, special_offers, entity_key
 
-5. **MCP Server** (`stays/mcp/server.py`)
-   - FastMCP instance with three tools, two prompts, one resource
-   - `@mcp.tool` signatures use `Annotated[..., Field(...)]` for rich JSON schema
-   - `Pydantic BaseModel` params classes (`SearchHotelsParams`, `GetHotelDetailsParams`, `SearchHotelsWithDetailsParams`) enforce validation before the network call
+5. **MCP Server** (`stays/mcp/`)
+   - `server.py` is the registration surface only: `@mcp.tool` / `@mcp.prompt` / `@mcp.resource` definitions plus re-exports of the params/executors
+   - `_config.py` owns `HotelSearchConfig`, `CONFIG`, `CONFIG_SCHEMA`, and `HARD_MAX_HOTELS_WITH_DETAILS = 15` (the canonical cap used by both the prompt copy and the `search_hotels_with_details` docstring)
+   - `_params.py` owns the pydantic params classes (`SearchHotelsParams`, `GetHotelDetailsParams`, `SearchHotelsWithDetailsParams`) and the deduplicated `_validate_child_ages` helper
+   - `_executors.py` owns `_execute_*_from_params` + the MCP-subset `_serialize_hotel_*` wrappers
+   - `@mcp.tool` signatures use `Annotated[..., Field(...)]` for rich JSON schema; pydantic validation runs before the network call
    - Spawned as `stays mcp` (stdio) or `stays mcp-http` (streamable HTTP) by the CLI
 
 6. **CLI** (`stays/cli/`)
    - `stays/cli/_entry.py` — console-script entry (smart-default router that treats `stays "tokyo"` as `stays search "tokyo"`)
    - `stays/cli/_app.py` — `typer.Typer` app + subcommand registration
    - `stays/cli/commands/{search,details,enrich,mcp,setup}.py` — subcommand bodies
+   - `stays/cli/_runtime.py` — shared `emit_result` / `emit_error` / `build_filters_from_cli_args` plumbing the subcommands delegate to
+   - `stays/cli/_serialize.py` — thin re-export shim over the canonical `stays/serialize.py`
    - Three output formats: `--format text` (rich tables, default), `--format json`, `--format jsonl`
+   - CLI `enrich` surfaces each item's `error_kind` + `is_retryable` in its output envelope (matching the MCP `search_hotels_with_details` shape)
 
 7. **MCP setup installers** (`stays/mcp/setup/`)
-   - `stays/mcp/setup/{claude,codex,chatgpt}.py` — per-client MCP registration backends
+   - `stays/mcp/setup/_backend.py` — `SetupBackend` Protocol + `SetupReport` dataclass
+   - `stays/mcp/setup/_adapters.py` — `BACKENDS` registry wiring the per-client modules to the Protocol
+   - `stays/mcp/setup/{claude,codex,chatgpt}.py` — per-client MCP registration backends (the legacy `register(...)` / `build()` signatures are preserved)
    - `stays/mcp/setup/__init__.py` — shared helpers (`resolve_stays_command`, canonical JSON/TOML blocks)
    - Pure-stdlib: setup logic has zero runtime MCP dependencies (safe to import during install)
 
@@ -104,14 +128,22 @@ make clean                   # Remove build/dist/cache artifacts
 
 - `stays/cli/_entry.py` — console-script entry (smart-default router)
 - `stays/cli/_app.py` — `typer.Typer` app + command registration
+- `stays/cli/_runtime.py` — shared `emit_result`, `emit_error`, and `build_filters_from_cli_args` helpers
+- `stays/cli/_serialize.py` — re-export shim over the canonical `stays/serialize.py`
 - `stays/cli/commands/{search,details,enrich,mcp,setup}.py` — subcommand bodies
+- `stays/mcp/setup/_backend.py` — `SetupBackend` Protocol + `SetupReport` dataclass
+- `stays/mcp/setup/_adapters.py` — `BACKENDS` registry binding per-client modules to the Protocol
 - `stays/mcp/setup/{claude,codex,chatgpt}.py` — per-client MCP registration backends
 - `stays/mcp/setup/__init__.py` — shared helpers (`resolve_stays_command`, canonical JSON/TOML)
 - `stays/mcp/_entry.py` — MCP server entry (`run`, `run_http`)
-- `stays/mcp/server.py` — FastMCP tool definitions + prompts + resource
+- `stays/mcp/server.py` — FastMCP registration surface (tool/prompt/resource decorators + re-exports)
+- `stays/mcp/_config.py` — `HotelSearchConfig`, `CONFIG`, `CONFIG_SCHEMA`, `HARD_MAX_HOTELS_WITH_DETAILS = 15`
+- `stays/mcp/_params.py` — MCP `*Params` pydantic classes + `_validate_child_ages`
+- `stays/mcp/_executors.py` — `_execute_*_from_params` + `_serialize_hotel_*` MCP wrappers
+- `stays/serialize.py` — canonical hotel serializers shared by CLI and MCP
 - `stays/search/client.py` — HTTP client with retry/rate-limit stack
-- `stays/search/hotels.py` — high-level `SearchHotels` API
-- `stays/search/parse.py` — response parsing
+- `stays/search/hotels.py` — high-level `SearchHotels` API + `EnrichedResult` (`error_kind`, `is_retryable`)
+- `stays/search/parse/` — response parsing package (`search_parser`, `detail_parser`, `policy_parser`, `provider_parser`, `slots`)
 - `stays/models/google_hotels/base.py` — shared enums + base pydantic models
 - `stays/models/google_hotels/hotels.py` — `HotelSearchFilters` + serializer
 - `stays/models/google_hotels/result.py` — list-view `HotelResult`
@@ -149,9 +181,9 @@ Deep view for ONE hotel. Requires `entity_key` from `search_hotels`.
 Returns: `HotelDetail` with rooms, per-OTA rate plans, cancellation policies, full amenity list.
 
 ### `search_hotels_with_details`
-Search + parallel detail fetch for the top N (1–15) hotels in one call.
+Search + parallel detail fetch for the top N (1–15) hotels in one call. The hard cap is `HARD_MAX_HOTELS_WITH_DETAILS = 15` (defined in `stays/mcp/_config.py`); both the `search_hotels_with_details` tool docstring and the `when-to-deep-search` prompt reference the same constant.
 
-Use only when the user wants to compare rooms/rates/cancellation across SEVERAL hotels. Costs 1 + N RPCs.
+Use only when the user wants to compare rooms/rates/cancellation across SEVERAL hotels. Costs 1 + N RPCs. Each returned item carries `error_kind` (`"transient" | "fatal" | None`) and `is_retryable` so callers can distinguish retryable transient failures from fatal ones.
 
 ## Code Style and Standards
 

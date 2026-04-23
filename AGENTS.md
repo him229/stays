@@ -24,11 +24,20 @@ All standard commands live in the `Makefile`. Key ones:
 - **CLI detail:** `uv run stays details <entity_key> --check-in ... --check-out ...`
 - **Build wheel/sdist:** `make build`
 
+## Module layout notes
+
+- The MCP server is split into `stays/mcp/{server,_config,_params,_executors}.py`: `server.py` is the registration surface only; `_config.py` holds `HotelSearchConfig` + `HARD_MAX_HOTELS_WITH_DETAILS = 15`; `_params.py` holds the pydantic `*Params` classes; `_executors.py` holds the `_execute_*_from_params` bodies.
+- The response parser lives under the package `stays/search/parse/` (`search_parser`, `detail_parser`, `policy_parser`, `provider_parser`, `slots`), not the old single `parse.py`.
+- `SearchHotels.search_with_details` returns `EnrichedResult` items with `error_kind: "transient" | "fatal" | None` and an `is_retryable` property — use these instead of inspecting error strings.
+
 ## Testing caveats
 
-- Tests under `tests/test_*_live.py` and `tests/test_mcp_live.py` hit the live Google Hotels API and are rate-limited (HTTP 429). These often fail in sandboxed/CI environments. All offline tests pass reliably.
-- Run `make test` (default) to skip live tests, or `uv run pytest -vv -m "not live"` equivalently.
-- Browser-verification tests under `tests/browser_verification/` require Playwright and are gated behind `--browser-verify`; they're opt-in only.
+- Tests marked `@pytest.mark.live` hit the live Google Hotels API and are rate-limited (HTTP 429). Tests marked `@pytest.mark.browser_verify` spawn a browser. **Both are auto-skipped by `conftest.py` on bare `pytest`** — no file-path ignore list to maintain.
+- `make test` / bare `pytest` = offline only. Safe default for sandboxed and CI environments.
+- `make test-live` / `pytest --live -m live` = live tests only. Hits google.com; expect rate-limit flakiness.
+- `make test-browser` / `pytest --browser-verify -m browser_verify` = browser-verify suite only. Requires agent-browser or Playwright on `$PATH` (`STAYS_BROWSER_DRIVER=agent-browser|playwright` selects which).
+- `make test-all` = everything.
+- CI split: offline suite gates PRs (`test.yml`, matrix 3.10–3.13); live suite runs on push-to-main + nightly cron (`test-live.yml`, `continue-on-error: true`, doesn't block merges).
 
 ## MCP server notes
 

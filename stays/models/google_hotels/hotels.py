@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import json
 import urllib.parse
-from enum import Enum
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -133,18 +132,6 @@ class HotelSearchFilters(BaseModel):
 
             [filter_details, None, [], price_slot, (optional) guest_rating]
         """
-
-        def serialize(obj):
-            if isinstance(obj, Enum):
-                return obj.value
-            if isinstance(obj, list):
-                return [serialize(x) for x in obj]
-            if isinstance(obj, dict):
-                return {k: serialize(v) for k, v in obj.items()}
-            if isinstance(obj, BaseModel):
-                return serialize(obj.model_dump(exclude_none=True))
-            return obj
-
         # --- [1][2][0] Location slot (3-elem, per docs/reverse-engineering/slot-map.md) ----
         # Shape: [None, [[kgmid, None, None, None, None, fid, display_name]], []]
         # The trailing empty list is a reserved slot observed in every
@@ -301,8 +288,9 @@ class HotelSearchFilters(BaseModel):
         # Google silently IGNORES filters (brands, hotel_class, amenities,
         # free_cancellation) when this element is missing — the request
         # still returns hotels but the filter application is dropped.
-        # Detail queries overlay the entity_key into slot [2][5] (handled
-        # by SearchHotels._with_entity_key); list queries leave it null.
+        # Detail queries set ``entity_key`` into slot [2][5] directly on the
+        # filter (see ``HotelSearchFilters.entity_key``); list queries leave
+        # it null.
         request_meta: list = [1, None, None, None, None, None, 13, None, 0]
         if self.entity_key is not None:
             request_meta[5] = self.entity_key

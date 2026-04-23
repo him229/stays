@@ -8,7 +8,7 @@ import subprocess
 
 import pytest
 
-from stays.mcp.setup import canonical_server_block, resolve_stays_command
+from stays.mcp.setup import BACKENDS, SetupReport, canonical_server_block, resolve_stays_command
 from stays.mcp.setup import chatgpt as chatgpt_backend
 from stays.mcp.setup import claude as claude_backend
 from stays.mcp.setup import codex as codex_backend
@@ -58,9 +58,7 @@ class TestClaude:
         assert report.fallback_json is not None
         assert any("No Claude client" in m for m in report.messages)
 
-    def test_already_registered_no_replace_does_not_print_fallback(
-        self, monkeypatch, tmp_path
-    ):
+    def test_already_registered_no_replace_does_not_print_fallback(self, monkeypatch, tmp_path):
         """Regression: if clients ARE detected but already have `stays`
         registered, a no-op re-run must NOT print the 'No Claude client
         detected' JSON fallback — that message is reserved for the case
@@ -73,9 +71,7 @@ class TestClaude:
         monkeypatch.setattr(shutil, "which", which)
 
         cfg = tmp_path / "claude_desktop_config.json"
-        cfg.write_text(
-            json.dumps({"mcpServers": {"stays": {"command": "/bin/stays", "args": ["mcp"]}}})
-        )
+        cfg.write_text(json.dumps({"mcpServers": {"stays": {"command": "/bin/stays", "args": ["mcp"]}}}))
         monkeypatch.setattr(claude_backend, "claude_desktop_config_path", lambda: cfg)
 
         # Claude Code reports `stays` already registered.
@@ -103,9 +99,7 @@ class TestClaude:
 
         monkeypatch.setattr(shutil, "which", which)
         cfg = tmp_path / "claude_desktop_config.json"
-        cfg.write_text(
-            json.dumps({"mcpServers": {"stays": {"command": "/bin/stays", "args": ["mcp"]}}})
-        )
+        cfg.write_text(json.dumps({"mcpServers": {"stays": {"command": "/bin/stays", "args": ["mcp"]}}}))
         monkeypatch.setattr(claude_backend, "claude_desktop_config_path", lambda: cfg)
         monkeypatch.setattr(
             claude_backend.subprocess,
@@ -499,3 +493,120 @@ class TestCodexEdgeCases:
         assert not report.registered
         assert report.fallback_toml is not None
         assert "[mcp_servers.stays]" in report.fallback_toml
+
+
+class TestBackendsProtocol:
+    """Coverage for the Protocol-path wrappers (stays.mcp.setup.BACKENDS).
+
+    The legacy module-level ``register()`` / ``build()`` calls tested
+    above stay the authoritative source of truth — these tests only
+    verify that adapters correctly forward kwargs and wrap reports.
+    """
+
+    def test_backends_registry_populated(self):
+        assert set(BACKENDS.keys()) == {"claude", "codex", "chatgpt"}
+
+    def test_backends_claude_register_forwards_kwargs(self, monkeypatch):
+        """ClaudeAdapter.register must forward every kwarg to claude.register."""
+        captured: dict[str, object] = {}
+
+        def fake_register(**kwargs):
+            captured.update(kwargs)
+            rep = claude_backend.ClaudeSetupReport()
+            rep.claude_code_registered = True
+            rep.messages.append("ok")
+            return rep
+
+        monkeypatch.setattr(claude_backend, "register", fake_register)
+        report = BACKENDS["claude"].register(
+            replace=True,
+            force_desktop_only=False,
+            print_json_only=False,
+        )
+        assert captured == {
+            "replace": True,
+            "force_desktop_only": False,
+            "print_json_only": False,
+        }
+        assert isinstance(report, SetupReport)
+        assert report.kind == "claude"
+        assert report.ok is True
+        assert "ok" in report.message
+
+    def test_backends_claude_register_surfaces_fallback_json(self, monkeypatch):
+        """When the legacy register returns a fallback_json, the adapter
+        must surface it via ``config_text``."""
+
+        def fake_register(**kwargs):
+            rep = claude_backend.ClaudeSetupReport()
+            rep.fallback_json = '{"mcpServers": {"stays": {}}}'
+            rep.messages.append("No Claude client detected.")
+            return rep
+
+        monkeypatch.setattr(claude_backend, "register", fake_register)
+        report = BACKENDS["claude"].register()
+        assert report.ok is True  # fallback json counts as useful output
+        assert report.config_text is not None
+        assert "mcpServers" in report.config_text
+
+    def test_backends_codex_register_forwards_kwargs(self, monkeypatch):
+        """CodexAdapter.register must forward kwargs verbatim."""
+        captured: dict[str, object] = {}
+
+        def fake_register(**kwargs):
+            captured.update(kwargs)
+            rep = codex_backend.CodexSetupReport()
+            rep.registered = True
+            rep.messages.append("Codex: registered 'stays'.")
+            return rep
+
+        monkeypatch.setattr(codex_backend, "register", fake_register)
+        report = BACKENDS["codex"].register(replace=False, print_toml_only=True)
+        assert captured == {"replace": False, "print_toml_only": True}
+        assert isinstance(report, SetupReport)
+        assert report.kind == "codex"
+        assert report.ok is True
+        assert "registered" in report.message
+
+    def test_backends_codex_register_returns_fallback_toml(self, monkeypatch):
+        """When the legacy register surfaces fallback_toml, it must end
+        up on ``SetupReport.config_text``."""
+
+        def fake_register(**kwargs):
+            rep = codex_backend.CodexSetupReport()
+            rep.fallback_toml = '[mcp_servers.stays]\ncommand = "/bin/stays"\n'
+            rep.messages.append("Codex CLI not found.")
+            return rep
+
+        monkeypatch.setattr(codex_backend, "register", fake_register)
+        report = BACKENDS["codex"].register()
+        assert report.ok is True
+        assert report.config_text is not None
+        assert "[mcp_servers.stays]" in report.config_text
+
+    def test_backends_chatgpt_build_instructions_is_non_empty(self):
+        """ChatGPTAdapter.build_instructions must be non-empty and
+        include the things we document (OAuth, Developer Mode)."""
+        text = BACKENDS["chatgpt"].build_instructions()
+        assert text  # non-empty
+        assert "OAuth" in text
+        assert "Developer Mode" in text
+        assert "chatgpt.com" in text
+
+    def test_backends_chatgpt_register_returns_ok_report_with_config_text(self):
+        """ChatGPT has no automated registration — register() must
+        return ok=True with the instructions materialized as
+        ``config_text`` so callers can treat every backend uniformly."""
+        report = BACKENDS["chatgpt"].register()
+        assert isinstance(report, SetupReport)
+        assert report.kind == "chatgpt"
+        assert report.ok is True
+        assert report.config_text is not None
+        assert report.config_text == BACKENDS["chatgpt"].build_instructions()
+
+    def test_backends_chatgpt_register_ignores_unknown_kwargs(self):
+        """ChatGPTAdapter.register must tolerate arbitrary kwargs so
+        caller code that passes ``replace=True`` (valid for other
+        backends) doesn't blow up."""
+        report = BACKENDS["chatgpt"].register(replace=True, foo="bar")
+        assert report.ok is True
