@@ -9,8 +9,13 @@ around Google Hotels — PRs are welcome.
 git clone https://github.com/him229/stays.git
 cd stays
 make install-dev
+uv run pre-commit install --hook-type pre-commit --hook-type pre-push
 make test
 ```
+
+The pre-commit hook runs `ruff format` + `ruff check --fix` on every commit;
+the pre-push hook runs the offline pytest suite. Both mirror CI, so a green
+local commit means a green CI run.
 
 ## Before you submit a PR
 

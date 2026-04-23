@@ -12,6 +12,7 @@ CLI envelope cannot observe; test_mcp_live covers the MCP dispatch
 surface (Annotated[..., Field] params + tool wiring); test_detail_live
 exercises the SearchHotels Python API without subprocess/typer argv.
 """
+
 from __future__ import annotations
 
 import json
@@ -28,9 +29,7 @@ def run_cli(*args: str, timeout: int = 120) -> dict[str, Any]:
     """Run `stays <args> --format json` and return parsed JSON envelope."""
     cmd = [sys.executable, "-m", "stays.cli._entry", *args, "--format", "json"]
     proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
-    assert proc.returncode == 0, (
-        f"CLI failed rc={proc.returncode}\nstderr:\n{proc.stderr}"
-    )
+    assert proc.returncode == 0, f"CLI failed rc={proc.returncode}\nstderr:\n{proc.stderr}"
     env = json.loads(proc.stdout)
     assert env["success"] is True, env
     assert env["data_source"] == "google_hotels", env
@@ -95,12 +94,8 @@ def test_cli_search_brand_filter_hilton_nyc():
         "canopy",
         "motto",
     )
-    matches = sum(
-        1 for h in hotels if any(t in (h["name"] or "").lower() for t in hilton_family)
-    )
-    assert matches >= max(1, len(hotels) // 2), (
-        f"brand filter likely silently dropped: {matches}/{len(hotels)}"
-    )
+    matches = sum(1 for h in hotels if any(t in (h["name"] or "").lower() for t in hilton_family))
+    assert matches >= max(1, len(hotels) // 2), f"brand filter likely silently dropped: {matches}/{len(hotels)}"
 
 
 @pytest.mark.flaky(reruns=2, reruns_delay=10)
@@ -120,9 +115,7 @@ def test_cli_search_class_filter_paris_4_5_stars():
     classed = [h for h in hotels if h.get("star_class") is not None]
     assert classed, "no star_class set — suspect parser regression"
     bad = [h for h in classed if h["star_class"] not in (4, 5)]
-    assert not bad, (
-        f"outside 4-5 range: {[(h['name'], h['star_class']) for h in bad]}"
-    )
+    assert not bad, f"outside 4-5 range: {[(h['name'], h['star_class']) for h in bad]}"
 
 
 @pytest.mark.flaky(reruns=2, reruns_delay=10)
@@ -152,9 +145,7 @@ def test_cli_search_amenity_and_price_london():
     # the whole pool family so the regression guard (filter applied → most
     # results match) still fires without being fooled by enum subcategory.
     pool_family = {"POOL", "INDOOR_POOL", "OUTDOOR_POOL", "WIFI"}
-    with_pool_or_wifi = sum(
-        1 for h in hotels if pool_family & set(h.get("amenities") or ())
-    )
+    with_pool_or_wifi = sum(1 for h in hotels if pool_family & set(h.get("amenities") or ()))
     assert with_pool_or_wifi >= max(1, len(hotels) // 2)
 
 
@@ -167,9 +158,7 @@ def test_cli_search_free_cancellation_la_differential():
         "--max-results",
         "5",
     )
-    without_filter = run_cli(
-        "search", "los angeles hotels", "--max-results", "5"
-    )
+    without_filter = run_cli("search", "los angeles hotels", "--max-results", "5")
     filt = tuple(h["name"] for h in _hotels(with_filter))
     unfilt = tuple(h["name"] for h in _hotels(without_filter))
     assert filt, "no results with filter"
@@ -224,11 +213,7 @@ def test_cli_free_cancellation_surfaces_refundable_rate_in_detail():
             "2026-10-03",
         )
         detail = _hotel(det)
-        rates = [
-            r
-            for room in (detail.get("rooms") or [])
-            for r in (room.get("rates") or [])
-        ]
+        rates = [r for room in (detail.get("rooms") or []) for r in (room.get("rates") or [])]
         if rates:
             any_detail_had_rates = True
         for r in rates:
@@ -301,8 +286,7 @@ def test_cli_details_roundtrip_from_search():
     # tolerance.
     assert detail["name"], "detail returned empty name — suspect parser regression"
     assert detail.get("rooms") or detail.get("address"), (
-        f"detail has no rooms AND no address — suspect parser regression "
-        f"(keys returned: {sorted(detail.keys())})"
+        f"detail has no rooms AND no address — suspect parser regression (keys returned: {sorted(detail.keys())})"
     )
 
 
@@ -358,11 +342,7 @@ def test_cli_search_sort_cheapest_jpy():
     assert len(hotels) >= 2
     currencies = {h.get("currency") for h in hotels if h.get("currency")}
     assert currencies <= {"JPY"}, f"leaked non-JPY: {currencies}"
-    prices = [
-        h["display_price"]
-        for h in hotels
-        if isinstance(h.get("display_price"), (int, float))
-    ]
+    prices = [h["display_price"] for h in hotels if isinstance(h.get("display_price"), (int, float))]
     if len(prices) >= 2:
         # Google interleaves 1-2 "featured"/sponsored rows into LOWEST_PRICE
         # lists at positions that vary run-to-run. Observed samples:
