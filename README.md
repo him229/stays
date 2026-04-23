@@ -514,6 +514,13 @@ captures/          # Playwright capture oracles (gitignored where large)
 Contributions welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for the dev
 loop, PR checklist, and issue template.
 
+## Acknowledgements
+
+Inspired by [punitarani/fli](https://github.com/punitarani/fli), which
+demonstrated the same direct `batchexecute` approach for Google Flights
+— a cleaner path than HTML scraping or headless-browser automation.
+`stays` applies that pattern to Google Hotels.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
