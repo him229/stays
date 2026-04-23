@@ -1,8 +1,8 @@
 # 🏨 stays — Google Hotels MCP Server + Python Library
 
 [![CI](https://github.com/him229/stays/actions/workflows/test.yml/badge.svg)](https://github.com/him229/stays/actions/workflows/test.yml)
-[![PyPI](https://img.shields.io/pypi/v/stays.svg)](https://pypi.org/project/stays/)
-[![Python](https://img.shields.io/pypi/pyversions/stays.svg)](https://pypi.org/project/stays/)
+[![PyPI](https://img.shields.io/pypi/v/stays.svg?v=2)](https://pypi.org/project/stays/)
+[![Python](https://img.shields.io/pypi/pyversions/stays.svg?v=2)](https://pypi.org/project/stays/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A single Python package that gives you Google Hotels three ways: a **CLI**, an
