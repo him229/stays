@@ -1,0 +1,73 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  lint:
+    uses: ./.github/workflows/lint.yml
+
+  test:
+    needs: [lint]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: uv sync --extra dev
+
+      - name: Run unit + offline MCP tests
+        run: |
+          uv run pytest tests/ -v \
+            --ignore=tests/test_hotel_live.py \
+            --ignore=tests/test_search_live.py \
+            --ignore=tests/test_detail_live.py \
+            --ignore=tests/test_mcp_live.py \
+            --ignore=tests/test_cli_live.py \
+            --ignore=tests/browser_verification \
+            --junitxml=junit.xml
+        env:
+          FORCE_COLOR: 1
+
+      - name: Upload JUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-py${{ matrix.python-version }}
+          path: junit.xml
+
+  publish-results:
+    name: Publish Test Results
+    needs: [test]
+    if: always() && needs.test.result != 'skipped'
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: "artifacts/**/junit.xml"
+          check_name: Test Results
+          comment_mode: always

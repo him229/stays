@@ -1,0 +1,112 @@
+# --- Standard Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+junit.xml
+
+# Environments
+.env
+.env.local
+.env.*.local
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Type checkers / linters
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+
+# IDEs / editors / AI tools
+.idea/
+.vscode/
+.cursor/
+.claude/
+.aider*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# mkdocs
+/site
+
+# pdm / pipenv / poetry (uncomment as needed; we commit uv.lock)
+# Pipfile.lock
+# poetry.lock
+.pdm.toml
+.pdm-python
+.pdm-build/
+
+# --- stays specifics ---
+# Captured Playwright data (keep tracked samples + slot maps; exclude ephemeral raw runs)
+captures/output_run*.json
+captures/output_run*_backup.json
+captures/hotel_detail_raw.json
+captures/chip_*.json
+captures/aria_*.json
+captures/screenshots/
+baseline_out.txt
+capture/
+debug-session/
+/tmp/
+
+# Browser-verification screenshots (opt-in Playwright suite)
+tests/browser_verification/screenshots/*.png
+
+# Local dev misc
+*.log
+*.tgz
+
+# Documentation — not distributed
+docs/
+CONTEXT.md
+captures/
+scripts/
+.actrc

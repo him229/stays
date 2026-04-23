@@ -1,0 +1,47 @@
+# VCS
+.git
+.gitignore
+.github
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+dist/
+*.egg-info/
+.ruff_cache
+.mypy_cache
+.pytest_cache
+.coverage
+htmlcov/
+
+# Virtualenvs
+.venv
+venv
+
+# IDE / OS
+.idea
+.vscode
+.DS_Store
+
+# Reverse-engineering + debug
+captures/
+capture/
+debug-session/
+baseline_out.txt
+
+# Tests + docs not needed at runtime
+tests/
+docs/
+scripts/
+examples/
+*.md
+!README.md
+Makefile
+.actrc
+.dockerignore
+Dockerfile
+docker-compose.yml

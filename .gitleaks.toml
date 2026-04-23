@@ -1,0 +1,33 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "stays false positives: Google Hotels entity_keys + test fixtures"
+paths = [
+    '''captures/.*\.json$''',
+    '''tests/fixtures/.*\.json$''',
+    '''tests/.*\.py$''',
+    '''scripts/.*\.(py|log|md)$''',
+    '''docs/reverse-engineering/.*''',
+    '''docs/superpowers/.*''',
+]
+
+# Google Hotels entity_keys are base64-encoded protobufs starting with "Ch"
+# (protobuf wire tag 0x0A). They're public identifiers, not secrets.
+regexTarget = "match"
+regexes = [
+    '''Ch[a-zA-Z0-9_-]{20,100}''',
+]
+
+# History leaks from files deleted in the Phase 1 cleanup.
+stopwords = [
+    "header_strip.py",
+    "payload_strip.py",
+    "scope_check.py",
+    "slot_probe.py",
+    "final_verify.py",
+    "final_shrink.py",
+    "test.py",
+    "google_hotels.py",
+    "baseline",
+]
