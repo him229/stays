@@ -33,6 +33,16 @@ def pytest_addoption(parser):
 
 
 def pytest_configure(config):
+    # Golden-fixture tests compare Rich-rendered CLI stdout byte-for-byte.
+    # CI sets FORCE_COLOR=1 to colorize pytest's own output, but that leaks
+    # into Rich's renderer when CliRunner invokes the CLI in-process, emitting
+    # ANSI codes the plain-text fixtures never contain. Normalize here so the
+    # suite is deterministic regardless of ambient env.
+    import os
+
+    os.environ.pop("FORCE_COLOR", None)
+    os.environ["NO_COLOR"] = "1"
+
     config.addinivalue_line(
         "markers",
         "live: hits the real Google Hotels endpoint over the network",

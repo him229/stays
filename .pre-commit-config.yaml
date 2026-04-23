@@ -12,7 +12,7 @@ repos:
     hooks:
       - id: pytest-offline
         name: pytest (offline suite)
-        entry: uv run --extra dev pytest -q
+        entry: env FORCE_COLOR=1 uv run --extra dev pytest -q
         language: system
         pass_filenames: false
         stages: [pre-push]
