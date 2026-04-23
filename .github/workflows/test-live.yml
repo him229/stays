@@ -18,7 +18,7 @@ permissions:
 jobs:
   live:
     # Skip on forks — no CI rate-limit budget for external contributors.
-    if: github.repository == 'victoriawei/stays'
+    if: github.repository == 'him229/stays'
     runs-on: ubuntu-latest
     # Job-level continue-on-error keeps the workflow yellow (not red) when
     # Google 429s or reshuffles results — live flakes shouldn't page anyone.

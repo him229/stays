@@ -6,7 +6,7 @@ around Google Hotels — PRs are welcome.
 ## Quick dev setup
 
 ```bash
-git clone https://github.com/victoriawei/stays.git
+git clone https://github.com/him229/stays.git
 cd stays
 make install-dev
 make test

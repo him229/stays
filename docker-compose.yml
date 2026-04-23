@@ -1,6 +1,6 @@
 services:
   stays:
-    image: ghcr.io/victoriawei/stays:latest
+    image: ghcr.io/him229/stays:latest
     container_name: stays
     profiles: [prod]
     ports:

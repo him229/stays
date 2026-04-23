@@ -1,6 +1,6 @@
 # 🏨 stays — Google Hotels MCP Server + Python Library
 
-[![CI](https://github.com/victoriawei/stays/actions/workflows/test.yml/badge.svg)](https://github.com/victoriawei/stays/actions/workflows/test.yml)
+[![CI](https://github.com/him229/stays/actions/workflows/test.yml/badge.svg)](https://github.com/him229/stays/actions/workflows/test.yml)
 [![PyPI](https://img.shields.io/pypi/v/stays.svg)](https://pypi.org/project/stays/)
 [![Python](https://img.shields.io/pypi/pyversions/stays.svg)](https://pypi.org/project/stays/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -61,7 +61,7 @@ Prefer a different install path? See [Install](#install) below.
 - 🤖 **MCP server** — FastMCP over stdio (what Claude/Codex spawn) or streamable HTTP (dev / Docker).
 - 🧰 **Three-format CLI** — `text` (rich tables), `json` (single envelope), `jsonl` (stream-friendly).
 - 🛡️ **Production hygiene** — rate-limited `curl_cffi` session with Chrome TLS impersonation, tenacity exponential backoff, typed pydantic v2 models, 330 offline tests.
-- 🐳 **Ready for containers** — published multi-arch image at `ghcr.io/victoriawei/stays:latest`, plus `docker-compose` profiles.
+- 🐳 **Ready for containers** — published multi-arch image at `ghcr.io/him229/stays:latest`, plus `docker-compose` profiles.
 
 ## Install
 
@@ -73,10 +73,10 @@ pipx install stays
 pip install stays
 
 # From source (latest main)
-pip install 'git+https://github.com/victoriawei/stays.git'
+pip install 'git+https://github.com/him229/stays.git'
 
 # Local dev checkout
-git clone https://github.com/victoriawei/stays.git
+git clone https://github.com/him229/stays.git
 cd stays
 uv sync --extra dev
 uv run stays --help
@@ -402,7 +402,7 @@ A published image is available from GitHub Container Registry:
 
 ```bash
 # Pull the latest release image
-docker run --rm -p 8000:8000 ghcr.io/victoriawei/stays:latest
+docker run --rm -p 8000:8000 ghcr.io/him229/stays:latest
 
 # Or with compose (prod profile, healthcheck included)
 docker compose --profile prod up
@@ -448,7 +448,7 @@ stays setup claude        # registers with any Claude client detected
 pip install stays
 
 # Option C — local dev checkout
-git clone https://github.com/victoriawei/stays.git
+git clone https://github.com/him229/stays.git
 cd stays
 uv sync --extra dev
 uv run stays setup claude
@@ -460,7 +460,7 @@ install — live in [`docs/AI_AGENTS.md`](docs/AI_AGENTS.md).
 ## Development
 
 ```bash
-git clone https://github.com/victoriawei/stays.git
+git clone https://github.com/him229/stays.git
 cd stays
 make install-dev          # uv sync --extra dev
 make test                 # offline suite

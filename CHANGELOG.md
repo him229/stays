@@ -51,5 +51,5 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Rate-limited `curl_cffi` client with tenacity retries.
 - 153 offline tests + 15 live MCP tests + opt-in browser verification suite.
 
-[Unreleased]: https://github.com/victoriawei/stays/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/victoriawei/stays/releases/tag/v0.1.0
+[Unreleased]: https://github.com/him229/stays/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/him229/stays/releases/tag/v0.1.0
