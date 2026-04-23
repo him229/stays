@@ -11,8 +11,11 @@ repos:
   - repo: local
     hooks:
       - id: pytest-offline
-        name: pytest (offline suite)
-        entry: env FORCE_COLOR=1 uv run --extra dev pytest -q
+        name: pytest (offline suite, Python 3.10)
+        # Mirror the oldest supported runtime + CI env: version-specific
+        # behaviours (e.g. Python 3.10 unittest.mock dotted-path lookup)
+        # would otherwise slip past the hook and fail in CI.
+        entry: env FORCE_COLOR=1 uv run --python 3.10 --extra dev pytest -q
         language: system
         pass_filenames: false
         stages: [pre-push]

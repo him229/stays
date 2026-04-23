@@ -81,11 +81,16 @@ __all__ = [
 # who manually uninstalled the optional ``fastmcp`` runtime; everything
 # else (broken stays.mcp module, ImportError for names we control, etc.)
 # must surface loudly rather than be silently swallowed.
+#
+# We deliberately do NOT re-export the ``mcp`` FastMCP instance here: it
+# would shadow the ``stays.mcp`` subpackage on the ``stays`` namespace,
+# which breaks Python 3.10's ``unittest.mock.patch`` dotted-path lookup
+# (3.11+ recovers; 3.10 does not). Callers that need the FastMCP object
+# can still reach it at ``stays.mcp.mcp``.
 _OPTIONAL_MCP_DEPS = frozenset({"fastmcp"})
 try:
     from stays.mcp import (
         get_hotel_details,
-        mcp,
         search_hotels,
         search_hotels_with_details,
     )
@@ -98,7 +103,6 @@ try:
 
     __all__ += [
         "get_hotel_details",
-        "mcp",
         "run_mcp",
         "run_mcp_http",
         "search_hotels",

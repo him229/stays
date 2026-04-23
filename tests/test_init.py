@@ -84,4 +84,4 @@ def test_init_reimport_restores_normal_surface():
     import stays
 
     assert "HotelSearchFilters" in stays.__all__
-    assert "mcp" in stays.__all__
+    assert "search_hotels" in stays.__all__

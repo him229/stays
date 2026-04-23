@@ -32,10 +32,9 @@ def test_root_help_lists_subcommands(runner):
 
 def test_mcp_delegates_to_entry(runner, monkeypatch):
     sentinel = MagicMock()
-    # `stays.mcp` is aliased to the FastMCP instance by the package's
-    # re-exports, so monkeypatch.setattr("stays.mcp._entry.run", ...)
-    # hits an attribute chain rather than the module. Reach into the
-    # _entry module directly via its imported reference.
+    # Patch the run symbol through the imported module reference rather
+    # than a dotted string — works regardless of how the MCP surface is
+    # re-exported from ``stays``.
     monkeypatch.setattr(mcp_entry, "run", sentinel)
     result = runner.invoke(app, ["mcp"])
     assert result.exit_code == 0
