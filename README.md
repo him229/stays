@@ -12,7 +12,7 @@ scraping, no headless browser, no unofficial proxies.
 
 > 🚀 **Why `stays`?**
 >
-> * **Fast** — direct `AtySUc` RPC calls, not page rendering
+> * **Fast** — direct RPC calls, not page rendering
 > * **Zero scraping** — no HTML parsing, no Playwright/Puppeteer at runtime
 > * **Reliable** — Chrome TLS impersonation via `curl_cffi`, 10 rps rate-limit bucket, tenacity retries
 > * **MCP-native** — three tools, two prompts, one resource; stdio and streamable HTTP
