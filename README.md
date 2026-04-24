@@ -20,6 +20,16 @@ scraping, no headless browser, no unofficial proxies.
 
 ## Quick start
 
+**Don't want to touch the terminal?** If you already use Claude Code or
+Codex, paste this into the chat and your assistant will handle
+everything — `uv`, the `stays` install, and the MCP client registration:
+
+> Install the stays MCP server on this Mac and register it with your CLI. Use uv (install it from https://astral.sh/uv/install.sh if it's not already there) — don't use Homebrew. Once stays is installed, run `stays setup <your-host>` (use `claude` if you're Claude Code, `codex` if you're Codex) and tell me to restart this session.
+
+Then restart your CLI and ask for a hotel search.
+
+**Prefer the terminal?**
+
 ```bash
 # Install
 pipx install stays
