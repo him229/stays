@@ -6,6 +6,20 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-04-23
+
+### Fixed
+
+- `search_parser._find_hotel_entries` no longer drops listings whose `entry[3]` star-class tuple is `None`. Budget, boutique, and hostel properties (5 in the NYC fixture alone) were being silently skipped. The heuristic now anchors on coordinates at `[2][0]` plus FID/entity_key instead of star class.
+- `SearchHotels.search` applies a stable post-sort when `sort_by` is `LOWEST_PRICE`, `HIGHEST_RATING`, or `MOST_REVIEWED`. Google's own ordering has same-price inversions and occasional sponsored-row interleaves; the post-sort gives callers strictly monotonic output on the non-None subsequence. `RELEVANCE` / `None` remain no-ops. `None` values sort to the end on every mode.
+
+### Tests
+
+- New offline suite `test_search_sort_post_sort.py` covering the three sort modes, `None`-last behavior on each, `RELEVANCE`/`None` no-op, and Python-sort stability on ties.
+- New regression guard `test_budget_hotels_without_star_class_are_kept` asserting the 5 known star-less NYC hotels surface by name.
+- New `test_detail_finds_exactly_one_hotel_entry` confirming the relaxed heuristic still resolves exactly one entry for detail responses.
+- `test_cli_live` LOWEST_PRICE scenario tightened from "≤2 inversions" to strict monotonic; added live E2E scenarios for `HIGHEST_RATING` and `MOST_REVIEWED`.
+
 ## [0.1.0] - 2026-04-23
 
 Initial public release.
@@ -31,5 +45,6 @@ Initial public release.
 - PEP 561 `py.typed` marker.
 - `LICENSE` (MIT), `CONTRIBUTING.md`, `CHANGELOG.md`, `docs/AI_AGENTS.md`, `CLAUDE.md`, `AGENTS.md`.
 
-[Unreleased]: https://github.com/him229/stays/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/him229/stays/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/him229/stays/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/him229/stays/releases/tag/v0.1.0
