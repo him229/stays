@@ -14,7 +14,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from typing import Literal
 
-from stays.models.google_hotels.base import Currency, DateRange, Location
+from stays.models.google_hotels.base import Currency, DateRange, Location, SortBy
 from stays.models.google_hotels.detail import HotelDetail
 from stays.models.google_hotels.hotels import RPC_ID, HotelSearchFilters
 from stays.models.google_hotels.result import HotelResult
@@ -29,6 +29,38 @@ from stays.search.parse import parse_detail_response, parse_search_response
 logger = logging.getLogger(__name__)
 
 ErrorKind = Literal["transient", "fatal"]
+
+
+def _apply_post_sort(results: list[HotelResult], sort_by: SortBy | None) -> list[HotelResult]:
+    """Stable-sort parsed results so explicit sort_by produces monotonic output.
+
+    Google's own response order is usually mostly-sorted but has minor
+    reorderings within same-price groups (likely pre-tax base rate vs.
+    display-rounded USD). Post-sorting guarantees strict monotonicity
+    on the requested key. RELEVANCE / None is a no-op.
+
+    Missing values (``None``) always fall to the end so callers reading
+    the top of the list still see well-ranked hotels. Ties preserve
+    Google's order via Python's stable sort.
+    """
+    if sort_by is None or sort_by is SortBy.RELEVANCE:
+        return results
+    if sort_by is SortBy.LOWEST_PRICE:
+        return sorted(
+            results,
+            key=lambda h: (h.display_price is None, h.display_price if h.display_price is not None else 0),
+        )
+    if sort_by is SortBy.HIGHEST_RATING:
+        return sorted(
+            results,
+            key=lambda h: (h.overall_rating is None, -(h.overall_rating or 0.0)),
+        )
+    if sort_by is SortBy.MOST_REVIEWED:
+        return sorted(
+            results,
+            key=lambda h: (h.review_count is None, -(h.review_count or 0)),
+        )
+    return results
 
 
 class MissingHotelIdError(ValueError):
@@ -101,7 +133,8 @@ class SearchHotels:
     def search(self, filters: HotelSearchFilters) -> list[HotelResult]:
         inner_req = filters.format()
         inner_resp = self._client.post_rpc(RPC_ID, inner_req)
-        return parse_search_response(inner_resp)
+        results = parse_search_response(inner_resp)
+        return _apply_post_sort(results, filters.sort_by)
 
     def get_details(
         self,

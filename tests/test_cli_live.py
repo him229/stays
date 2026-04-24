@@ -343,22 +343,47 @@ def test_cli_search_sort_cheapest_jpy():
     currencies = {h.get("currency") for h in hotels if h.get("currency")}
     assert currencies <= {"JPY"}, f"leaked non-JPY: {currencies}"
     prices = [h["display_price"] for h in hotels if isinstance(h.get("display_price"), (int, float))]
-    if len(prices) >= 2:
-        # Google interleaves 1-2 "featured"/sponsored rows into LOWEST_PRICE
-        # lists at positions that vary run-to-run. Observed samples:
-        #   * [3648, 3657, 3659, 4016, 3693] — 1 sponsored row at index 3
-        #   * [5034, 3642, 3654, 3655, 4016] — 1 sponsored row at index 0,
-        #     which breaks a median-split check (lower-half median 4338
-        #     ends up above upper-half median 3655).
-        #
-        # Count adjacent-pair inversions (a[i] > a[i+1]) and tolerate up
-        # to 2 — that's the worst observed "2 sponsored rows anywhere"
-        # case. A truly reverse-sorted or randomized list trivially
-        # exceeds 2 inversions in any window of 5 items, so the test
-        # still decisively fails real sort breakage.
-        inversions = sum(1 for a, b in zip(prices, prices[1:], strict=False) if a > b)
-        assert inversions <= 2, (
-            f"too many inversions in LOWEST_PRICE sort: prices={prices} "
-            f"has {inversions} adjacent a>b pairs (tolerance=2 for up to "
-            "two sponsored interleaves)."
-        )
+    assert len(prices) >= 2, f"need at least 2 priced hotels to validate sort; got {len(prices)}"
+    # Library layer now applies a stable post-sort (stays.search.hotels._apply_post_sort)
+    # so LOWEST_PRICE output must be strictly non-decreasing on the non-None price subsequence.
+    # No sponsored-row tolerance — sponsored interleaves are normalized by the post-sort.
+    inversions = [(i, a, b) for i, (a, b) in enumerate(zip(prices, prices[1:], strict=False)) if a > b]
+    assert not inversions, f"LOWEST_PRICE not monotonic non-decreasing: prices={prices} inversions={inversions}"
+
+
+@pytest.mark.flaky(reruns=2, reruns_delay=10)
+def test_cli_search_sort_highest_rating_japan():
+    env = run_cli(
+        "search",
+        "hotels in japan",
+        "--sort-by",
+        "HIGHEST_RATING",
+        "--max-results",
+        "10",
+    )
+    hotels = _hotels(env)
+    assert len(hotels) >= 5, f"need broad result set to validate sort; got {len(hotels)}"
+    ratings = [h["overall_rating"] for h in hotels if isinstance(h.get("overall_rating"), (int, float))]
+    assert len(ratings) >= 3, f"need at least 3 rated hotels; got {len(ratings)}"
+    # Non-increasing (best first); post-sort guarantees strict monotonicity on non-None subseq.
+    inversions = [(i, a, b) for i, (a, b) in enumerate(zip(ratings, ratings[1:], strict=False)) if a < b]
+    assert not inversions, f"HIGHEST_RATING not monotonic non-increasing: ratings={ratings} inversions={inversions}"
+
+
+@pytest.mark.flaky(reruns=2, reruns_delay=10)
+def test_cli_search_sort_most_reviewed_japan():
+    env = run_cli(
+        "search",
+        "hotels in japan",
+        "--sort-by",
+        "MOST_REVIEWED",
+        "--max-results",
+        "10",
+    )
+    hotels = _hotels(env)
+    assert len(hotels) >= 5, f"need broad result set to validate sort; got {len(hotels)}"
+    reviews = [h["review_count"] for h in hotels if isinstance(h.get("review_count"), int)]
+    assert len(reviews) >= 3, f"need at least 3 reviewed hotels; got {len(reviews)}"
+    # Non-increasing (most-reviewed first); post-sort guarantees strict monotonicity on non-None subseq.
+    inversions = [(i, a, b) for i, (a, b) in enumerate(zip(reviews, reviews[1:], strict=False)) if a < b]
+    assert not inversions, f"MOST_REVIEWED not monotonic non-increasing: reviews={reviews} inversions={inversions}"
