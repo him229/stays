@@ -65,3 +65,15 @@ def test_reviews_have_sensible_ratings_if_present():
     for rv in out.recent_reviews:
         assert 1 <= rv.rating <= 5
         assert rv.body
+
+
+def test_detail_finds_exactly_one_hotel_entry():
+    """Regression guard: after relaxing ``_find_hotel_entries``'s heuristic
+    to not require a star-class tuple, the detail parser (which reuses the
+    same walker and picks entries[0]) must still resolve to exactly ONE
+    hotel entry — not a false-positive second entry.
+    """
+    from stays.search.parse.search_parser import _find_hotel_entries
+
+    entries = _find_hotel_entries(_load())
+    assert len(entries) == 1, f"detail response should yield exactly 1 hotel entry; got {len(entries)}"

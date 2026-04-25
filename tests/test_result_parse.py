@@ -139,3 +139,28 @@ def test_no_hotels_dropped_by_dedup_when_kgmid_is_none(parsed_hotels):
         assert len(keys) == len(kgmid_none), (
             f"dedupe dropped kgmid=None records: {len(kgmid_none)} → {len(keys)} unique fid+ghi keys"
         )
+
+
+def test_budget_hotels_without_star_class_are_kept(parsed_hotels):
+    """Regression: the hotel-detection heuristic must NOT require a star-class tuple.
+
+    Before the fix, ``looks_like_hotel`` required ``entry[3] = ["N-star hotel", N]``
+    which silently dropped budget hotels (hostels, lodging, boutique) that return
+    ``entry[3] = None``. The NYC fixture has 5 such hotels — assert by name that
+    they're included so an accidental re-tightening can't pass silently.
+    """
+    no_star = [h for h in parsed_hotels if h.star_class is None]
+    assert len(no_star) >= 5, (
+        f"expected >=5 hotels without star_class; got {len(no_star)}. "
+        f"Did the heuristic get re-tightened to require star-class at entry[3]?"
+    )
+    names = {h.name for h in parsed_hotels}
+    must_include = {
+        "Moon Hotel Brooklyn",
+        "Hotel 369 Brooklyn",
+        "West Side YMCA Lodging",
+        "Nova Hotel Bronx",
+        "Cabana Hotel Bronx",
+    }
+    missing = must_include - names
+    assert not missing, f"parser dropped known star-less NYC hotels: {missing}"

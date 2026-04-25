@@ -9,6 +9,7 @@ for decoding the base64-wrapped entity key.
 from __future__ import annotations
 
 import base64
+import logging
 import re
 from datetime import date as _date
 from typing import Any
@@ -32,6 +33,8 @@ from stays.search.parse.slots import (
     Tree,
     safe_get,
 )
+
+logger = logging.getLogger(__name__)
 
 __all__ = [
     "extract_kgmid_from_protobuf",
@@ -73,35 +76,32 @@ def extract_kgmid_from_protobuf(b64_or_bytes: str | bytes) -> str | None:
 def _find_hotel_entries(tree: Tree) -> list[HotelEntryRaw]:
     """Return every nested list that looks like a hotel-entry tuple.
 
-    Heuristic: a hotel entry is a list of length >= 26 whose [1] is a
-    non-empty string (hotel name) and whose [2] is a non-empty nested
-    list whose first element is a [lat, lng] float-pair.
+    Heuristic: a hotel entry is a list of length >= 20 whose [1] is a
+    non-empty hotel name, whose [2][0] is a [lat, lng] float-pair
+    (structural anchor), and which carries a stable identifier — FID
+    at [9] or entity_key at [20].
+
+    Star-class is NOT required: many real hotels (budget, boutique,
+    hostels) return ``entry[3] = None`` and must still surface.
     """
     found: list[HotelEntryRaw] = []
 
     def looks_like_hotel(node: Any) -> bool:
-        """Hotel entry anchor — works on both live (thin 27-slot) and captured
-        (rich 48-slot) responses. Key signal is the star-class tuple at [3]
-        plus at least one stable identifier at [9] (FID) or [20] (entity_key)."""
         if not isinstance(node, list) or len(node) < 20:
             return False
         name = node[1] if len(node) > 1 else None
         if not isinstance(name, str) or not name:
             return False
-        # star-class tuple at [3]: ["<N>-star hotel", N]
-        pos3 = node[3] if len(node) > 3 else None
-        if not (
-            isinstance(pos3, list)
-            and len(pos3) >= 2
-            and isinstance(pos3[0], str)
-            and isinstance(pos3[1], int)
-            and 1 <= pos3[1] <= 5
-        ):
-            return False
-        # At least one identifier: FID at [9] or entity_key at [20]
+        # Identifiers: FID at [9] or entity_key at [20]
         fid = node[9] if len(node) > 9 else None
         ek = node[20] if len(node) > 20 else None
         if not ((isinstance(fid, str) and fid) or (isinstance(ek, str) and ek)):
+            return False
+        # Structural anchor: coords pair at [2][0] = [lat, lng]
+        pos2 = node[2] if len(node) > 2 else None
+        coords = pos2[0] if isinstance(pos2, list) and pos2 else None
+        if not (isinstance(coords, list) and len(coords) == 2 and all(isinstance(c, (int, float)) for c in coords)):
+            logger.debug("skip hotel-like entry name=%r reason=%s", name, "missing_coords_anchor")
             return False
         return True
 
