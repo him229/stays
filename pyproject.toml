@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "stays"
-version = "0.1.0"
+version = "0.1.1"
 description = "Google Hotels MCP server and Python library — reverse-engineered batchexecute client with FastMCP tools"
 authors = [
     { name = "Himank Yadav", email = "him229@gmail.com" },
