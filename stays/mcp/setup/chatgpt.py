@@ -1,14 +1,19 @@
 """ChatGPT MCP setup — instructions only.
 
-ChatGPT (Desktop + web) supports ONLY remote HTTPS MCP endpoints that
-implement OAuth 2.1 + Dynamic Client Registration (RFC 7591). Local
-stdio servers cannot be registered, and there is no local config file
-to edit. This module emits copy-pasteable instructions + a deep-link
-into the ChatGPT Connectors settings page.
+ChatGPT (Desktop + web) supports ONLY remote HTTPS MCP endpoints.
+Local stdio servers cannot be registered, and there is no local config
+file to edit. This module emits copy-pasteable instructions + a
+deep-link into the ChatGPT Connectors settings page.
 
-Confirmed 2025-12 against:
+`stays` is a read-only tool with no per-user state, so it can be
+registered as an **unauthenticated** connector — ChatGPT Developer Mode
+explicitly allows "No authentication" for anonymous/read-only servers.
+OAuth 2.1 + Dynamic Client Registration (RFC 7591) is only required
+when the server needs to access per-user credentials.
+
+Confirmed 2026-04 against:
 - https://developers.openai.com/apps-sdk/deploy/connect-chatgpt
-- https://help.openai.com/en/articles/11487775-connectors-in-chatgpt
+- https://developers.openai.com/apps-sdk/build/auth
 - https://help.openai.com/en/articles/12584461-developer-mode-apps-and-full-mcp-connectors-in-chatgpt-beta
 """
 
@@ -31,35 +36,41 @@ class ChatGPTInstructions:
 def build() -> ChatGPTInstructions:
     out = ChatGPTInstructions()
     out.messages = [
-        "ChatGPT requires a *public HTTPS* MCP endpoint implementing OAuth 2.1 +",
-        "Dynamic Client Registration (RFC 7591). The local `stays mcp-http`",
-        "server (plain HTTP on 127.0.0.1) CANNOT be registered with ChatGPT",
-        "directly.",
+        "`stays` can be connected to ChatGPT as an unauthenticated (read-only)",
+        "connector. No OAuth implementation is required.",
+        "",
+        "ChatGPT does NOT support plain HTTP on 127.0.0.1 — you must expose",
+        "`stays mcp-http` over a public HTTPS URL first.",
         "",
         "To set up a ChatGPT connector for `stays`:",
         "",
-        "  1. Expose `stays mcp-http` over public HTTPS. Easiest options:",
-        "        a) cloudflared tunnel:",
+        "  1. Start the HTTP server:",
+        "        stays mcp-http",
+        "     (Listens on http://127.0.0.1:8000 by default.)",
+        "",
+        "  2. Expose it over public HTTPS. Easiest options:",
+        "        a) cloudflared tunnel (free, no account required):",
         "              cloudflared tunnel --url http://127.0.0.1:8000",
         "        b) ngrok:",
         "              ngrok http 8000",
-        "     Note: `stays mcp-http` does NOT currently implement OAuth 2.1 +",
-        "     DCR. A production-safe ChatGPT connector would need that layer",
-        "     added in front of the tunnel. Out of scope for v0.1.",
+        "     Either prints a public URL like https://<id>.trycloudflare.com.",
         "",
-        "  2. Ensure you are on a paid ChatGPT plan that includes Developer",
-        "     Mode (as of Dec 2025: Plus, Pro, Business, Enterprise, or Edu;",
-        "     workspace plans may require an admin to enable it for Teams /",
-        "     Enterprise). Then toggle Developer Mode ON:",
+        "     Security note: anyone who discovers this URL can call the server.",
+        "     Tear down the tunnel when you are not actively using it.",
+        "",
+        "  3. Ensure you are on a paid ChatGPT plan that includes Developer",
+        "     Mode (Plus, Pro, Business, Enterprise, or Edu; workspace plans",
+        "     may require an admin to enable it). Toggle Developer Mode ON:",
         "        Settings → Apps & Connectors → Advanced → Developer Mode.",
-        "",
-        "  3. Still in that panel, click 'Create' → paste the public HTTPS URL",
-        "     (https://<your-tunnel>/mcp) + a name and description.",
         "",
         f"     Settings root: {SETTINGS_URL}",
         "     (Navigate to 'Apps & Connectors' from there — the exact",
         "     tab label has changed more than once and may differ.)",
         "",
-        "  4. Complete the OAuth enrollment flow when prompted.",
+        "  4. In that panel, click 'Create':",
+        "       • Name: stays",
+        "       • URL:  https://<your-tunnel>/mcp",
+        "       • Auth: No authentication",
+        "     Save and verify that the tool list appears in a new chat.",
     ]
     return out

@@ -24,9 +24,9 @@ jobs:
     # Google 429s or reshuffles results — live flakes shouldn't page anyone.
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: astral-sh/setup-uv@v4
+      - uses: astral-sh/setup-uv@v6
         with:
           version: "latest"
 
@@ -46,7 +46,7 @@ jobs:
 
       - name: Upload JUnit
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: junit-live
           path: junit-live.xml
