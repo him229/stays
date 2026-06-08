@@ -1,6 +1,6 @@
 # Makefile — uv-driven task runner for stays
 
-TARGETS := stays/ tests/ scripts/
+TARGETS := stays/ tests/
 
 .DEFAULT_GOAL := help
 

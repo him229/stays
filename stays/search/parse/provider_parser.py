@@ -38,7 +38,7 @@ __all__ = [
 ]
 
 
-def _parse_cancellation_tuple(n: Tree) -> CancellationPolicy | None:
+def _parse_cancellation_tuple(n: Tree, *, reference_year: int | None = None) -> CancellationPolicy | None:
     """Detect Google's structured cancellation tuple: [bool, date_str, time_str].
 
     Google encodes per-rate cancellation as a list where:
@@ -60,10 +60,7 @@ def _parse_cancellation_tuple(n: Tree) -> CancellationPolicy | None:
         try:
             parsed = _dt_cls.strptime(date_str, fmt)
             if parsed.year == 1900:
-                today = _date.today()
-                parsed = parsed.replace(year=today.year)
-                if parsed.date() < today:
-                    parsed = parsed.replace(year=today.year + 1)
+                parsed = parsed.replace(year=reference_year or _dt_cls.now().year)
             free_until = parsed.date()
             break
         except ValueError:
@@ -80,7 +77,7 @@ def _parse_cancellation_tuple(n: Tree) -> CancellationPolicy | None:
     )
 
 
-def _cancel_from_rate_slot(cancel_raw: Tree) -> CancellationPolicy:
+def _cancel_from_rate_slot(cancel_raw: Tree, *, reference_year: int | None = None) -> CancellationPolicy:
     """Convert a rate-level cancel slot to a CancellationPolicy.
 
     Google encodes:
@@ -89,7 +86,7 @@ def _cancel_from_rate_slot(cancel_raw: Tree) -> CancellationPolicy:
     """
     if isinstance(cancel_raw, list) and cancel_raw:
         if cancel_raw[0] is True:
-            result = _parse_cancellation_tuple(cancel_raw)
+            result = _parse_cancellation_tuple(cancel_raw, reference_year=reference_year)
             if result is not None:
                 return result
         # [False, ...] → explicitly no free cancellation
@@ -97,7 +94,12 @@ def _cancel_from_rate_slot(cancel_raw: Tree) -> CancellationPolicy:
     return CancellationPolicy()
 
 
-def _parse_provider_rate(entry: ProviderEntryRaw, currency: str) -> RatePlan | None:
+def _parse_provider_rate(
+    entry: ProviderEntryRaw,
+    currency: str,
+    *,
+    reference_year: int | None = None,
+) -> RatePlan | None:
     """Extract a RatePlan from a provider entry in the detail RPC response.
 
     Strategy (matches what Google shows in the list-view per provider):
@@ -165,7 +167,10 @@ def _parse_provider_rate(entry: ProviderEntryRaw, currency: str) -> RatePlan | N
                     continue
                 if best_price is None or per_night < best_price:
                     best_price = per_night
-                    best_cancellation = _cancel_from_rate_slot(safe_get(rate, *SLOT_RATE_CANCEL))
+                    best_cancellation = _cancel_from_rate_slot(
+                        safe_get(rate, *SLOT_RATE_CANCEL),
+                        reference_year=reference_year,
+                    )
 
     price = best_price if best_price is not None else header_price
     if price is None:

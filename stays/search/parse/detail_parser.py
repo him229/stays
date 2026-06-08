@@ -33,7 +33,7 @@ from stays.search.parse.slots import (
 __all__ = ["parse_detail_response"]
 
 
-def parse_detail_response(inner: Tree) -> HotelDetail:
+def parse_detail_response(inner: Tree, *, reference_year: int | None = None) -> HotelDetail:
     """Parse a single-hotel AtySUc detail response into a HotelDetail.
 
     The detail response surfaces exactly one enriched hotel entry. We
@@ -79,7 +79,11 @@ def parse_detail_response(inner: Tree) -> HotelDetail:
         rates: list[RatePlan] = []
         if isinstance(provider_list_entry, list):
             for provider_entry in provider_list_entry:
-                rate = _parse_provider_rate(provider_entry, base.currency or "USD")
+                rate = _parse_provider_rate(
+                    provider_entry,
+                    base.currency or "USD",
+                    reference_year=reference_year,
+                )
                 if rate is not None:
                     rates.append(rate)
         if rates:
