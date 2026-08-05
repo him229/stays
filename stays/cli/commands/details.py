@@ -9,7 +9,7 @@ import typer
 from stays.cli import _render, _runtime, _serialize, _validate
 from stays.cli._console import console
 from stays.cli._enums import OutputFormat
-from stays.models.google_hotels.base import DateRange
+from stays.models.google_hotels.base import DateRange, GuestInfo
 from stays.search.client import BatchExecuteError, TransientBatchExecuteError
 from stays.search.hotels import MissingHotelIdError, SearchHotels
 
@@ -22,6 +22,12 @@ def details(
     # pass Ellipsis as a real default in some typer versions.
     check_in: Annotated[str, typer.Option("--check-in", help="Check-in date YYYY-MM-DD.")],
     check_out: Annotated[str, typer.Option("--check-out", help="Check-out date YYYY-MM-DD.")],
+    adults: Annotated[int, typer.Option("--adults", min=1, max=12)] = 2,
+    children: Annotated[int, typer.Option("--children", min=0, max=8)] = 0,
+    child_age: Annotated[
+        list[int] | None,
+        typer.Option("--child-age", help="Repeatable. e.g. --child-age 7 --child-age 10."),
+    ] = None,
     currency: Annotated[str | None, typer.Option("--currency")] = None,
     output_format: Annotated[OutputFormat, typer.Option("--format", case_sensitive=False)] = OutputFormat.TEXT,
 ) -> None:
@@ -32,18 +38,26 @@ def details(
     ci = _validate.parse_date(check_in)
     co = _validate.parse_date(check_out)
     dates = DateRange(check_in=ci, check_out=co)
+    guests = GuestInfo(adults=adults, children=children, child_ages=child_age or [])
     cur = _validate.parse_currency(currency)  # Currency | None
 
     query: dict[str, Any] = {
         "entity_key": entity_key,
         "check_in": ci.isoformat(),
         "check_out": co.isoformat(),
+        "adults": adults,
+        "children": children,
+        "child_ages": child_age,
         "currency": cur.value if cur else None,
     }
 
     # get_details signature is `currency: Currency = Currency.USD` — passing
     # None would TypeError the pydantic validator. Only pass when set.
-    get_details_kwargs: dict[str, Any] = {"entity_key": entity_key, "dates": dates}
+    get_details_kwargs: dict[str, Any] = {
+        "entity_key": entity_key,
+        "dates": dates,
+        "guests": guests,
+    }
     if cur is not None:
         get_details_kwargs["currency"] = cur
 

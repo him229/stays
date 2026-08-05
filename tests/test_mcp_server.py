@@ -98,12 +98,19 @@ def test_execute_get_hotel_details_envelopes_success():
         entity_key="ek123",
         check_in="2026-09-01",
         check_out="2026-09-03",
+        adults=1,
+        children=1,
+        child_ages=[7],
     )
     with patch("stays.mcp.server.SearchHotels") as M:
         M.return_value.get_details.return_value = _fake_detail()
         resp = _execute_get_hotel_details_from_params(params)
     assert resp["success"] is True
     assert resp["hotel"]["name"] == "Test Hotel"
+    guests = M.return_value.get_details.call_args.kwargs["guests"]
+    assert guests.adults == 1
+    assert guests.children == 1
+    assert guests.child_ages == [7]
 
 
 def test_execute_search_hotels_with_details_envelopes_success():
@@ -175,6 +182,27 @@ def test_schema_rejects_short_currency():
         SearchHotelsParams(query="x", currency="US")
 
 
+def test_get_hotel_details_schema_rejects_missing_child_ages():
+    with pytest.raises(ValidationError, match="child_ages is required"):
+        GetHotelDetailsParams(
+            entity_key="ek123",
+            check_in="2026-09-01",
+            check_out="2026-09-03",
+            children=1,
+        )
+
+
+def test_get_hotel_details_schema_rejects_mismatched_child_ages():
+    with pytest.raises(ValidationError, match="must equal children"):
+        GetHotelDetailsParams(
+            entity_key="ek123",
+            check_in="2026-09-01",
+            check_out="2026-09-03",
+            children=2,
+            child_ages=[7],
+        )
+
+
 def test_schema_rejects_invalid_sort_literal():
     with pytest.raises(ValidationError):
         SearchHotelsParams(query="x", sort_by="PRICE_LOW_TO_HIGH")
@@ -239,6 +267,20 @@ async def test_list_tools_returns_three_with_annotations():
     for t in tools:
         assert t.annotations.readOnlyHint is True
         assert t.annotations.idempotentHint is True
+
+
+@pytest.mark.asyncio
+async def test_get_hotel_details_tool_schema_exposes_guest_fields():
+    tools = await mcp.list_tools()
+    detail_tool = next(t for t in tools if t.name == "get_hotel_details")
+
+    properties = detail_tool.parameters["properties"]
+
+    assert properties["adults"]["default"] == 2
+    assert properties["adults"]["minimum"] == 1
+    assert properties["children"]["default"] == 0
+    assert properties["children"]["maximum"] == 8
+    assert "child_ages" in properties
 
 
 @pytest.mark.asyncio

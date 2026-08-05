@@ -9,6 +9,7 @@ import pytest
 
 from stays import (
     DateRange,
+    GuestInfo,
     HotelSearchFilters,
     Location,
 )
@@ -144,12 +145,19 @@ def _call_get_details_and_capture_payload(
     dates: DateRange,
     location: Location | None = None,
     currency: Currency = Currency.USD,
+    guests: GuestInfo | None = None,
 ):
     client = MagicMock()
     client.post_rpc.return_value = [None]
     search = SearchHotels(client=client)
     try:
-        search.get_details(entity_key=entity_key, dates=dates, location=location, currency=currency)
+        search.get_details(
+            entity_key=entity_key,
+            dates=dates,
+            location=location,
+            currency=currency,
+            guests=guests,
+        )
     except Exception:
         pass  # mock response fails the parser; we only care about the outbound call
     return client.post_rpc.call_args.args[1]
@@ -181,6 +189,23 @@ def test_get_details_full_payload_equality_with_location_and_currency():
         entity_key=entity_key,
     ).format()
     got = _call_get_details_and_capture_payload(entity_key, dates, location, currency)
+    assert got == expected
+
+
+def test_get_details_full_payload_includes_guests():
+    entity_key = "ChkI_party"
+    dates = DateRange(check_in=date(2026, 12, 20), check_out=date(2026, 12, 23))
+    guests = GuestInfo(adults=1, children=1, child_ages=[7])
+    expected = HotelSearchFilters(
+        location=Location(query="hotels"),
+        dates=dates,
+        guests=guests,
+        currency=Currency.USD,
+        entity_key=entity_key,
+    ).format()
+
+    got = _call_get_details_and_capture_payload(entity_key, dates, guests=guests)
+
     assert got == expected
 
 
@@ -232,6 +257,22 @@ def _enrich_filters() -> HotelSearchFilters:
         location=Location(query="x"),
         dates=DateRange(check_in=date(2026, 9, 1), check_out=date(2026, 9, 4)),
     )
+
+
+def test_search_with_details_forwards_guests_to_detail_requests():
+    from stays import HotelDetail
+
+    detail = HotelDetail(name="hotel-0", entity_key="key-0")
+    search, _ = _make_search_hotels_with_mocked_details([detail])
+    filters = HotelSearchFilters(
+        location=Location(query="x"),
+        dates=DateRange(check_in=date(2026, 9, 1), check_out=date(2026, 9, 4)),
+        guests=GuestInfo(adults=1, children=1, child_ages=[7]),
+    )
+
+    search.search_with_details(filters, max_hotels=1)
+
+    assert search.get_details.call_args.kwargs["guests"] == filters.guests
 
 
 def test_enrich_transient_error_is_retryable():

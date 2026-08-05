@@ -14,7 +14,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from typing import Literal
 
-from stays.models.google_hotels.base import Currency, DateRange, Location, SortBy
+from stays.models.google_hotels.base import Currency, DateRange, GuestInfo, Location, SortBy
 from stays.models.google_hotels.detail import HotelDetail
 from stays.models.google_hotels.hotels import RPC_ID, HotelSearchFilters
 from stays.models.google_hotels.result import HotelResult
@@ -143,6 +143,7 @@ class SearchHotels:
         *,
         location: Location | None = None,
         currency: Currency = Currency.USD,
+        guests: GuestInfo | None = None,
     ) -> HotelDetail:
         """Fetch full detail for one hotel.
 
@@ -154,6 +155,9 @@ class SearchHotels:
         without a pinned location. If omitted, a neutral query ("hotels")
         is used.
 
+        ``guests`` should match the party used by the preceding search.
+        If omitted, Google's conventional default of two adults is used.
+
         Returns a ``HotelDetail`` with rooms, rate plans, cancellation
         policies (when resolvable), description, amenities, reviews.
         """
@@ -162,6 +166,7 @@ class SearchHotels:
         filters = HotelSearchFilters(
             location=location or Location(query="hotels"),
             dates=dates,
+            guests=guests or GuestInfo(),
             currency=currency,
             entity_key=entity_key,
         )
@@ -203,6 +208,7 @@ class SearchHotels:
                     dates=filters.dates,
                     location=filters.location,
                     currency=filters.currency,
+                    guests=filters.guests,
                 )
                 return EnrichedResult(result=r, detail=detail)
             except TransientBatchExecuteError as e:
