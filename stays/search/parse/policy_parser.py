@@ -19,7 +19,7 @@ from stays.models.google_hotels.policy import (
 __all__ = ["_parse_cancellation"]
 
 
-def _parse_cancellation(text: str) -> CancellationPolicy | None:
+def _parse_cancellation(text: str, *, reference_year: int | None = None) -> CancellationPolicy | None:
     """Extract a CancellationPolicy from a Google cancellation label string.
 
     Handles whitespace-padded strings like:
@@ -44,11 +44,7 @@ def _parse_cancellation(text: str) -> CancellationPolicy | None:
             try:
                 parsed = _dt_cls.strptime(raw_date, fmt)
                 if parsed.year == 1900:
-                    # No year in format — use current year, advance to next if past
-                    today = _date.today()
-                    parsed = parsed.replace(year=today.year)
-                    if parsed.date() < today:
-                        parsed = parsed.replace(year=today.year + 1)
+                    parsed = parsed.replace(year=reference_year or _dt_cls.now().year)
                 free_until = parsed.date()
                 break
             except ValueError:
