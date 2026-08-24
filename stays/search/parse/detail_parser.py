@@ -33,7 +33,12 @@ from stays.search.parse.slots import (
 __all__ = ["parse_detail_response"]
 
 
-def parse_detail_response(inner: Tree, *, reference_year: int | None = None) -> HotelDetail:
+def parse_detail_response(
+    inner: Tree,
+    *,
+    reference_year: int | None = None,
+    requested_currency: str | None = None,
+) -> HotelDetail:
     """Parse a single-hotel AtySUc detail response into a HotelDetail.
 
     The detail response surfaces exactly one enriched hotel entry. We
@@ -44,6 +49,11 @@ def parse_detail_response(inner: Tree, *, reference_year: int | None = None) -> 
     The hotel entry is found via `_find_hotel_entries` (same heuristic as
     search). In detail mode there's typically only one matching entry; if
     multiple, take the first.
+
+    Detail-mode responses omit the list-view price pair that normally carries
+    the ISO currency code. ``requested_currency`` preserves the request context
+    so the hotel and its provider rates are labelled with the currency Google
+    was asked to return.
     """
     entries = _find_hotel_entries(inner)
     if not entries:
@@ -52,6 +62,7 @@ def parse_detail_response(inner: Tree, *, reference_year: int | None = None) -> 
     base = _parse_hotel_entry(entry)
     if base is None:
         raise ValueError("parse_detail_response: hotel entry failed to parse")
+    detail_currency = base.currency or requested_currency
 
     # Address: SLOT_ADDRESS = entry[2][1][0][0][0]
     addr_node = safe_get(entry, *SLOT_ADDRESS)
@@ -81,7 +92,7 @@ def parse_detail_response(inner: Tree, *, reference_year: int | None = None) -> 
             for provider_entry in provider_list_entry:
                 rate = _parse_provider_rate(
                     provider_entry,
-                    base.currency or "USD",
+                    detail_currency or "USD",
                     reference_year=reference_year,
                 )
                 if rate is not None:
@@ -115,8 +126,12 @@ def parse_detail_response(inner: Tree, *, reference_year: int | None = None) -> 
             if rv is not None:
                 recent_reviews.append(rv)
 
+    base_data = base.model_dump()
+    if detail_currency is not None:
+        base_data["currency"] = detail_currency
+
     return HotelDetail(
-        **base.model_dump(),
+        **base_data,
         description=description,
         address=address,
         phone=phone,

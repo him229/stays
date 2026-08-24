@@ -54,6 +54,15 @@ def test_rooms_have_rate_plans_with_provider_and_price():
     assert found, "no rate plan had both provider and price"
 
 
+def test_requested_currency_labels_hotel_and_provider_rates():
+    out = parse_detail_response(_load(), requested_currency="GBP")
+
+    assert out.currency == "GBP"
+    rates = [rate for room in out.rooms for rate in room.rates]
+    assert rates
+    assert {rate.currency for rate in rates} == {"GBP"}
+
+
 def test_detail_populates_description_or_phone_or_address():
     out = parse_detail_response(_load())
     # At least one of these enrichment fields should populate.
