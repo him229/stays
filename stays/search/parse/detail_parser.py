@@ -8,6 +8,8 @@ human-readable amenity labels, and room/rate plans per provider.
 
 from __future__ import annotations
 
+import html
+import re
 from typing import Any
 
 from stays.models.google_hotels.detail import (
@@ -31,6 +33,8 @@ from stays.search.parse.slots import (
 )
 
 __all__ = ["parse_detail_response"]
+
+_HTML_TAG_RE = re.compile(r"<[^>]+>")
 
 
 def parse_detail_response(
@@ -100,22 +104,12 @@ def parse_detail_response(
         if rates:
             rooms.append(RoomType(name="Standard Room", rates=rates))
 
-    # Amenity details: SLOT_AMENITY_DETAILS subtree contains human-readable
-    # text labels under the available-bit pairs. Walk it and collect any
-    # string children that look like amenity labels.
-    amenity_details: list[str] = []
+    # Amenity details: entry[10][0] contains grouped human-readable labels.
+    # Other branches contain search-result snippets and business names, so
+    # parse only the documented label records instead of recursively walking
+    # every string in the subtree.
     pos10 = safe_get(entry, *SLOT_AMENITY_DETAILS)
-    if isinstance(pos10, list):
-
-        def collect_labels(n: Any) -> None:
-            if isinstance(n, str) and 2 <= len(n) <= 60 and n[0].isupper():
-                amenity_details.append(n)
-            elif isinstance(n, list):
-                for child in n:
-                    collect_labels(child)
-
-        collect_labels(pos10)
-    amenity_details = amenity_details[:40]
+    amenity_details = _parse_amenity_details(pos10)
 
     # Reviews sample from SLOT_REVIEWS_LIST = entry[7][3]
     recent_reviews: list[Review] = []
@@ -139,6 +133,35 @@ def parse_detail_response(
         amenity_details=amenity_details,
         recent_reviews=recent_reviews,
     )
+
+
+def _parse_amenity_details(node: Any) -> list[str]:
+    """Extract canonical amenity labels from the detail amenity subtree."""
+    groups = safe_get(node, 0, default=[])
+    if not isinstance(groups, list):
+        return []
+
+    labels: list[str] = []
+    seen: set[str] = set()
+    for group in groups:
+        amenity_records = safe_get(group, 1, default=[])
+        if not isinstance(amenity_records, list):
+            continue
+        for record in amenity_records:
+            raw_label = safe_get(record, 0)
+            if not isinstance(raw_label, str):
+                continue
+            label = _HTML_TAG_RE.sub("", html.unescape(raw_label))
+            label = " ".join(label.split())
+            key = label.casefold()
+            if not label or key in seen:
+                continue
+            seen.add(key)
+            labels.append(label)
+            if len(labels) == 40:
+                return labels
+
+    return labels
 
 
 def _parse_review_entry(entry: Tree) -> Review | None:

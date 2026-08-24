@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 
 from stays.search.parse import parse_detail_response
+from stays.search.parse.detail_parser import _parse_amenity_details
 
 FIXTURE = Path(__file__).parent / "fixtures" / "detail_response_sample.json"
 
@@ -67,6 +68,31 @@ def test_detail_populates_description_or_phone_or_address():
     out = parse_detail_response(_load())
     # At least one of these enrichment fields should populate.
     assert out.description or out.phone or out.address
+
+
+def test_detail_amenities_exclude_headings_duplicates_and_business_snippets():
+    out = parse_detail_response(_load())
+
+    assert out.amenity_details == ["LGBTQ+ friendly"]
+
+
+def test_parse_amenity_details_returns_unique_plain_text_labels():
+    subtree = [
+        [
+            [
+                "Dining",
+                [
+                    ["<b>Breakfast</b>", True],
+                    ["Breakfast", True],
+                    ["Spa &amp; wellness", True],
+                ],
+            ]
+        ],
+        [],
+        ["Restaurant Name | Example Hotel"],
+    ]
+
+    assert _parse_amenity_details(subtree) == ["Breakfast", "Spa & wellness"]
 
 
 def test_reviews_have_sensible_ratings_if_present():
