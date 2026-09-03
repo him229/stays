@@ -7,6 +7,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+import stays.search.hotels as hotels_module
 from stays import (
     DateRange,
     GuestInfo,
@@ -207,6 +208,27 @@ def test_get_details_full_payload_includes_guests():
     got = _call_get_details_and_capture_payload(entity_key, dates, guests=guests)
 
     assert got == expected
+def test_get_details_passes_requested_currency_to_detail_parser():
+    client = MagicMock()
+    inner_response = ["detail-response"]
+    client.post_rpc.return_value = inner_response
+    parsed_detail = MagicMock()
+    search = SearchHotels(client=client)
+    dates = DateRange(check_in=date(2026, 12, 20), check_out=date(2026, 12, 23))
+
+    with patch.object(hotels_module, "parse_detail_response", return_value=parsed_detail) as parse:
+        result = search.get_details(
+            entity_key="ChkI_otherhotel",
+            dates=dates,
+            currency=Currency.GBP,
+        )
+
+    assert result is parsed_detail
+    parse.assert_called_once_with(
+        inner_response,
+        reference_year=2026,
+        requested_currency="GBP",
+    )
 
 
 # ---------------------------------------------------------------------------

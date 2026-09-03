@@ -8,6 +8,8 @@ human-readable amenity labels, and room/rate plans per provider.
 
 from __future__ import annotations
 
+import html
+import re
 from typing import Any
 
 from stays.models.google_hotels.detail import (
@@ -32,8 +34,15 @@ from stays.search.parse.slots import (
 
 __all__ = ["parse_detail_response"]
 
+_HTML_TAG_RE = re.compile(r"<[^>]+>")
 
-def parse_detail_response(inner: Tree, *, reference_year: int | None = None) -> HotelDetail:
+
+def parse_detail_response(
+    inner: Tree,
+    *,
+    reference_year: int | None = None,
+    requested_currency: str | None = None,
+) -> HotelDetail:
     """Parse a single-hotel AtySUc detail response into a HotelDetail.
 
     The detail response surfaces exactly one enriched hotel entry. We
@@ -44,6 +53,11 @@ def parse_detail_response(inner: Tree, *, reference_year: int | None = None) -> 
     The hotel entry is found via `_find_hotel_entries` (same heuristic as
     search). In detail mode there's typically only one matching entry; if
     multiple, take the first.
+
+    Detail-mode responses omit the list-view price pair that normally carries
+    the ISO currency code. ``requested_currency`` preserves the request context
+    so the hotel and its provider rates are labelled with the currency Google
+    was asked to return.
     """
     entries = _find_hotel_entries(inner)
     if not entries:
@@ -52,6 +66,7 @@ def parse_detail_response(inner: Tree, *, reference_year: int | None = None) -> 
     base = _parse_hotel_entry(entry)
     if base is None:
         raise ValueError("parse_detail_response: hotel entry failed to parse")
+    detail_currency = base.currency or requested_currency
 
     # Address: SLOT_ADDRESS = entry[2][1][0][0][0]
     addr_node = safe_get(entry, *SLOT_ADDRESS)
@@ -81,7 +96,7 @@ def parse_detail_response(inner: Tree, *, reference_year: int | None = None) -> 
             for provider_entry in provider_list_entry:
                 rate = _parse_provider_rate(
                     provider_entry,
-                    base.currency or "USD",
+                    detail_currency or "USD",
                     reference_year=reference_year,
                 )
                 if rate is not None:
@@ -89,22 +104,12 @@ def parse_detail_response(inner: Tree, *, reference_year: int | None = None) -> 
         if rates:
             rooms.append(RoomType(name="Standard Room", rates=rates))
 
-    # Amenity details: SLOT_AMENITY_DETAILS subtree contains human-readable
-    # text labels under the available-bit pairs. Walk it and collect any
-    # string children that look like amenity labels.
-    amenity_details: list[str] = []
+    # Amenity details: entry[10][0] contains grouped human-readable labels.
+    # Other branches contain search-result snippets and business names, so
+    # parse only the documented label records instead of recursively walking
+    # every string in the subtree.
     pos10 = safe_get(entry, *SLOT_AMENITY_DETAILS)
-    if isinstance(pos10, list):
-
-        def collect_labels(n: Any) -> None:
-            if isinstance(n, str) and 2 <= len(n) <= 60 and n[0].isupper():
-                amenity_details.append(n)
-            elif isinstance(n, list):
-                for child in n:
-                    collect_labels(child)
-
-        collect_labels(pos10)
-    amenity_details = amenity_details[:40]
+    amenity_details = _parse_amenity_details(pos10)
 
     # Reviews sample from SLOT_REVIEWS_LIST = entry[7][3]
     recent_reviews: list[Review] = []
@@ -115,8 +120,12 @@ def parse_detail_response(inner: Tree, *, reference_year: int | None = None) -> 
             if rv is not None:
                 recent_reviews.append(rv)
 
+    base_data = base.model_dump()
+    if detail_currency is not None:
+        base_data["currency"] = detail_currency
+
     return HotelDetail(
-        **base.model_dump(),
+        **base_data,
         description=description,
         address=address,
         phone=phone,
@@ -124,6 +133,35 @@ def parse_detail_response(inner: Tree, *, reference_year: int | None = None) -> 
         amenity_details=amenity_details,
         recent_reviews=recent_reviews,
     )
+
+
+def _parse_amenity_details(node: Any) -> list[str]:
+    """Extract canonical amenity labels from the detail amenity subtree."""
+    groups = safe_get(node, 0, default=[])
+    if not isinstance(groups, list):
+        return []
+
+    labels: list[str] = []
+    seen: set[str] = set()
+    for group in groups:
+        amenity_records = safe_get(group, 1, default=[])
+        if not isinstance(amenity_records, list):
+            continue
+        for record in amenity_records:
+            raw_label = safe_get(record, 0)
+            if not isinstance(raw_label, str):
+                continue
+            label = _HTML_TAG_RE.sub("", html.unescape(raw_label))
+            label = " ".join(label.split())
+            key = label.casefold()
+            if not label or key in seen:
+                continue
+            seen.add(key)
+            labels.append(label)
+            if len(labels) == 40:
+                return labels
+
+    return labels
 
 
 def _parse_review_entry(entry: Tree) -> Review | None:

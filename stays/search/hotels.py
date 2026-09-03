@@ -172,7 +172,11 @@ class SearchHotels:
         )
         inner_req = filters.format()
         inner_resp = self._client.post_rpc(RPC_ID, inner_req)
-        return parse_detail_response(inner_resp, reference_year=dates.check_in.year)
+        return parse_detail_response(
+            inner_resp,
+            reference_year=dates.check_in.year,
+            requested_currency=currency.value,
+        )
 
     def search_with_details(self, filters: HotelSearchFilters, max_hotels: int = 5) -> list[EnrichedResult]:
         """Run ``search()``, then fetch detail for the first
