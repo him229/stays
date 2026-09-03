@@ -42,9 +42,17 @@ class SearchHotelsParams(BaseModel):
     query: str = Field(description="City or property query.")
     check_in: str | None = Field(default=None, description="YYYY-MM-DD; omit for flexible dates.")
     check_out: str | None = Field(default=None, description="YYYY-MM-DD; required if check_in is set.")
-    adults: int = Field(default=CONFIG.default_adults, ge=1)
-    children: int = Field(default=CONFIG.default_children, ge=0, le=8)
-    child_ages: list[int] | None = Field(default=None, description="Ages 0-17.")
+    adults: int = Field(default=CONFIG.default_adults, ge=1, description="Adults from the preceding search.")
+    children: int = Field(
+        default=CONFIG.default_children,
+        ge=0,
+        le=8,
+        description="Children from the preceding search.",
+    )
+    child_ages: list[int] | None = Field(
+        default=None,
+        description="Ages 0-17, one per child; match the preceding search.",
+    )
     currency: str = Field(default=CONFIG.default_currency, min_length=3, max_length=3)
     sort_by: SortByLiteral = CONFIG.default_sort_by
     hotel_class: list[int] | None = None
@@ -69,7 +77,15 @@ class GetHotelDetailsParams(BaseModel):
     entity_key: str = Field(description="entity_key from a prior search_hotels result.")
     check_in: str = Field(description="YYYY-MM-DD.")
     check_out: str = Field(description="YYYY-MM-DD after check_in.")
+    adults: int = Field(default=CONFIG.default_adults, ge=1)
+    children: int = Field(default=CONFIG.default_children, ge=0, le=8)
+    child_ages: list[int] | None = Field(default=None, description="Ages 0-17.")
     currency: str = Field(default=CONFIG.default_currency, min_length=3, max_length=3)
+
+    @model_validator(mode="after")
+    def _child_ages_matches_children(self):
+        _validate_child_ages(self.children, self.child_ages)
+        return self
 
 
 class SearchHotelsWithDetailsParams(BaseModel):

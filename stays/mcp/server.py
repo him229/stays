@@ -224,18 +224,32 @@ def get_hotel_details(
     entity_key: Annotated[str, Field()],
     check_in: Annotated[str, Field()],
     check_out: Annotated[str, Field()],
+    adults: Annotated[int, Field(ge=1, description="Adults from the preceding search.")] = CONFIG.default_adults,
+    children: Annotated[
+        int,
+        Field(ge=0, le=8, description="Children from the preceding search."),
+    ] = CONFIG.default_children,
+    child_ages: Annotated[
+        list[int] | None,
+        Field(description="Ages 0-17, one per child; match the preceding search."),
+    ] = None,
     currency: Annotated[str, Field(min_length=3, max_length=3)] = CONFIG.default_currency,
 ) -> dict[str, Any]:
     """Deep detail for ONE hotel. Requires entity_key from search_hotels.
 
-    Returns rooms, per-OTA rate plans with prices, and cancellation
-    policies. One RPC. For multi-hotel deep comparison use
+    Pass the same adults, children, and child ages used by the preceding
+    search so availability and pricing stay consistent. Returns rooms,
+    per-OTA rate plans with prices, and cancellation policies. One RPC.
+    For multi-hotel deep comparison use
     search_hotels_with_details instead.
     """
     params = GetHotelDetailsParams(
         entity_key=entity_key,
         check_in=check_in,
         check_out=check_out,
+        adults=adults,
+        children=children,
+        child_ages=child_ages,
         currency=currency,
     )
     return _execute_get_hotel_details_from_params(params)

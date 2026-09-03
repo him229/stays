@@ -10,6 +10,9 @@
     "entity_key": "ChkI_bad",
     "check_in": "2026-07-22",
     "check_out": "2026-07-26",
+    "adults": 2,
+    "children": 0,
+    "child_ages": null,
     "currency": null
   }
 }

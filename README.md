@@ -128,7 +128,8 @@ stays "paris hotels" --check-in 2026-09-01 --check-out 2026-09-04
 
 # Rooms / rates / cancellation for ONE hotel
 stays details "ChkI_ENTITY_KEY_FROM_SEARCH" \
-    --check-in 2026-07-22 --check-out 2026-07-26
+    --check-in 2026-07-22 --check-out 2026-07-26 \
+    --adults 1
 
 # Search + top-5 deep detail in parallel
 stays enrich "new york hotels" --max-hotels 5 \
@@ -139,14 +140,14 @@ stays search "tokyo" --format json    # single pretty-printed envelope
 stays search "tokyo" --format jsonl   # one record per line, stream-friendly
 ```
 
-### CLI options (`search` / `enrich`)
+### CLI options
 
 | Flag | Type | Purpose |
 |------|------|---------|
-| `--check-in` / `--check-out` | `YYYY-MM-DD` | Stay window (required for rate plans) |
-| `--adults` / `--children` | int | Party composition (1–12 / 0–8) |
-| `--child-age` | int (repeat) | One `--child-age` per child |
-| `--currency` | ISO 4217 | Output currency (default `USD`) |
+| `--check-in` / `--check-out` | `YYYY-MM-DD` | Stay window (required for `details` and rate plans) |
+| `--adults` / `--children` | int | Party composition (1–12 / 0–8; all hotel commands) |
+| `--child-age` | int (repeat) | One `--child-age` per child (all hotel commands) |
+| `--currency` | ISO 4217 | Output currency (default `USD`; all hotel commands) |
 | `--property-type` | enum | `HOTELS` (default) or `VACATION_RENTALS` |
 | `--sort-by` | enum | `RELEVANCE`, `LOWEST_PRICE`, `HIGHEST_RATING`, `MOST_REVIEWED` |
 | `--stars` | 1–5 (repeat) | Hotel-class filter (`--stars 4 --stars 5`) |
@@ -276,6 +277,7 @@ The server exposes three tools. All of them return JSON-safe dicts.
 | `entity_key` *required* | string | From a prior `search_hotels` result |
 | `check_in` *required* | string | `YYYY-MM-DD` (rate plans are date-keyed) |
 | `check_out` *required* | string | `YYYY-MM-DD` after `check_in` |
+| `adults` / `children` / `child_ages` | int / int / list[int] | Party composition; match the preceding search |
 | `currency` | string | ISO 4217 (default `USD`) |
 
 ### `search_hotels_with_details` parameters
@@ -329,6 +331,7 @@ if first.entity_key:
     detail = s.get_details(
         entity_key=first.entity_key,
         dates=DateRange(check_in=date(2026, 7, 22), check_out=date(2026, 7, 26)),
+        guests=GuestInfo(adults=2),
     )
     print(detail.address, detail.phone)
     for room in detail.rooms:

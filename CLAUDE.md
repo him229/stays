@@ -78,7 +78,7 @@ make clean                   # Remove build/dist/cache artifacts
 
 2. **Search Engine** (`stays/search/hotels.py`)
    - `SearchHotels.search(filters)` — list view, returns `list[HotelResult]`
-   - `SearchHotels.get_details(entity_key, dates, *, currency, location)` — single hotel deep view
+   - `SearchHotels.get_details(entity_key, dates, *, currency, location, guests)` — single hotel deep view; pass the same party as the preceding search
    - `SearchHotels.search_with_details(filters, max_hotels)` — parallel enrichment (thread pool of N). Only `BatchExecuteError` / `TransientBatchExecuteError` / `MissingHotelIdError` become per-hotel errors; unknown exceptions (including parser bugs) now propagate instead of being silently swallowed.
    - `EnrichedResult` carries `error_kind: Literal["transient","fatal"] | None` plus an `is_retryable` property — callers can tell retryable transient failures from fatal ones.
 
@@ -176,6 +176,7 @@ Deep view for ONE hotel. Requires `entity_key` from `search_hotels`.
 **Key Parameters:**
 - `entity_key` — from a prior `search_hotels` result
 - `check_in` / `check_out` — required (rate plans are date-keyed)
+- `adults`, `children`, `child_ages` — party composition; match the preceding search
 - `currency`
 
 Returns: `HotelDetail` with rooms, per-OTA rate plans, cancellation policies, full amenity list.

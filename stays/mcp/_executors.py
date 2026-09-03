@@ -216,6 +216,11 @@ def _execute_get_hotel_details_from_params(params: GetHotelDetailsParams) -> dic
             entity_key=params.entity_key,
             dates=dates,
             currency=Currency[params.currency],
+            guests=GuestInfo(
+                adults=params.adults,
+                children=params.children,
+                child_ages=params.child_ages or [],
+            ),
         )
         return {"success": True, "hotel": _serialize_hotel_detail(detail)}
     except MissingHotelIdError as e:

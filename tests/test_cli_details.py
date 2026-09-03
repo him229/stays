@@ -98,6 +98,53 @@ def test_details_with_currency_flag(runner, mock_search):
     assert kwargs["currency"].name == "EUR"
 
 
+def test_details_with_guest_flags(runner, mock_search):
+    result = runner.invoke(
+        app,
+        [
+            "details",
+            "ChkI_key",
+            "--check-in",
+            "2026-07-22",
+            "--check-out",
+            "2026-07-26",
+            "--adults",
+            "1",
+            "--children",
+            "2",
+            "--child-age",
+            "7",
+            "--child-age",
+            "10",
+        ],
+    )
+    assert result.exit_code == 0
+    guests = mock_search.return_value.get_details.call_args.kwargs["guests"]
+    assert guests.adults == 1
+    assert guests.children == 2
+    assert guests.child_ages == [7, 10]
+
+
+def test_details_rejects_mismatched_child_ages(runner, mock_search):
+    result = runner.invoke(
+        app,
+        [
+            "details",
+            "ChkI_key",
+            "--check-in",
+            "2026-07-22",
+            "--check-out",
+            "2026-07-26",
+            "--children",
+            "2",
+            "--child-age",
+            "7",
+        ],
+    )
+    assert result.exit_code != 0
+    mock_search.return_value.get_details.assert_not_called()
+
+
 def test_details_jsonl_format(runner, mock_search):
     """Covers lines 67-68: JSONL output path."""
     result = runner.invoke(
